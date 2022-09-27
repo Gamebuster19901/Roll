@@ -1,19 +1,26 @@
 package com.gamebuster19901.excite.bot.command;
 
+import java.awt.Color;
+
 import com.mojang.brigadier.CommandDispatcher;
+
+import net.dv8tion.jda.api.EmbedBuilder;
 
 public class HelpCommand {
 
 	@SuppressWarnings("rawtypes")
-	public static void register(CommandDispatcher<MessageContext> dispatcher) {
+	public static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.literal("help").executes((context) -> {
 			return sendHelpInfo(context.getSource());
 		}));
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static int sendHelpInfo(MessageContext context) {
-		context.sendMessage("For help, see <https://github.com/gamebuster19901/ExciteBot/wiki>\n\nTo report a bug, create a new issue at <https://gamebuster19901.com/ExciteBot/issues> or notify the bot owner");
+	private static int sendHelpInfo(CommandContext context) {
+		EmbedBuilder embed = context.getEmbed();
+		embed.appendDescription("For help, see [INSERT URL HERE]");
+		embed.setColor(Color.WHITE);
+		context.sendMessage(embed);
 		return 1;
 	}
 	

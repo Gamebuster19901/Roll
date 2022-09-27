@@ -1,4 +1,4 @@
-rootProject.name = 'ExciteBot'
+rootProject.name = 'Roll'
 
 sourceControl {
 	gitRepository('https://github.com/TheGameCommunity/brigadier.git') {

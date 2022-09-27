@@ -3,7 +3,7 @@ package com.gamebuster19901.excite.util;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import com.gamebuster19901.excite.Main;
-import com.gamebuster19901.excite.bot.command.MessageContext;
+import com.gamebuster19901.excite.bot.command.CommandContext;
 
 public class ThreadService {
 
@@ -58,7 +58,7 @@ public class ThreadService {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static void shutdown(MessageContext context, int ExitCode) {
+	public static void shutdown(CommandContext context, int ExitCode) {
 		Main.stopping = true;
 		Thread shutdownHandler = new Thread() {
 			@Override
@@ -90,9 +90,6 @@ public class ThreadService {
 						context.sendMessage("Iterrupted, Emergency Stop!");
 						String stacktrace = StacktraceUtil.getStackTrace(e);
 						context.sendMessage(stacktrace);
-						if(context.getDiscordAuthor() != Main.CONSOLE) {
-							Main.CONSOLE.sendMessage(stacktrace);
-						}
 						break;
 					}
 				}
