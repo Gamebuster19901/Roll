@@ -77,6 +77,11 @@ public class Dice {
 		return child != null;
 	}
 	
+	
+	public Dice getChild() {
+		return child;
+	}
+	
 	public void roll() {
 		if(die > 0) {
 			if(amount > 0) {

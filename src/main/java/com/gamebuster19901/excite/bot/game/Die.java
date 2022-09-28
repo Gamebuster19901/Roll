@@ -11,6 +11,7 @@ public class Die {
 	protected final int value;
 	protected final Rotation rotation = Rotation.randRotation();
 	protected final Spin spin = Spin.randSpin();
+	protected final DieType dieType;
 	
 	public Die(int sides) {
 		if(sides < 1) {
@@ -18,6 +19,7 @@ public class Die {
 		}
 		this.sides = sides;
 		this.value = ThreadLocalRandom.current().nextInt(1, sides + 1);
+		dieType = DieType.getDieType(sides);
 	}
 	
 	public int getValue() {
@@ -26,6 +28,14 @@ public class Die {
 	
 	public String toString() {
 		return "[" + value + "]d"+sides;
+	}
+	
+	public DieType getDieType() {
+		return dieType;
+	}
+	
+	public Spin getSpin() {
+		return spin;
 	}
 	
 }

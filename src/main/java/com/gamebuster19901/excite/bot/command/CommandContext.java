@@ -5,7 +5,9 @@ import java.time.Instant;
 import com.gamebuster19901.excite.util.MessageUtil;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -94,6 +96,13 @@ public class CommandContext<E>{
 		embedBuilder.setAuthor(user.getAsTag(), null, user.getAvatarUrl());
 		embedBuilder.setTimestamp(Instant.now());
 		return embedBuilder;
+	}
+	
+	public MessageChannel getChannel() {
+		if(event instanceof SlashCommandInteractionEvent) {
+			return ((SlashCommandInteractionEvent) event).getMessageChannel();
+		}
+		return null;
 	}
 	
 	public EmbedBuilder getEmbed() {

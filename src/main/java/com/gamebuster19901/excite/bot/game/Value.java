@@ -15,4 +15,9 @@ public class Value extends Die {
 		return ""+ getValue();
 	}
 	
+	@Override
+	public DieType getDieType() {
+		return DieType.modifier;
+	}
+	
 }
