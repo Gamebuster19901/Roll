@@ -1,57 +1,21 @@
 package com.gamebuster19901.excite.bot.graphics;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-
 import javax.imageio.ImageIO;
+
 import com.gamebuster19901.excite.bot.game.Dice;
 import com.gamebuster19901.excite.bot.game.Die;
 
-public class DieAnimationBuilder {
-
-	int rows;
-	int columns;
-	int width;
-	int height;
-	Dice dice;
-	List<Die> allDice;
-	int dieCount;
-	byte[] rollingImage;
-	HashMap<Dice, Color> dieColors = new HashMap<>();
-
+public class DieAnimationBuilder extends DieGraphicBuilder{
 	
 	public DieAnimationBuilder(Dice dice) {
-		this.dice = dice;
-		allDice = dice.getAllDice();
-		dieCount = allDice.size();
-		rows = (int)Math.ceil((double)dieCount / 10);
-		columns = dieCount;
-		if(columns > 10) {
-			columns = 10;
-		}
-		if(columns < 4) {
-			columns = 4;
-		}
-		setDieColors(dice);
-		width = columns * 256;
-		if(width > 2560) {
-			width = 2560;
-		}
-		height = rows * 256;
-	}
-
-	private void setDieColors(Dice dice) {
-		dieColors.put(dice, Color.WHITE);
-		if(dice.hasChild()) {
-			setDieColors(dice.getChild());
-		}
+		super(dice);
 	}
 	
-	public ByteArrayOutputStream buildFrames() throws IOException {
+	@Override
+	public ByteArrayOutputStream buildImage() throws IOException {
 		ByteArrayOutputStream ret = new ByteArrayOutputStream(4194304);//4MiB
 		BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		GifWriter writer = new GifWriter(ret, BufferedImage.TYPE_INT_RGB, 1, true);
