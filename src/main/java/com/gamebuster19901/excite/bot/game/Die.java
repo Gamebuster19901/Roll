@@ -14,12 +14,17 @@ public class Die {
 	protected final DieType dieType;
 	
 	public Die(int sides) {
-		if(sides < 1) {
-			throw new IllegalArgumentException("Die must have 1 or more sides!");
+		if(sides == 0) {
+			throw new IllegalArgumentException("Die cannot have 0 sides!");
 		}
 		this.sides = sides;
-		this.value = ThreadLocalRandom.current().nextInt(1, sides + 1);
-		dieType = DieType.getDieType(sides);
+		if(sides > 0) {
+			this.value = ThreadLocalRandom.current().nextInt(1, sides + 1);
+		}
+		else {
+			this.value = ThreadLocalRandom.current().nextInt(sides, 0);
+		}
+		dieType = DieType.getDieType(Math.abs(sides));
 	}
 	
 	public int getValue() {

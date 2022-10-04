@@ -12,6 +12,9 @@ public class Value extends Die {
 	}
 
 	public String toString() {
+		if(getValue() > -1) {
+			return "+" + getValue();
+		}
 		return ""+ getValue();
 	}
 	

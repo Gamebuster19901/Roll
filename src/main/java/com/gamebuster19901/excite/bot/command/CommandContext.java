@@ -5,7 +5,6 @@ import java.time.Instant;
 import com.gamebuster19901.excite.util.MessageUtil;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -48,6 +47,14 @@ public class CommandContext<E>{
 	@SuppressWarnings("unchecked")
 	public CommandContext() {
 		this.event = null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getEvent(Class<T> type) throws ClassCastException {	
+		if(type.isAssignableFrom(event.getClass())) {
+			return (T)event;
+		}
+		throw new ClassCastException(event + " cannot be cast to " + type.getClass());
 	}
 	
 	public boolean isDiscordContext() {

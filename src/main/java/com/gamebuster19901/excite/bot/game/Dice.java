@@ -11,10 +11,9 @@ import com.mojang.brigadier.StringReader;
 
 public class Dice {
 
-	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<modifier>[\\+\\-])?(?<amount>\\d*)(?<die>d\\d*){0,1}");
+	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d*){0,1}");
 	
 	int cursor;
-	final boolean positive;
 	final int amount;
 	final int die;
 	Dice child;
@@ -37,16 +36,20 @@ public class Dice {
 		matcher.find();
 		this.cursor = cursor;
 		try {
-			positive = !"-".equals(matcher.group("modifier"));
-			this.cursor = matcher.start("modifier");
+			this.cursor = matcher.start("amount");
 			
 			String amt = matcher.group("amount");
-			this.cursor = matcher.start("amount");
 			int amount = 1;
-			if(amt != null && !amt.isEmpty()) {
+			if(amt.equals("-")) {
+				amount = -1;
+			}
+			else if(amt.equals("+")) {
+				//no-op
+			}
+			else if(amt != null && !amt.isEmpty()) {
 				amount = Integer.parseInt(amt);
 			}
-
+			
 			this.amount = amount;
 			
 			String die = matcher.group("die");
@@ -58,7 +61,7 @@ public class Dice {
 				this.die = 0;
 			}
 			
-			System.out.println("amount: " + amt);
+			System.out.println("amount: " + this.amount);
 			System.out.println("die:" + this.die);
 			
 			if(!matcher.hitEnd()) {
@@ -84,9 +87,12 @@ public class Dice {
 	
 	public void roll() {
 		if(die > 0) {
-			if(amount > 0) {
-				for(int i = 0; i < amount; i++) {
+			for(int i = 0; i < Math.abs(amount); i++) {
+				if(amount > 0) {
 					roll.add(new Die(die));
+				}
+				else {
+					roll.add(new Die(-die));
 				}
 			}
 		}
@@ -113,9 +119,6 @@ public class Dice {
 		for(Die die : roll) {
 			ret += die.getValue();
 		}
-		if(!positive) {
-			ret = ret * -1;
-		}
 		if(hasChild()) {
 			child.roll();
 			ret = ret + child.getValue();
@@ -125,10 +128,28 @@ public class Dice {
 	
 	public String toString() {
 		StringBuilder ret = new StringBuilder();
-		ret.append('<');
-		if(!positive) {
-			ret.append('-');
+		Dice dice = this;
+		do {
+			if(dice.die != 0) {
+				ret.append(dice.amount + "d" + dice.die);
+			}
+			else {
+				ret.append(dice.amount);
+			}
+			dice = dice.child;
+			if(dice != null) {
+				if(dice.amount > -1) {
+					ret.append("+");
+				}
+			}
 		}
+		while(dice != null);
+		return ret.toString();
+	}
+	
+	public String toDebugString() {
+		StringBuilder ret = new StringBuilder();
+		ret.append('<');
 		for(Die die : roll) {
 			ret.append("[" + die + "] ");
 		}
