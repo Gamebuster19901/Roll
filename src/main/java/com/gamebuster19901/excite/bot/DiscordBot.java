@@ -71,6 +71,11 @@ public class DiscordBot {
 		presence.setPresence(OnlineStatus.ONLINE, Activity.of(ActivityType.LISTENING, "commands"));
 	}
 	
+	public void setNoDB() {
+		Presence presence = jda.getPresence();
+		presence.setPresence(OnlineStatus.DO_NOT_DISTURB, Activity.of(ActivityType.STREAMING, "No Database!"));
+	}
+	
 	public SelfUser getSelfUser() {
 		return jda.getSelfUser();
 	}

@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 
 import com.gamebuster19901.excite.bot.DiscordBot;
+import com.gamebuster19901.excite.bot.database.sql.DatabaseConnection;
 
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
@@ -55,6 +56,18 @@ public class Main {
 				Thread.sleep(5000);
 			}
 		}
+		
+		do {
+			try {
+				DatabaseConnection.INSTANCE = new DatabaseConnection();
+			}
+			catch(Throwable t) {
+				System.out.println(t);
+				discordBot.setNoDB();
+				Thread.sleep(5000);
+			}
+		}
+		while(DatabaseConnection.INSTANCE == null);
 		
 		Thread.sleep(5000);
 		

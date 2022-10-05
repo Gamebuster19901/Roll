@@ -2,6 +2,7 @@ package com.gamebuster19901.excite.bot.command;
 
 import java.time.Instant;
 
+import com.gamebuster19901.excite.bot.database.sql.DatabaseConnection;
 import com.gamebuster19901.excite.util.MessageUtil;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -110,6 +111,10 @@ public class CommandContext<E>{
 			return ((SlashCommandInteractionEvent) event).getMessageChannel();
 		}
 		return null;
+	}
+	
+	public DatabaseConnection getConnection() {
+		return DatabaseConnection.INSTANCE;
 	}
 	
 	public EmbedBuilder getEmbed() {
