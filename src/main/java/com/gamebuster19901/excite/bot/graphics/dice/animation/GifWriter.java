@@ -1,4 +1,4 @@
-package com.gamebuster19901.excite.bot.graphics;
+package com.gamebuster19901.excite.bot.graphics.dice.animation;
 
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
@@ -15,6 +15,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 
+@Deprecated
 public class GifWriter implements Closeable {
 
 	protected ImageWriter writer;

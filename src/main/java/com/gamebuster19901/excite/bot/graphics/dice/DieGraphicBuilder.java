@@ -1,29 +1,27 @@
-package com.gamebuster19901.excite.bot.graphics;
+package com.gamebuster19901.excite.bot.graphics.dice;
 
-import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import com.gamebuster19901.excite.bot.game.Dice;
 import com.gamebuster19901.excite.bot.game.Die;
+import com.gamebuster19901.excite.bot.game.Roll;
 
 public abstract class DieGraphicBuilder {
 
-	int rows;
-	int columns;
-	int width;
-	int height;
-	Dice dice;
-	List<Die> allDice;
-	int dieCount;
-	HashMap<Dice, Color> dieColors = new HashMap<>();
+	protected int rows;
+	protected int columns;
+	protected int width;
+	protected int height;
+	protected Roll roll;
+	protected Dice dice;
+	protected List<Die> allDice;
+	protected int dieCount;
 	
-	public DieGraphicBuilder(Dice dice) {
-
-		
-		this.dice = dice;
+	public DieGraphicBuilder(Roll roll) {
+		this.roll = roll;
+		this.dice = roll.getDice();
 		allDice = dice.getAllDice();
 		dieCount = allDice.size();
 		rows = (int)Math.ceil(Math.abs((double)dieCount) / 10);
@@ -34,24 +32,17 @@ public abstract class DieGraphicBuilder {
 		if(columns < 4) {
 			columns = 4;
 		}
-		setDieColors(dice);
+
 		width = columns * 256;
 		if(width > 2560) {
 			width = 2560;
 		}
 		height = rows * 256;
 		
-		System.out.println("Rows: " + rows);
-		System.out.println("Columns: " + columns);
+		//System.out.println("Rows: " + rows);
+		//System.out.println("Columns: " + columns);
 	}
 	
 	public abstract ByteArrayOutputStream buildImage() throws IOException;
-	
-	protected void setDieColors(Dice dice) {
-		dieColors.put(dice, Color.WHITE);
-		if(dice.hasChild()) {
-			setDieColors(dice.getChild());
-		}
-	}
 	
 }

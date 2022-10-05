@@ -86,18 +86,26 @@ public class Dice {
 	}
 	
 	public void roll() {
-		if(die > 0) {
-			for(int i = 0; i < Math.abs(amount); i++) {
-				if(amount > 0) {
-					roll.add(new Die(die));
-				}
-				else {
-					roll.add(new Die(-die));
+		if(roll.isEmpty()) {
+			if(die > 0) {
+				for(int i = 0; i < Math.abs(amount); i++) {
+					if(amount > 0) {
+						roll.add(new Die(die));
+					}
+					else {
+						roll.add(new Die(-die));
+					}
 				}
 			}
+			else if(die == 0) {
+				roll.add(new Value(amount));
+			}
+			if(child != null) {
+				child.roll();
+			}
 		}
-		else if(die == 0) {
-			roll.add(new Value(amount));
+		else {
+			throw new IllegalStateException("Dice already rolled!");
 		}
 	}
 	
@@ -116,12 +124,8 @@ public class Dice {
 	
 	public int getValue() {
 		int ret = 0;
-		for(Die die : roll) {
+		for(Die die : getAllDice()) {
 			ret += die.getValue();
-		}
-		if(hasChild()) {
-			child.roll();
-			ret = ret + child.getValue();
 		}
 		return ret;
 	}

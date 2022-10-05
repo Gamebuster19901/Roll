@@ -1,17 +1,19 @@
-package com.gamebuster19901.excite.bot.graphics;
+package com.gamebuster19901.excite.bot.graphics.dice.animation;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import com.gamebuster19901.excite.bot.game.Dice;
 import com.gamebuster19901.excite.bot.game.Die;
+import com.gamebuster19901.excite.bot.game.Roll;
+import com.gamebuster19901.excite.bot.graphics.dice.DieGraphicBuilder;
 
+@Deprecated
 public class DieAnimationBuilder extends DieGraphicBuilder{
 	
-	public DieAnimationBuilder(Dice dice) {
-		super(dice);
+	public DieAnimationBuilder(Roll roll) {
+		super(roll);
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package com.gamebuster19901.excite.bot.graphics;
+package com.gamebuster19901.excite.bot.graphics.dice.animation;
 
 import java.util.concurrent.ThreadLocalRandom;
 

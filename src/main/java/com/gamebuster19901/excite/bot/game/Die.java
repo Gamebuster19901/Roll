@@ -2,8 +2,8 @@ package com.gamebuster19901.excite.bot.game;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.gamebuster19901.excite.bot.graphics.Rotation;
-import com.gamebuster19901.excite.bot.graphics.Spin;
+import com.gamebuster19901.excite.bot.graphics.dice.animation.Rotation;
+import com.gamebuster19901.excite.bot.graphics.dice.animation.Spin;
 
 public class Die {
 
@@ -41,6 +41,10 @@ public class Die {
 	
 	public Spin getSpin() {
 		return spin;
+	}
+	
+	public int getSides() {
+		return sides;
 	}
 	
 }
