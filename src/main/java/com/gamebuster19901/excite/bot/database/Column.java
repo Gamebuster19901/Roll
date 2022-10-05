@@ -24,7 +24,8 @@ public enum Column {
 	DIE_COLOR("dieColor", THEMES),
 	TEXT_COLOR("textColor", THEMES),
 	GOOD_COLOR("goodColor", THEMES),
-	BAD_COLOR("badColor", THEMES)
+	BAD_COLOR("badColor", THEMES),
+	DEBUG("Debug", THEMES)
 	
 	;
 	
