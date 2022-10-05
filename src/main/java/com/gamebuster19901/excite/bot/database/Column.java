@@ -11,6 +11,21 @@ public enum Column {
 	ALL_COLUMNS("*", Table.values()),
 	GENERATED_KEY("GENERATED_KEY", Table.values()), //Used for getting generated key
 	
+	DISCORD_ID("discordID", CHARACTERS, THEMES),
+	
+	/*
+	 * Characters
+	 */
+	CHARACTER_ID("characterID", CHARACTERS),
+	
+	/*
+	 * THEMES
+	 */
+	DIE_COLOR("dieColor", THEMES),
+	TEXT_COLOR("textColor", THEMES),
+	GOOD_COLOR("goodColor", THEMES),
+	BAD_COLOR("badColor", THEMES)
+	
 	;
 	
 	private final String name;
