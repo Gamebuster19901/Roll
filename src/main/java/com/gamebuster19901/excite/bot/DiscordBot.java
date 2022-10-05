@@ -66,6 +66,11 @@ public class DiscordBot {
 		presence.setPresence(OnlineStatus.IDLE, Activity.of(ActivityType.WATCHING, "Loading..."));
 	}
 	
+	public void setOnline() {
+		Presence presence = jda.getPresence();
+		presence.setPresence(OnlineStatus.ONLINE, Activity.of(ActivityType.LISTENING, "commands"));
+	}
+	
 	public SelfUser getSelfUser() {
 		return jda.getSelfUser();
 	}

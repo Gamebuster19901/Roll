@@ -56,8 +56,9 @@ public class Main {
 			}
 		}
 		
+		Thread.sleep(5000);
 		
-		
+		discordBot.setOnline();
 		while(true) {
 			//stuff
 		}
