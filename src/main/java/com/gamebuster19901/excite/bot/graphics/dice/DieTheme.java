@@ -85,7 +85,13 @@ public class DieTheme {
 				}
 				renderText(g, die.getValue() > -1 ? "+" + die.getValue() : die.getValue() + "", 0, 0, 211, 211);
 				g.setColor(Color.YELLOW);
-				renderText(g, "d" + die.getSides(), 0, 100, 256, 45);
+				if(die.getSides() > 0) {
+					renderText(g, "d" + die.getSides(), 0, 100, 256, 45);
+				}
+				else {
+					renderText(g, "-d" + Math.abs(die.getSides()), 0, 100, 256, 45);
+				}
+				
 				break;
 		}
 		return dieImage;
@@ -113,14 +119,14 @@ public class DieTheme {
 		
 		Color color = g.getColor();
 		
-		//if(debug) {
+		if(debug) {
 			g.setColor(getDebugOutlineTextSize());
 			System.out.println(("x: ") + rect.getX());
 			g.drawRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
 			
 			g.setColor(getDebugOutlineTextBounds());
 			g.drawRect((int)(128 - (rect.getWidth() / 2) + offsetX), (int)(128 - rect.getHeight() / 2) + offsetY, (int)rect.getWidth(), (int)rect.getHeight());
-		//}
+		}
 		
 		g.setColor(color);
 		g.drawGlyphVector(string, drawX, drawY);
