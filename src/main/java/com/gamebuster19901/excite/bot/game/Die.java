@@ -31,6 +31,22 @@ public class Die {
 		return value;
 	}
 	
+	public int getMaxValue() {
+		if(sides > 0) {
+			return sides;
+		}
+		else {
+			return -1;
+		}
+	}
+	
+	public int getMinValue() {
+		if(sides < 0) {
+			return sides;
+		}
+		return 1;
+	}
+	
 	public String toString() {
 		return "[" + value + "]d"+sides;
 	}

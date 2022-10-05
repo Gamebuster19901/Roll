@@ -47,7 +47,7 @@ public class RollCommand {
 							.setFiles(FileUpload.fromData(in, "test.png"))
 							.setEmbeds(c.getEmbed().setDescription("Rolling " + roll.getDice())
 								.setImage("attachment://test.png")
-								.setFooter("Result: " + roll.getDice().getValue())
+								.setFooter("Result: " + roll.getDice().getValue() + ". Min: " + roll.getDice().getMinValue() + " Max: " + roll.getDice().getMaxValue())
 								.build());
 						if(roll.isSortable()) {
 							action.addActionRow(Button.primary("Sort", "Sort Dice"), Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));

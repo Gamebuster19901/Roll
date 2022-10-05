@@ -130,6 +130,22 @@ public class Dice {
 		return ret;
 	}
 	
+	public int getMaxValue() {
+		int ret = 0;
+		for(Die die : getAllDice()) {
+			ret = ret + die.getMaxValue();
+		}
+		return ret;
+	}
+	
+	public int getMinValue() {
+		int ret = 0;
+		for(Die die : getAllDice()) {
+			ret = ret + die.getMinValue();
+		}
+		return ret;
+	}
+	
 	public String toString() {
 		StringBuilder ret = new StringBuilder();
 		Dice dice = this;

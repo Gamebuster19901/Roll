@@ -18,6 +18,14 @@ public class Value extends Die {
 		return ""+ getValue();
 	}
 	
+	public int getMaxValue() {
+		return sides;
+	}
+	
+	public int getMinValue() {
+		return sides;
+	}
+	
 	@Override
 	public DieType getDieType() {
 		return DieType.modifier;
