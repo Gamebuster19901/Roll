@@ -2,10 +2,8 @@ package com.gamebuster19901.excite.bot.graphics.dice;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import com.gamebuster19901.excite.bot.game.Dice;
-import com.gamebuster19901.excite.bot.game.Die;
 import com.gamebuster19901.excite.bot.game.Roll;
 import com.gamebuster19901.excite.bot.graphics.Theme;
 import com.gamebuster19901.excite.bot.graphics.Themed;
@@ -18,17 +16,13 @@ public abstract class DieGraphicBuilder {
 	protected int height;
 	protected Roll roll;
 	protected Dice dice;
-	protected List<Die> allDice;
-	protected int dieCount;
 	protected Theme theme;
 	
 	public DieGraphicBuilder(Themed theme, Roll roll) {
 		this.roll = roll;
 		this.dice = roll.getDice();
-		allDice = dice.getAllDice();
-		dieCount = allDice.size();
-		rows = (int)Math.ceil(Math.abs((double)dieCount) / 10);
-		columns = dieCount;
+		rows = (int)Math.ceil(Math.abs((double)roll.getDieCount()) / 10);
+		columns = roll.getDieCount();
 		if(columns > 10) {
 			columns = 10;
 		}

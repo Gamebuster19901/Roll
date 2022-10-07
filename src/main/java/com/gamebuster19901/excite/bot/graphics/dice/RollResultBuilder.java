@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -21,17 +22,20 @@ public class RollResultBuilder extends DieGraphicBuilder {
 	public ByteArrayOutputStream buildImage() throws IOException {
 		ByteArrayOutputStream ret = new ByteArrayOutputStream(4194304);//4MiB
 		BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Die die;
+		Entry<Die, Integer> die;
 		BufferedImage dieImage = null;
-		if(allDice.size() > 1000) {
+		if(roll.getDieCount() <= 0) {
+			throw new AssertionError("Zero dice?!");
+		}
+		if(roll.getDieCount() > 1000) {
 			throw new IllegalArgumentException("Too many dice");
 		}
 		DieTheme dieTheme = theme.getDieTheme();
-		for(int d = 0; d < allDice.size(); d++) {
+		for(int d = 0; d < roll.getDieCount(); d++) {
 			int x = d % 10;
 			int y = d / 10;
-			die = allDice.get(d);
-			dieImage = dieTheme.renderDie(roll, allDice.get(d));
+			die = roll.getValue(d);
+			dieImage = dieTheme.renderDie(roll, die);
 
 
 			if(dieTheme.isDebug()) {

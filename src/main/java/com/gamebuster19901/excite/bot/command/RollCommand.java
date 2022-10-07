@@ -29,9 +29,9 @@ public class RollCommand {
 					SlashCommandInteractionEvent e = c.getEvent(SlashCommandInteractionEvent.class);
 					Dice dice = context.getArgument("dice", Dice.class);
 					try {
-						int result = dice.getValue();
-						c.getEmbed().appendDescription("\n\nResult: " + result);
 						Roll roll = new Roll(dice);
+						int result = roll.getValue();
+						c.getEmbed().appendDescription("\n\nResult: " + result);
 						DieGraphicBuilder graphic = new RollResultBuilder(Theme.DEFAULT_THEME, roll);
 						PipedInputStream in = new PipedInputStream();
 	
@@ -48,7 +48,7 @@ public class RollCommand {
 							.setFiles(FileUpload.fromData(in, "test.png"))
 							.setEmbeds(c.getEmbed().setDescription("Rolling " + roll.getDice())
 								.setImage("attachment://test.png")
-								.setFooter("Result: " + roll.getDice().getValue() + ". Min: " + roll.getDice().getMinValue() + " Max: " + roll.getDice().getMaxValue())
+								.setFooter("Result: " + result + ". Min: " + roll.getMinValue() + " Max: " + roll.getMaxValue())
 								.build());
 						if(roll.isSortable()) {
 							action.addActionRow(Button.primary("Sort", "Sort Dice"), Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));

@@ -121,14 +121,6 @@ public class Dice {
 		return dice;
 	}
 	
-	public int getValue() {
-		int ret = 0;
-		for(Die die : getAllDice()) {
-			ret += die.getValue();
-		}
-		return ret;
-	}
-	
 	public int getMaxValue() {
 		int ret = 0;
 		for(Die die : getAllDice()) {

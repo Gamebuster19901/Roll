@@ -8,6 +8,7 @@ import java.awt.font.GlyphVector;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -39,10 +40,12 @@ public class DieTheme {
 		this.debug = debug;
 	}
 	
-	public BufferedImage renderDie(Roll roll, Die die) throws IOException {
+	public BufferedImage renderDie(Roll roll, Entry<Die, Integer> dieResult) throws IOException {
 		BufferedImage dieImage = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = (Graphics2D) dieImage.getGraphics();
 		int maxSize = 256;
+		Die die = dieResult.getKey();
+		int value = dieResult.getValue();
 		switch(die.getDieType()) {
 			case d10:
 			case d12:
@@ -56,18 +59,18 @@ public class DieTheme {
 				
 				g.setColor(getTextColor());
 				
-				if(die.getSides() > -1 && die.getSides() == die.getValue()) {
+				if(die.getSides() > -1 && value == die.getMaxValue()) {
 					g.setColor(getGoodColor());
 				}
-				else if(die.getValue() == 1 || die.getValue() < 0) {
+				else if(value == 1 || value < 0) {
 					g.setColor(getBadColor());
 				}
 				
-				renderText(g, die.getValue() + "", die.getDieType().getOffsetX(), die.getDieType().getOffsetY(), maxSize, maxSize);
+				renderText(g, value + "", die.getDieType().getOffsetX(), die.getDieType().getOffsetY(), maxSize, maxSize);
 				break;
 			case modifier:
 				g.setColor(getTextColor());
-				renderText(g, die.getValue() > -1 ? "+" + die.getValue() : die.getValue() + "", 0, 0, maxSize, maxSize);
+				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, maxSize, maxSize);
 				break;
 			case other:
 			case d100:
@@ -76,14 +79,14 @@ public class DieTheme {
 				g = (Graphics2D) dieImage.getGraphics();
 				g.setColor(getTextColor());
 				if(Math.abs(die.getSides()) > 2) { //so coin tosses are not always red/green
-					if(die.getSides() > -1 && die.getSides() == die.getValue()) {
+					if(die.getSides() > -1 && die.getSides() == value) {
 						g.setColor(getGoodColor());
 					}
-					else if(die.getValue() == 1 || die.getValue() < 0) {
+					else if(value == 1 || value < 0) {
 						g.setColor(getBadColor());
 					}
 				}
-				renderText(g, die.getValue() > -1 ? "+" + die.getValue() : die.getValue() + "", 0, 0, 211, 211);
+				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, 211, 211);
 				g.setColor(Color.YELLOW);
 				if(die.getSides() > 0) {
 					renderText(g, "d" + die.getSides(), 0, 100, 256, 45);

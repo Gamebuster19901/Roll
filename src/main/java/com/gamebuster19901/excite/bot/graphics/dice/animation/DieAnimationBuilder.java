@@ -3,6 +3,8 @@ package com.gamebuster19901.excite.bot.graphics.dice.animation;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map.Entry;
+
 import javax.imageio.ImageIO;
 
 import com.gamebuster19901.excite.bot.game.Die;
@@ -22,14 +24,15 @@ public class DieAnimationBuilder extends DieGraphicBuilder{
 		ByteArrayOutputStream ret = new ByteArrayOutputStream(4194304);//4MiB
 		BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		GifWriter writer = new GifWriter(ret, BufferedImage.TYPE_INT_RGB, 1, true);
-		Die die;
+		Entry<Die, Integer> rolledDie;
 		BufferedImage dieImage;
 		for(int i = 0; i < 72; i++) { //24fps for 3 seconds = 72 frames
 			BufferedImage frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-			for(int d = 0; d < allDice.size(); d++) {
+			for(int d = 0; d < roll.getDieCount(); d++) {
 				int x = d % 10;
 				int y = d / 10;
-				die = allDice.get(d);
+				rolledDie = roll.getValue(d);
+				Die die = rolledDie.getKey();
 				if(getClass().getResourceAsStream("/com/gamebuster19901/roll/" + die.getDieType() + "/" + die.getSpin() + "/" + fileNo(i) + ".png") == null) {
 					throw new AssertionError("Could not find " + "/com/gamebuster19901/roll/" + die.getDieType() + "/" + die.getSpin() + "/" + fileNo(i) + ".png");
 				}

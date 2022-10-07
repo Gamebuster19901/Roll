@@ -5,17 +5,12 @@ public class Value extends Die {
 	public Value(int value) {
 		super(value);
 	}
-	
-	@Override
-	public int getValue() {
-		return sides;
-	}
 
 	public String toString() {
-		if(getValue() > -1) {
-			return "+" + getValue();
+		if(sides > -1) {
+			return "+" + sides;
 		}
-		return ""+ getValue();
+		return ""+ sides;
 	}
 	
 	public int getMaxValue() {
