@@ -33,10 +33,13 @@ public class DieAnimationBuilder extends DieGraphicBuilder{
 				int y = d / 10;
 				rolledDie = roll.getValue(d);
 				Die die = rolledDie.getKey();
-				if(getClass().getResourceAsStream("/com/gamebuster19901/roll/" + die.getDieType() + "/" + die.getSpin() + "/" + fileNo(i) + ".png") == null) {
-					throw new AssertionError("Could not find " + "/com/gamebuster19901/roll/" + die.getDieType() + "/" + die.getSpin() + "/" + fileNo(i) + ".png");
+				Rotation rotation = Rotation.randRotation();
+				Spin spin = Spin.randSpin();
+
+				if(getClass().getResourceAsStream("/com/gamebuster19901/roll/" + die.getDieType() + "/" + spin + "/" + fileNo(i) + ".png") == null) {
+					throw new AssertionError("Could not find " + "/com/gamebuster19901/roll/" + die.getDieType() + "/" + spin + "/" + fileNo(i) + ".png");
 				}
-				dieImage = ImageIO.read(getClass().getResourceAsStream("/com/gamebuster19901/roll/" + die.getDieType() + "/" + die.getSpin() + "/" + fileNo(i) + ".png"));
+				dieImage = ImageIO.read(getClass().getResourceAsStream("/com/gamebuster19901/roll/" + die.getDieType() + "/" + spin + "/" + fileNo(i) + ".png"));
 				frame.getGraphics().drawImage(dieImage, x * 256, y * 256, null);
 				System.out.println("Width" + width);
 				System.out.println("Height" + height);
