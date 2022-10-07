@@ -9,11 +9,12 @@ import javax.imageio.ImageIO;
 
 import com.gamebuster19901.excite.bot.game.Die;
 import com.gamebuster19901.excite.bot.game.Roll;
+import com.gamebuster19901.excite.bot.graphics.Themed;
 
 public class RollResultBuilder extends DieGraphicBuilder {
 	
-	public RollResultBuilder(Roll roll) {
-		super(roll);
+	public RollResultBuilder(Themed theme, Roll roll) {
+		super(theme, roll);
 	}
 
 	@Override
@@ -25,17 +26,17 @@ public class RollResultBuilder extends DieGraphicBuilder {
 		if(allDice.size() > 1000) {
 			throw new IllegalArgumentException("Too many dice");
 		}
-		DieTheme theme = roll.getTheme().getDieTheme();
+		DieTheme dieTheme = theme.getDieTheme();
 		for(int d = 0; d < allDice.size(); d++) {
 			int x = d % 10;
 			int y = d / 10;
 			die = allDice.get(d);
-			dieImage = theme.renderDie(roll, allDice.get(d));
+			dieImage = dieTheme.renderDie(roll, allDice.get(d));
 
 
-			if(theme.isDebug()) {
+			if(dieTheme.isDebug()) {
 				Graphics2D g = (Graphics2D) out.getGraphics();
-				g.setColor(theme.getDebugOutline());
+				g.setColor(dieTheme.getDebugOutline());
 				g.drawRect(0, 0, 255, 255);
 			}
 			

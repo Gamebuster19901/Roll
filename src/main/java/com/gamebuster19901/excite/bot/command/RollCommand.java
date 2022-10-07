@@ -7,6 +7,7 @@ import java.io.PipedOutputStream;
 import com.gamebuster19901.excite.bot.command.argument.DiceArgumentType;
 import com.gamebuster19901.excite.bot.game.Dice;
 import com.gamebuster19901.excite.bot.game.Roll;
+import com.gamebuster19901.excite.bot.graphics.Theme;
 import com.gamebuster19901.excite.bot.graphics.dice.DieGraphicBuilder;
 import com.gamebuster19901.excite.bot.graphics.dice.RollResultBuilder;
 import com.mojang.brigadier.CommandDispatcher;
@@ -31,7 +32,7 @@ public class RollCommand {
 						int result = dice.getValue();
 						c.getEmbed().appendDescription("\n\nResult: " + result);
 						Roll roll = new Roll(dice);
-						DieGraphicBuilder graphic = new RollResultBuilder(roll);
+						DieGraphicBuilder graphic = new RollResultBuilder(Theme.DEFAULT_THEME, roll);
 						PipedInputStream in = new PipedInputStream();
 	
 						PipedOutputStream out = new PipedOutputStream(in);

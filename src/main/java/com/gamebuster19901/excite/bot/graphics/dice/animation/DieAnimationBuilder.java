@@ -7,13 +7,14 @@ import javax.imageio.ImageIO;
 
 import com.gamebuster19901.excite.bot.game.Die;
 import com.gamebuster19901.excite.bot.game.Roll;
+import com.gamebuster19901.excite.bot.graphics.Themed;
 import com.gamebuster19901.excite.bot.graphics.dice.DieGraphicBuilder;
 
 @Deprecated
 public class DieAnimationBuilder extends DieGraphicBuilder{
 	
-	public DieAnimationBuilder(Roll roll) {
-		super(roll);
+	public DieAnimationBuilder(Themed theme, Roll roll) {
+		super(theme, roll);
 	}
 	
 	@Override

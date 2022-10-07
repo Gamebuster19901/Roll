@@ -1,29 +1,44 @@
 package com.gamebuster19901.excite.bot.game;
 
-import com.gamebuster19901.excite.bot.graphics.Theme;
-import com.gamebuster19901.excite.bot.graphics.Themed;
+import java.util.ArrayList;
 
 public class Roll {
 	
-	private final Theme theme;
 	private final Dice dice;
+	private final ArrayList<Die> result = new ArrayList<Die>();
 	
 	public Roll(Dice dice) {
-		this(Theme.DEFAULT_THEME, dice);
-	}
-
-	public Roll(Themed theme, Dice dice) {
-		this.theme = theme.getTheme();
 		this.dice = dice;
-		dice.roll();
+		roll();
+	}
+	
+	public void roll() {
+		if(result.isEmpty()) {
+			if(dice.die > 0) {
+				for(int i = 0; i < Math.abs(dice.amount); i++) {
+					if(dice.amount > 0) {
+						result.add(new Die(dice.die));
+					}
+					else {
+						result.add(new Die(-dice.die));
+					}
+				}
+			}
+			else if(dice.die == 0) {
+				result.add(new Value(dice.amount));
+			}
+			if(dice.hasChild()) {
+				Roll childRoll = new Roll(dice.child);
+				result.addAll(childRoll.result);
+			}
+		}
+		else {
+			throw new IllegalStateException("Dice already rolled!");
+		}
 	}
 
 	public Dice getDice() {
 		return dice;
-	}
-
-	public Theme getTheme() {
-		return theme;
 	}
 	
 	public boolean isSortable() {

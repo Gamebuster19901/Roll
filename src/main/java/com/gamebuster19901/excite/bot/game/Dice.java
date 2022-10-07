@@ -17,7 +17,7 @@ public class Dice {
 	final int amount;
 	final int die;
 	Dice child;
-	List<Die> roll = new ArrayList<>();
+	List<Die> dice = new ArrayList<>();
 	
 	public Dice(String s) {
 		this(s, 0);
@@ -67,6 +67,7 @@ public class Dice {
 			if(!matcher.hitEnd()) {
 				child = new Dice(matcher, cursor + matcher.end());
 			}
+			group();
 		}
 		catch(Throwable t) {
 			if(t instanceof DieParseException) {
@@ -85,37 +86,35 @@ public class Dice {
 		return child;
 	}
 	
-	public void roll() {
-		if(roll.isEmpty()) {
+	public void group() {
+		if(dice.isEmpty()) {
 			if(die > 0) {
 				for(int i = 0; i < Math.abs(amount); i++) {
 					if(amount > 0) {
-						roll.add(new Die(die));
+						dice.add(new Die(die));
 					}
 					else {
-						roll.add(new Die(-die));
+						dice.add(new Die(-die));
 					}
 				}
 			}
 			else if(die == 0) {
-				roll.add(new Value(amount));
-			}
-			if(child != null) {
-				child.roll();
+				dice.add(new Value(amount));
 			}
 		}
 		else {
-			throw new IllegalStateException("Dice already rolled!");
+			throw new IllegalStateException("Dice already grouped!");
 		}
 	}
 	
+	@Deprecated
 	public List<Die> getDice() {
-		return roll;
+		return dice;
 	}
 	
 	public List<Die> getAllDice() {
 		ArrayList<Die> dice = new ArrayList<>();
-		dice.addAll(roll);
+		dice.addAll(this.dice);
 		if(hasChild()) {
 			dice.addAll(child.getAllDice());
 		}
@@ -170,7 +169,7 @@ public class Dice {
 	public String toDebugString() {
 		StringBuilder ret = new StringBuilder();
 		ret.append('<');
-		for(Die die : roll) {
+		for(Die die : dice) {
 			ret.append("[" + die + "] ");
 		}
 		ret.append('>');

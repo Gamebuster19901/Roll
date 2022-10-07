@@ -7,6 +7,8 @@ import java.util.List;
 import com.gamebuster19901.excite.bot.game.Dice;
 import com.gamebuster19901.excite.bot.game.Die;
 import com.gamebuster19901.excite.bot.game.Roll;
+import com.gamebuster19901.excite.bot.graphics.Theme;
+import com.gamebuster19901.excite.bot.graphics.Themed;
 
 public abstract class DieGraphicBuilder {
 
@@ -18,8 +20,9 @@ public abstract class DieGraphicBuilder {
 	protected Dice dice;
 	protected List<Die> allDice;
 	protected int dieCount;
+	protected Theme theme;
 	
-	public DieGraphicBuilder(Roll roll) {
+	public DieGraphicBuilder(Themed theme, Roll roll) {
 		this.roll = roll;
 		this.dice = roll.getDice();
 		allDice = dice.getAllDice();
@@ -39,8 +42,10 @@ public abstract class DieGraphicBuilder {
 		}
 		height = rows * 256;
 		
-		//System.out.println("Rows: " + rows);
-		//System.out.println("Columns: " + columns);
+		this.theme = theme.getTheme();
+		
+		System.out.println("Rows: " + rows);
+		System.out.println("Columns: " + columns);
 	}
 	
 	public abstract ByteArrayOutputStream buildImage() throws IOException;
