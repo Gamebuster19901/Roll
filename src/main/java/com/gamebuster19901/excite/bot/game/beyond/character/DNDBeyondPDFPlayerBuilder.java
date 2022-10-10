@@ -1,4 +1,4 @@
-package com.gamebuster19901.excite.bot.game.character;
+package com.gamebuster19901.excite.bot.game.beyond.character;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +7,7 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gamebuster19901.excite.bot.game.character.PlayerBuilder;
 import com.gamebuster19901.excite.util.pdf.PDFText;
 
 public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {

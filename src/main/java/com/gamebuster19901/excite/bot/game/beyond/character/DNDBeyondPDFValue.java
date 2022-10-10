@@ -1,4 +1,4 @@
-package com.gamebuster19901.excite.bot.game.character;
+package com.gamebuster19901.excite.bot.game.beyond.character;
 
 public enum DNDBeyondPDFValue {
 
