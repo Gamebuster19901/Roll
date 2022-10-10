@@ -84,7 +84,7 @@ public class PlayerBuilder {
 	}
 	
 	public PlayerCharacter build() {
-		return new PlayerCharacter();
+		return new PlayerCharacter(name);
 	}
 	
 }
