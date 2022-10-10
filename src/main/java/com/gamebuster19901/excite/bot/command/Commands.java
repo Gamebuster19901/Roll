@@ -16,6 +16,7 @@ public class Commands {
 	public Commands() {
 		HelpCommand.register(dispatcher);
 		RollCommand.register(dispatcher);
+		CharacterCommand.register(dispatcher);
 	}
 	
 	public static LiteralArgumentBuilder<CommandContext> literal(String name) {
