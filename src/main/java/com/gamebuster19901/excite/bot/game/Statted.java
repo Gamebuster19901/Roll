@@ -1,7 +1,7 @@
 package com.gamebuster19901.excite.bot.game;
 
 import com.gamebuster19901.excite.bot.game.stat.Ability;
-import com.gamebuster19901.excite.bot.game.stat.Proficiency;
+import com.gamebuster19901.excite.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.excite.bot.game.stat.Skill;
 
 public interface Statted {
@@ -14,11 +14,11 @@ public interface Statted {
 	
 	public int getModifier(Ability ability);
 	
-	public Proficiency getProficiency(Ability ability);
+	public ProficiencyLevel getProficiency(Ability ability);
 	
 	public int getModifier(Skill skill);
 	
-	public Proficiency getProficiency(Skill skill);
+	public ProficiencyLevel getProficiency(Skill skill);
 	
 	public int getHP();
 	
@@ -28,7 +28,7 @@ public interface Statted {
 	
 	public int getTempHP();
 	
-	public int getSpeed(SpeedType speedType);
+	public int getSpeed(MovementType speedType);
 	
 	public int getAC();
 	

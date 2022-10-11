@@ -2,46 +2,51 @@ package com.gamebuster19901.excite.bot.game.stat;
 
 import static com.gamebuster19901.excite.bot.game.stat.Ability.*;
 
-public class Skill {
+import com.gamebuster19901.excite.bot.game.Proficientable;
+import com.gamebuster19901.excite.bot.game.Statistic;
+import com.gamebuster19901.excite.bot.game.character.Proficiency;
+import com.gamebuster19901.excite.bot.game.character.Stat;
+
+public class Skill implements Statistic, Proficientable {
 	
-	public static final Skill ACROBATICS = new Skill("Acrobatics", DEXTERITY);
-	public static final Skill ANIMAL_HANDLING = new Skill("Animal Handling", WISDOM);
-	public static final Skill ARCANA = new Skill("Arcana", INTELLIGENCE);
-	public static final Skill ATHLETICS = new Skill("Athletics", STRENGTH);
-	public static final Skill DECEPTION = new Skill("Deception", CHARISMA);
-	public static final Skill HISTORY = new Skill("History", INTELLIGENCE);
-	public static final Skill INSIGHT = new Skill("Insight", WISDOM);
-	public static final Skill INTIMIDATION = new Skill("Intimidation", CHARISMA);
-	public static final Skill INVESTIGATION  = new Skill("Investigation", INTELLIGENCE);
-	public static final Skill MEDICINE = new Skill("Medicine", WISDOM);
-	public static final Skill NATURE = new Skill("Nature", INTELLIGENCE);
-	public static final Skill PERCEPTION = new Skill("Perception", WISDOM);
-	public static final Skill PERFORMANCE = new Skill("Performance", CHARISMA);
-	public static final Skill PERSUASION = new Skill("Persuasion", CHARISMA);
-	public static final Skill RELIGION = new Skill("Religion", INTELLIGENCE);
-	public static final Skill SLIGHT_OF_HAND = new Skill("Slight of Hand", DEXTERITY);
-	public static final Skill STEALTH = new Skill("Stealth", DEXTERITY);
-	public static final Skill SURVIVAL = new Skill("Survival", WISDOM);
+	public static final Skill Acrobatics = new Skill("Acrobatics", Dexterity);
+	public static final Skill Animal_Handling = new Skill("Animal Handling", Wisdom);
+	public static final Skill Arcana = new Skill("Arcana", Intelligence);
+	public static final Skill Athletics = new Skill("Athletics", Strength);
+	public static final Skill Deception = new Skill("Deception", Charisma);
+	public static final Skill History = new Skill("History", Intelligence);
+	public static final Skill Insight = new Skill("Insight", Wisdom);
+	public static final Skill Intimidation = new Skill("Intimidation", Charisma);
+	public static final Skill Investigation  = new Skill("Investigation", Intelligence);
+	public static final Skill Medicine = new Skill("Medicine", Wisdom);
+	public static final Skill Nature = new Skill("Nature", Intelligence);
+	public static final Skill Perception = new Skill("Perception", Wisdom);
+	public static final Skill Performance = new Skill("Performance", Charisma);
+	public static final Skill Persuasion = new Skill("Persuasion", Charisma);
+	public static final Skill Religion = new Skill("Religion", Intelligence);
+	public static final Skill Sleight_of_Hand = new Skill("Slight of Hand", Dexterity);
+	public static final Skill Stealth = new Skill("Stealth", Dexterity);
+	public static final Skill Survival = new Skill("Survival", Wisdom);
 	
 	public static final Skill[] DEFAULT_SKILLS = new Skill[] {
-		ACROBATICS,
-		ANIMAL_HANDLING,
-		ARCANA,
-		ATHLETICS,
-		DECEPTION,
-		HISTORY,
-		INSIGHT,
-		INTIMIDATION,
-		INVESTIGATION,
-		MEDICINE,
-		NATURE,
-		PERCEPTION,
-		PERFORMANCE,
-		PERSUASION,
-		RELIGION,
-		SLIGHT_OF_HAND,
-		STEALTH,
-		SURVIVAL
+		Acrobatics,
+		Animal_Handling,
+		Arcana,
+		Athletics,
+		Deception,
+		History,
+		Insight,
+		Intimidation,
+		Investigation,
+		Medicine,
+		Nature,
+		Perception,
+		Performance,
+		Persuasion,
+		Religion,
+		Sleight_of_Hand,
+		Stealth,
+		Survival
 	};
 	
 	final String name;
@@ -62,6 +67,15 @@ public class Skill {
 	
 	public Ability getAbility() {
 		return ability;
+	}
+	
+	public Stat getStat() {
+		return Stat.of(this);
+	}
+
+	@Override
+	public Stat getProficiencyStat() {
+		return Proficiency.of(this);
 	}
 	
 }

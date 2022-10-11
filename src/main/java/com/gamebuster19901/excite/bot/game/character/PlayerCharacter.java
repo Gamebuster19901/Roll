@@ -1,9 +1,9 @@
 package com.gamebuster19901.excite.bot.game.character;
 
-import com.gamebuster19901.excite.bot.game.SpeedType;
+import com.gamebuster19901.excite.bot.game.MovementType;
 import com.gamebuster19901.excite.bot.game.Statted;
 import com.gamebuster19901.excite.bot.game.stat.Ability;
-import com.gamebuster19901.excite.bot.game.stat.Proficiency;
+import com.gamebuster19901.excite.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.excite.bot.game.stat.Skill;
 
 public class PlayerCharacter implements Statted {
@@ -38,7 +38,7 @@ public class PlayerCharacter implements Statted {
 	}
 
 	@Override
-	public Proficiency getProficiency(Ability ability) {
+	public ProficiencyLevel getProficiency(Ability ability) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -50,7 +50,7 @@ public class PlayerCharacter implements Statted {
 	}
 
 	@Override
-	public Proficiency getProficiency(Skill skill) {
+	public ProficiencyLevel getProficiency(Skill skill) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -80,7 +80,7 @@ public class PlayerCharacter implements Statted {
 	}
 
 	@Override
-	public int getSpeed(SpeedType speedType) {
+	public int getSpeed(MovementType speedType) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

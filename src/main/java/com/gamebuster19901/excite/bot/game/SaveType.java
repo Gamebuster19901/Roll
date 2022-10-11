@@ -2,15 +2,16 @@ package com.gamebuster19901.excite.bot.game;
 
 import static com.gamebuster19901.excite.bot.game.stat.Ability.*;
 
+import com.gamebuster19901.excite.bot.game.character.Stat;
 import com.gamebuster19901.excite.bot.game.stat.Ability;
 
-public enum SaveType {
-		STRENGTH_SAVE(STRENGTH),
-		DEXTERITY_SAVE(DEXTERITY),
-		CONSTITUTION_SAVE(DEXTERITY),
-		INTELLIGENCE_SAVE(INTELLIGENCE),
-		WISDOM_SAVE(WISDOM),
-		CHARISMA_SAVE(CHARISMA),
+public enum SaveType implements Statistic {
+		STRENGTH_SAVE(Strength),
+		DEXTERITY_SAVE(Dexterity),
+		CONSTITUTION_SAVE(Constitution),
+		INTELLIGENCE_SAVE(Intelligence),
+		WISDOM_SAVE(Wisdom),
+		CHARISMA_SAVE(Charisma),
 		DEATH_SAVE("Death")
 	;
 
@@ -25,6 +26,11 @@ public enum SaveType {
 	SaveType(String name) {
 		this.name =  name;
 		this.ability = null;
+	}
+
+	@Override
+	public Stat getStat() {
+		return new Stat(name + " Saving Throw");
 	}
 	
 }
