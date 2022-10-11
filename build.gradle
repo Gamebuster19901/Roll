@@ -59,7 +59,7 @@ jar {
 		attributes(
 			'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
 			'MixinConfigs': 'mixins.json',
-			'Main-Class': 'com.gamebuster19901.excite.Main',
+			'Main-Class': 'com.gamebuster19901.roll.Main',
 			'Specification-Version': 8.0,
 			'Multi-Release': 'true'
 		)
