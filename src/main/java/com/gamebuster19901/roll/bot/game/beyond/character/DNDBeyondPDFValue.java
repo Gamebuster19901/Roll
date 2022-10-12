@@ -22,7 +22,7 @@ public enum DNDBeyondPDFValue {
 	EXP("EXPERIENCE POINTS", Stat.EXP, (text) -> {
 		return text.toString().contains("Milestone") 
 				? text.toString() : 
-					Integer.parseInt(text.toString());}),
+					INTEGER.getFunction().apply(text);}),
 	
 	/**
 	 * Yes, the D&D Beyond people named the fields in the PDF incorrectly,
@@ -157,7 +157,7 @@ public enum DNDBeyondPDFValue {
 	
 	static enum FunctionType {
 			STRING((text) -> {return text.toString();}),
-			INTEGER((text) -> {return text.toString().replace("-", "").isEmpty() ? 0 : Integer.parseInt(text.toString());}),
+			INTEGER((text) -> {return text.toString().replace("-", "").isEmpty() ? 0 : Integer.parseInt(text.toString().replace(",", ""));}),
 			BOOL_NONEMPTY((text) -> {return !text.toString().isBlank();}),
 			PROFICIENCY_BOOL((text) -> {return text.toString().isBlank() ? NOT_PROFICIENT : PROFICIENT;}),
 			PROFICIENCY_CHAR((text) -> {
