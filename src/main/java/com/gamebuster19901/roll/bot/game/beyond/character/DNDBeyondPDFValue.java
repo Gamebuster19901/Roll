@@ -43,12 +43,12 @@ public enum DNDBeyondPDFValue {
 	WIS_MOD("WIS", Wisdom.getModStat(), INTEGER),
 	CHA_MOD("CHA", Charisma.getModStat(), INTEGER),
 	
-	STR_PROF("StrProf", Strength.getProficiencyStat(), BOOL_NONEMPTY),
-	DEX_PROF("DexProf", Dexterity.getProficiencyStat(), BOOL_NONEMPTY),
-	CON_PROF("ConProf", Constitution.getProficiencyStat(), BOOL_NONEMPTY),
-	INT_PROF("IntProf", Intelligence.getProficiencyStat(), BOOL_NONEMPTY),
-	WIS_PROF("WisProf", Wisdom.getProficiencyStat(), BOOL_NONEMPTY),
-	CHA_PROF("ChaProf", Charisma.getProficiencyStat(), BOOL_NONEMPTY),
+	STR_PROF("StrProf", Strength.getProficiencyStat(), PROFICIENCY_BOOL),
+	DEX_PROF("DexProf", Dexterity.getProficiencyStat(), PROFICIENCY_BOOL),
+	CON_PROF("ConProf", Constitution.getProficiencyStat(), PROFICIENCY_BOOL),
+	INT_PROF("IntProf", Intelligence.getProficiencyStat(), PROFICIENCY_BOOL),
+	WIS_PROF("WisProf", Wisdom.getProficiencyStat(), PROFICIENCY_BOOL),
+	CHA_PROF("ChaProf", Charisma.getProficiencyStat(), PROFICIENCY_BOOL),
 	
 	SAVING_STR("ST Strength", CHARISMA_SAVE.getStat(), INTEGER),
 	SAVING_DEX("ST Dexterity", DEXTERITY_SAVE.getStat(), INTEGER),
