@@ -9,16 +9,18 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.Interaction;
 
-public class CommandContext<E>{
+public class CommandContext<E> {
 	
 	private E event;
 	private EmbedBuilder embedBuilder;
 	
 	public CommandContext(E e) {
-		if(e instanceof MessageReceivedEvent || e instanceof SlashCommandInteractionEvent) {
+		if(e instanceof MessageReceivedEvent || e instanceof SlashCommandInteractionEvent || e instanceof ModalInteractionEvent) {
 			this.event = e;
 		}
 		else {
@@ -26,28 +28,14 @@ public class CommandContext<E>{
 		}
 	}
 	
-	public CommandContext(E e, String message) {
-		this(e);
-		long id = 0;
-		if(e instanceof MessageReceivedEvent) {
-			id = ((MessageReceivedEvent) e).getMessageIdLong();
-		}
-
-	}
-	
 	public User getAuthor() {
 		if(event instanceof MessageReceivedEvent) {
 			return ((MessageReceivedEvent) event).getAuthor();
 		}
-		else if (event instanceof SlashCommandInteractionEvent) {
-			return ((SlashCommandInteractionEvent) event).getUser();
+		else if (event instanceof Interaction) {
+			return ((Interaction) event).getUser();
 		}
 		throw new AssertionError();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public CommandContext() {
-		this.event = null;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -72,6 +60,11 @@ public class CommandContext<E>{
 			else if (event instanceof SlashCommandInteractionEvent) {
 				for(String submessage : MessageUtil.toMessages(message)) {
 					((SlashCommandInteractionEvent) event).reply(submessage).complete();
+				}
+			}
+			else if (event instanceof ModalInteractionEvent) {
+				for(String submessage : MessageUtil.toMessages(message)) {
+					((ModalInteractionEvent)event).reply(submessage).complete();
 				}
 			}
 		}

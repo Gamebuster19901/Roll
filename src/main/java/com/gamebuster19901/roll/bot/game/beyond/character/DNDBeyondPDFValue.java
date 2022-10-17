@@ -8,9 +8,11 @@ import static com.gamebuster19901.roll.bot.game.stat.Skill.*;
 
 import java.util.function.Function;
 
+import com.gamebuster19901.roll.bot.command.exception.ParseExceptions;
 import com.gamebuster19901.roll.bot.game.Dice;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.util.pdf.PDFText;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 public enum DNDBeyondPDFValue {
 
@@ -218,8 +220,13 @@ public enum DNDBeyondPDFValue {
 		return stat;
 	}
 	
-	public Object parse(PDFText text) {
-		return function.apply(text);
+	public Object parse(PDFText text) throws CommandSyntaxException {
+		try {
+			return function.apply(text);
+		}
+		catch(Throwable t) {
+			throw ParseExceptions.UNABLE_TO_PARSE_PDF_VALUE.create(text.getName(), text.toString(), t);
+		}
 	}
 	
 	public static DNDBeyondPDFValue getValueType(PDFText text) {

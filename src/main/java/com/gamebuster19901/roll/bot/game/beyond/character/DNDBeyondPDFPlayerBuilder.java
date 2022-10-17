@@ -10,12 +10,13 @@ import java.util.regex.Pattern;
 import com.gamebuster19901.roll.bot.game.character.PlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.util.pdf.PDFText;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 
 	public static final Pattern PDF_OBJECT_PATTERN = Pattern.compile("\\d* \\d* obj.*?endobj", Pattern.DOTALL);
 	
-	public DNDBeyondPDFPlayerBuilder(String charSheet) {
+	public DNDBeyondPDFPlayerBuilder(String charSheet) throws CommandSyntaxException {
 		try {
 			if(!charSheet.startsWith("https://")) {
 				charSheet = charSheet + "https://";

@@ -5,10 +5,12 @@ import java.util.List;
 
 import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Commands;
+import com.gamebuster19901.roll.bot.command.interaction.Interactions;
 import com.gamebuster19901.roll.util.StacktraceUtil;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -40,7 +42,6 @@ public class EventReceiver extends ListenerAdapter {
 	public void onGuildReady(GuildReadyEvent e) {
 		List<CommandData> commands = new ArrayList<>();
 		Commands.DISPATCHER.getDispatcher().getRoot().getChildren().forEach((command) -> {
-		
 			SlashCommandData data = net.dv8tion.jda.api.interactions.commands.build.Commands.slash(command.getName(), command.getUsageText());
 			
 			if(command.getChildren().size() > 0) {
@@ -50,7 +51,18 @@ public class EventReceiver extends ListenerAdapter {
 			commands.add(data);
 			System.out.println(command.getUsageText());
 		});
+		Interactions.DISPATCHER.getDispatcher(); //initialize interactions
+		
 		e.getGuild().updateCommands().addCommands(commands).queue();
+	}
+	
+	@Override
+	public void onModalInteraction(ModalInteractionEvent e) {
+		try {
+			Interactions.execute(e);
+		} catch (CommandSyntaxException e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 }

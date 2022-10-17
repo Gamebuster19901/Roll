@@ -1,5 +1,10 @@
-package com.gamebuster19901.roll.bot.command;
+package com.gamebuster19901.roll.bot.command.interaction;
 
+import java.util.List;
+
+import com.gamebuster19901.roll.bot.command.CommandContext;
+import com.gamebuster19901.roll.bot.command.Dispatcher;
+import com.gamebuster19901.roll.bot.command.ImportCharacterCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -7,15 +12,35 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-@SuppressWarnings("rawtypes")
-public class Commands {
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.Component.Type;
+import net.dv8tion.jda.api.interactions.modals.ModalMapping;
+
+public class Interactions {
+
 	private final CommandDispatcher<CommandContext> dispatcher = new Dispatcher();
-	public static final Commands DISPATCHER = new Commands();
+	public static final Interactions DISPATCHER = new Interactions();
 	
-	public Commands() {
-		HelpCommand.register(dispatcher);
-		RollCommand.register(dispatcher);
+	public Interactions() {
 		ImportCharacterCommand.register(dispatcher);
+	}
+	
+	public static void execute(ModalInteractionEvent e) throws CommandSyntaxException {
+		List<ModalMapping> arguments = e.getValues();
+		StringBuilder command = new StringBuilder(e.getModalId());
+		for(ModalMapping arg : arguments) {
+			command.append(' ');
+			if(arg.getType() == Type.TEXT_INPUT) {
+				command.append(arg.getAsString());
+			}
+			else if (arg.getType() == Type.BUTTON) {
+				command.append(arg.getId());
+			}
+			else if (arg.getType() == Type.SELECT_MENU) {
+				command.append(arg.getId());
+			}
+		}
+		DISPATCHER.getDispatcher().execute(command.toString(), new CommandContext(e));
 	}
 	
 	public static LiteralArgumentBuilder<CommandContext> literal(String name) {
