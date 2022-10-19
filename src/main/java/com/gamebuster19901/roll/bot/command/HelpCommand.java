@@ -6,7 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class HelpCommand {
+class HelpCommand {
 
 	@SuppressWarnings("rawtypes")
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {

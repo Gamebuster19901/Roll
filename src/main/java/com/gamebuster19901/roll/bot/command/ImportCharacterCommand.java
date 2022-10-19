@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 
-public class ImportCharacterCommand {
+class ImportCharacterCommand {
 
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.literal("importcharacter")

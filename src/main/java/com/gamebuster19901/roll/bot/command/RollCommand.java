@@ -18,7 +18,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 
-public class RollCommand {
+class RollCommand {
 
 	@SuppressWarnings("rawtypes")
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
