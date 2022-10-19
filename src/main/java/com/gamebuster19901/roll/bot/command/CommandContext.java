@@ -2,17 +2,21 @@ package com.gamebuster19901.roll.bot.command;
 
 import java.time.Instant;
 
-import com.gamebuster19901.roll.bot.database.sql.DatabaseConnection;
-import com.gamebuster19901.roll.util.MessageUtil;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.Interaction;
+import net.dv8tion.jda.api.interactions.callbacks.IMessageEditCallback;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 public class CommandContext<E> {
 	
@@ -20,14 +24,14 @@ public class CommandContext<E> {
 	private EmbedBuilder embedBuilder;
 	
 	public CommandContext(E e) {
-		if(e instanceof MessageReceivedEvent || e instanceof SlashCommandInteractionEvent || e instanceof ModalInteractionEvent) {
+		if(e instanceof MessageReceivedEvent || e instanceof SlashCommandInteractionEvent || e instanceof ModalInteractionEvent || e instanceof ButtonInteractionEvent) {
 			this.event = e;
 		}
 		else {
 			throw new IllegalArgumentException(e.getClass().getCanonicalName());
 		}
 	}
-	
+
 	public User getAuthor() {
 		if(event instanceof MessageReceivedEvent) {
 			return ((MessageReceivedEvent) event).getAuthor();
@@ -50,41 +54,46 @@ public class CommandContext<E> {
 		return event instanceof ISnowflake;
 	}
 	
-	public void sendMessage(String message) {
-		if(isDiscordContext()) {
-			if(event instanceof MessageReceivedEvent) {
-				for(String submessage : MessageUtil.toMessages(message)) {
-					((MessageReceivedEvent)event).getChannel().sendMessage(submessage).complete();
-				}
-			}
-			else if (event instanceof SlashCommandInteractionEvent) {
-				for(String submessage : MessageUtil.toMessages(message)) {
-					((SlashCommandInteractionEvent) event).reply(submessage).complete();
-				}
-			}
-			else if (event instanceof ModalInteractionEvent) {
-				for(String submessage : MessageUtil.toMessages(message)) {
-					((ModalInteractionEvent)event).reply(submessage).complete();
-				}
-			}
+	public void replyMessage(MessageCreateData messageData) {
+		if(event instanceof IReplyCallback) {
+			((IReplyCallback) event).reply(messageData).complete();
+		}
+		else if(event instanceof MessageReceivedEvent) {
+			((MessageReceivedEvent) event).getChannel().sendMessage(messageData);
 		}
 		else {
-			throw new AssertionError("Unknown Command context: " + event.getClass().getCanonicalName());
+			throw new UnsupportedOperationException("Cannot reply to a " + event.getClass().getCanonicalName());
 		}
 	}
 	
-	public void sendMessage(EmbedBuilder embed) {
-		if(isDiscordContext()) {
-			if(event instanceof MessageReceivedEvent) {
-				((MessageReceivedEvent)event).getChannel().sendMessageEmbeds(embed.build()).complete();
-			}
-			else if (event instanceof SlashCommandInteractionEvent) {
-				((SlashCommandInteractionEvent) event).replyEmbeds((embed.build())).complete();
-			}
+	public void editMessage(MessageEditData messageEdit) {
+		if(event instanceof IMessageEditCallback) {
+			((IMessageEditCallback) event).editMessage(messageEdit);
 		}
 		else {
-			throw new AssertionError("Unknown Command context: " + event.getClass().getCanonicalName());
+			replyMessage(MessageCreateData.fromEditData(messageEdit));
 		}
+	}
+	
+	public void editMessage(String message) {
+		editMessage(new MessageEditBuilder().closeFiles().clear().setContent(message).build());
+	}
+	
+	public void editMessage(String message, boolean clear) {
+		if(!clear) {
+			editMessage(new MessageEditBuilder().setContent(message).build());
+		}
+		else {
+			editMessage(message);
+		}
+	}
+	
+	public void sendMessage(String message) {
+		replyMessage(new MessageCreateBuilder().setContent(message).build());
+	}
+	
+	public void sendMessage(EmbedBuilder embed) {
+		replyMessage(new MessageCreateBuilder().setEmbeds(embed.build()).build());
 	}
 	
 	public EmbedBuilder constructEmbedResponse(String command) {
@@ -100,8 +109,11 @@ public class CommandContext<E> {
 	}
 	
 	public MessageChannel getChannel() {
-		if(event instanceof SlashCommandInteractionEvent) {
-			return ((SlashCommandInteractionEvent) event).getMessageChannel();
+		if(event instanceof Interaction) {
+			return ((Interaction) event).getMessageChannel();
+		}
+		else if (event instanceof MessageReceivedEvent) {
+			return ((MessageReceivedEvent) event).getChannel();
 		}
 		return null;
 	}
