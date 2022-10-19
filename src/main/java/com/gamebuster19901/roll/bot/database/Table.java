@@ -11,6 +11,8 @@ import com.gamebuster19901.roll.bot.database.sql.PreparedStatement;
 public enum Table {
 	
 	CHARACTERS,
+	CLASSES,
+	RACES,
 	THEMES,
 	
 	;

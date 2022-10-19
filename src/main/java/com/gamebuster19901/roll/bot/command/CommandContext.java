@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.Interaction;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.callbacks.IMessageEditCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -54,16 +55,25 @@ public class CommandContext<E> {
 		return event instanceof ISnowflake;
 	}
 	
-	public void replyMessage(MessageCreateData messageData) {
+	public InteractionHook replyMessage(MessageCreateData messageData) {
+		return replyMessage(messageData, false);
+	}
+	
+	public InteractionHook replyMessage(MessageCreateData messageData, boolean ephemeral) {
 		if(event instanceof IReplyCallback) {
-			((IReplyCallback) event).reply(messageData).complete();
+			return ((IReplyCallback) event).reply(messageData).setEphemeral(ephemeral).complete();
 		}
 		else if(event instanceof MessageReceivedEvent) {
 			((MessageReceivedEvent) event).getChannel().sendMessage(messageData);
+			return null;
 		}
 		else {
 			throw new UnsupportedOperationException("Cannot reply to a " + event.getClass().getCanonicalName());
 		}
+	}
+	
+	public void replyMessage(String message) {
+		replyMessage(new MessageCreateBuilder().setContent(message).build(), false);
 	}
 	
 	public void editMessage(MessageEditData messageEdit) {
@@ -88,12 +98,17 @@ public class CommandContext<E> {
 		}
 	}
 	
+	@Deprecated
 	public void sendMessage(String message) {
 		replyMessage(new MessageCreateBuilder().setContent(message).build());
 	}
 	
 	public void sendMessage(EmbedBuilder embed) {
 		replyMessage(new MessageCreateBuilder().setEmbeds(embed.build()).build());
+	}
+	
+	public void sendMessage(EmbedBuilder embed, boolean ephemeral) {
+		replyMessage(new MessageCreateBuilder().setEmbeds(embed.build()).build(), ephemeral);
 	}
 	
 	public EmbedBuilder constructEmbedResponse(String command) {

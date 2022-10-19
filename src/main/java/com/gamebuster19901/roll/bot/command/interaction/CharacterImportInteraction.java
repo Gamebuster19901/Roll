@@ -69,11 +69,11 @@ public class CharacterImportInteraction {
 									askReply.editOriginal(rejectBuilder.build()).complete();
 								}
 								else {
-									e.reply(("Refusing to overwrite character `" + id+ "`. You do not own that character."));
+									c.replyMessage("Refusing to overwrite character `" + id+ "`. You do not own that character.");
 								}
 							}
 							else {
-								addCharacterToDatabase(c, e, builder.build());
+								addCharacterToDatabase(e, builder.build());
 							}
 						}
 					});
@@ -83,19 +83,9 @@ public class CharacterImportInteraction {
 		);
 	}
 	
-	private static void addCharacterToDatabase(CommandContext context, GenericInteractionCreateEvent interaction, PlayerCharacter character) {
-		if(interaction instanceof ModalInteractionEvent) {
-			MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
-			
-			((ModalInteractionEvent) interaction).reply(messageBuilder.build());
-		}
-		else if (interaction instanceof ButtonInteractionEvent) {
-			((ButtonInteractionEvent)interaction).editMessage("");
-		}
-	}
-	
-	public static void addCharacterToDatabase(PlayerCharacter character) {
-		
+	public static void addCharacterToDatabase(GenericInteractionCreateEvent interaction, PlayerCharacter character) {
+		CommandContext context = new CommandContext(interaction);
+		context.editMessage(null);
 	}
 	
 }

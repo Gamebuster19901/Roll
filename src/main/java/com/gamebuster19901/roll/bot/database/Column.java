@@ -11,12 +11,22 @@ public enum Column implements Columns {
 	ALL_COLUMNS("*", Table.values()),
 	GENERATED_KEY("GENERATED_KEY", Table.values()), //Used for getting generated key
 	
-	DISCORD_ID("discordID", CHARACTERS, THEMES),
+	DISCORD_ID("discordID", CHARACTERS, CLASSES, THEMES, RACES),
 	
 	/*
 	 * Characters
 	 */
 	CHARACTER_ID("characterID", CHARACTERS),
+	
+	/*
+	 * Classes
+	 */
+	CLASS_ID("classID", CLASSES),
+	
+	/*
+	 * Races
+	 */
+	RACE_ID("raceID", RACES),
 	
 	/*
 	 * THEMES
