@@ -16,7 +16,7 @@ public class Dispatcher extends CommandDispatcher<CommandContext> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public LiteralCommandNode<CommandContext> register(LiteralArgumentBuilder command, String description) {
+	public LiteralCommandNode<CommandContext<?>> register(LiteralArgumentBuilder command, String description) {
 		
 		this.getRoot().getChildren().forEach((e) -> e.getName());
 		

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Dispatcher;
-import com.gamebuster19901.roll.bot.command.ImportCharacterCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -13,6 +12,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.Component.Type;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 
@@ -22,7 +22,11 @@ public class Interactions {
 	public static final Interactions DISPATCHER = new Interactions();
 	
 	public Interactions() {
-		ImportCharacterCommand.register(dispatcher);
+		CharacterImportInteraction.register(dispatcher);
+	}
+	
+	public static void execute(CommandContext context, String command) throws CommandSyntaxException {
+		DISPATCHER.getDispatcher().execute(command, context);
 	}
 	
 	public static void execute(ModalInteractionEvent e) throws CommandSyntaxException {
@@ -43,11 +47,15 @@ public class Interactions {
 		DISPATCHER.getDispatcher().execute(command.toString(), new CommandContext(e));
 	}
 	
-	public static LiteralArgumentBuilder<CommandContext> literal(String name) {
+	public static void execute(ButtonInteractionEvent e) throws CommandSyntaxException {
+		DISPATCHER.getDispatcher().execute(e.getButton().getId(), new CommandContext(e));
+	}
+	
+	public static LiteralArgumentBuilder<CommandContext<?>> literal(String name) {
 		return LiteralArgumentBuilder.literal(name);
 	}
 	
-	public static <T> RequiredArgumentBuilder<CommandContext, T> argument(String name, ArgumentType<T> type) {
+	public static <T> RequiredArgumentBuilder<CommandContext<?>, T> argument(String name, ArgumentType<T> type) {
 		return RequiredArgumentBuilder.argument(name, type);
 	}
 	

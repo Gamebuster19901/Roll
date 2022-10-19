@@ -32,18 +32,29 @@ public class PlayerBuilder {
 	}
 
 	protected String name;
+	protected long id;
 	protected HashMap<Stat, Object> baseStats = new LinkedHashMap<>();
 	protected HashMap<Stat, Object> modifiers = new LinkedHashMap<>();
 	protected HashMap<Stat, Object> overrides = new LinkedHashMap<>();
 	
 	public PlayerBuilder() {};
 	
-	public void setName(String name) {
+	protected PlayerBuilder setName(String name) {
 		this.name = name;
+		return this;
+	}
+	
+	protected PlayerBuilder setID(long id) {
+		this.id = id;
+		return this;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public long getID() {
+		return id;
 	}
 	
 	public void set(Stat stat, Object value) {
@@ -74,6 +85,9 @@ public class PlayerBuilder {
 	public void checkValid() {
 		if(name == null || name.isBlank()) {
 			throw new IllegalStateException("Invalid character - No name");
+		}
+		if(id < 1) {
+			throw new IllegalStateException("Invalid character - No character ID");
 		}
 		for(Stat stat : requiredStats) {
 			if(get(stat) == null) {

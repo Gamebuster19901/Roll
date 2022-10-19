@@ -24,7 +24,7 @@ public class DNDBeyondPDFArgument implements ArgumentType<DNDBeyondPDFPlayerBuil
 		if(character.startsWith(DND_BEYOND_PDF) && character.endsWith(PDF)) {
 			return new DNDBeyondPDFPlayerBuilder(character);
 		}
-		throw new Error();
+		throw new Error(character);
 	}
 	
 }

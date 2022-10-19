@@ -1,12 +1,12 @@
 package com.gamebuster19901.roll.bot.game.beyond.character;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gamebuster19901.roll.bot.command.argument.DNDBeyondPDFArgument;
 import com.gamebuster19901.roll.bot.game.character.PlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.util.pdf.PDFText;
@@ -15,12 +15,16 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 
 	public static final Pattern PDF_OBJECT_PATTERN = Pattern.compile("\\d* \\d* obj.*?endobj", Pattern.DOTALL);
+	private static final long maxID = Long.MAX_VALUE / 2;
+	
+	final long characterID = -1;
 	
 	public DNDBeyondPDFPlayerBuilder(String charSheet) throws CommandSyntaxException {
 		try {
 			if(!charSheet.startsWith("https://")) {
 				charSheet = charSheet + "https://";
 			}
+
 			URL url = new URL(charSheet);
 			URLConnection connection = url.openConnection();
 			InputStream is = connection.getInputStream();
@@ -39,7 +43,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 					else {
 						switch(val) {
 							case CHARACTER_NAME:
-								name = (String) val.parse(text);
+								this.setName((String) val.parse(text));
 								break;
 							case DEFENSES:
 							case SAVE_MODS:
@@ -61,12 +65,21 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 								System.out.println(text.getName() + " not implemented yet, ignoring");
 								break;
 							default:
-								set(val.getStat(), val.parse(text));
+								this.set(val.getStat(), val.parse(text));
 						}
 					}
 					System.out.println(text.getName() + ": " + text);
 				}
 			}
+			
+			long id = Long.parseLong(charSheet.substring(charSheet.lastIndexOf('_') + 1).replace(DNDBeyondPDFArgument.PDF, ""));
+			if(id <= maxID) {
+				this.setID(id);
+			}
+			else {
+				throw new IllegalStateException("D&D Beyond character id (" + id + "exceeded maximum expected value?! This is a critical issue! Report immediately!");
+			}
+			
 			defaultStats.put(Stat.HP, get(Stat.Max_HP));
 			if(get(Stat.Max_HP) == null) {
 				throw new AssertionError("Max HP is null");
@@ -76,7 +89,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 			}
 			System.out.println(count + " matches");
 		}
-		catch(IOException e) {
+		catch(Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
