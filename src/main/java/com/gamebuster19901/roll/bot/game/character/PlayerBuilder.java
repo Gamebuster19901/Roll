@@ -32,6 +32,7 @@ public class PlayerBuilder {
 	}
 
 	protected String name;
+	protected long owner;
 	protected long id;
 	protected HashMap<Stat, Object> baseStats = new LinkedHashMap<>();
 	protected HashMap<Stat, Object> modifiers = new LinkedHashMap<>();
@@ -49,12 +50,21 @@ public class PlayerBuilder {
 		return this;
 	}
 	
+	protected PlayerBuilder setOwner(long id) {
+		this.owner = id;
+		return this;
+	}
+	
 	public String getName() {
 		return name;
 	}
 	
 	public long getID() {
 		return id;
+	}
+	
+	public long getOwner() {
+		return owner;
 	}
 	
 	public void set(Stat stat, Object value) {

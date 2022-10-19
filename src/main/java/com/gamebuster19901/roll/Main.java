@@ -13,6 +13,7 @@ import javax.security.auth.login.LoginException;
 
 import com.gamebuster19901.roll.bot.DiscordBot;
 import com.gamebuster19901.roll.bot.database.sql.Database;
+import com.google.gson.Gson;
 
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
@@ -21,6 +22,7 @@ public class Main {
 	public static long botOwner = -1;
 
 	public static DiscordBot discordBot;
+	public static Gson gson = GsonInitalizer.initialize();
 	
 	private static ConcurrentLinkedDeque<String> consoleCommandsAwaitingProcessing = new ConcurrentLinkedDeque<String>();
 

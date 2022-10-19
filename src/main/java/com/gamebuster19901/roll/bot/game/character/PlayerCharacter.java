@@ -1,5 +1,8 @@
 package com.gamebuster19901.roll.bot.game.character;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import com.gamebuster19901.roll.Main;
 import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Comparator;
@@ -8,28 +11,40 @@ import com.gamebuster19901.roll.bot.database.Table;
 import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.Statted;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
+import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
+import com.gamebuster19901.roll.bot.game.stat.StatValue;
 
 import net.dv8tion.jda.api.entities.User;
 
 public class PlayerCharacter implements Statted {
 
 	private String name;
+	protected long id;
+	protected HashMap<Stat, StatValue<?>> baseStats = new LinkedHashMap<>();
+	protected HashMap<Stat, StatValue<?>> modifiers = new LinkedHashMap<>();
+	protected HashMap<Stat, StatValue<?>> overrides = new LinkedHashMap<>();
 	
-	public PlayerCharacter(String name) {
+	public PlayerCharacter(String name, HashMap<Stat, StatValue<?>> baseStats) {
 		this.name = name;
+		this.baseStats = baseStats;
+	}
+	
+	public PlayerCharacter(String name, HashMap<Stat, StatValue<?>> baseStats, HashMap<Stat, StatValue<?>> modifiers, HashMap<Stat, StatValue<?>> overrides) {
+		this.name = name;
+		this.baseStats = baseStats;
+		this.modifiers = modifiers;
+		this.overrides = overrides;
 	}
 	
 	@Override
 	public String getName() {
 		return name;
 	}
-
-	@Override
-	public int getRaw(Ability ability) {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public long getID() {
+		return id;
 	}
 
 	@Override
@@ -39,19 +54,19 @@ public class PlayerCharacter implements Statted {
 	}
 
 	@Override
-	public int getModifier(Ability ability) {
+	public int getModifier(GameLayer layer, Ability ability) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public ProficiencyLevel getProficiency(Ability ability) {
+	public ProficiencyLevel getProficiency(GameLayer layer, Ability ability) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int getModifier(Skill skill) {
+	public int getModifier(GameLayer layer, Skill skill) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -69,13 +84,7 @@ public class PlayerCharacter implements Statted {
 	}
 
 	@Override
-	public int getMaxHP() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getRawMaxHP() {
+	public int getHP(GameLayer layer) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -87,13 +96,13 @@ public class PlayerCharacter implements Statted {
 	}
 
 	@Override
-	public int getSpeed(MovementType speedType) {
+	public int getSpeed(GameLayer effect, MovementType movementType) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int getAC() {
+	public int getAC(GameLayer layer) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

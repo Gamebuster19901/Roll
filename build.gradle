@@ -32,6 +32,7 @@ dependencies {
 	shadow group: 'com.thegamecommunity', name:'brigadier', version: 'TGC-1.1.0.0'
 	implementation group: 'com.thegamecommunity', name:'brigadier', version: 'TGC-1.1.0.0'
 	shadow group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
+	shadow group: 'com.ezylang', name: 'EvalEx', version: '3.0.1'
 	
 	/*
 	* Testing
