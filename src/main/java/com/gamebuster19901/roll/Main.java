@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 
 import com.gamebuster19901.roll.bot.DiscordBot;
-import com.gamebuster19901.roll.bot.database.sql.DatabaseConnection;
+import com.gamebuster19901.roll.bot.database.sql.Database;
 
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
@@ -59,7 +59,7 @@ public class Main {
 		
 		do {
 			try {
-				DatabaseConnection.INSTANCE = new DatabaseConnection();
+				Database.INSTANCE = new Database();
 			}
 			catch(Throwable t) {
 				System.out.println(t);
@@ -67,7 +67,7 @@ public class Main {
 				Thread.sleep(5000);
 			}
 		}
-		while(DatabaseConnection.INSTANCE == null);
+		while(Database.INSTANCE == null);
 		
 		Thread.sleep(5000);
 		

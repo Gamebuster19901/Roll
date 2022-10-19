@@ -5,7 +5,7 @@ import static com.gamebuster19901.roll.bot.database.Table.*;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public enum Column {
+public enum Column implements Columns {
 
 	//MULTIPLE TABLES:
 	ALL_COLUMNS("*", Table.values()),
@@ -56,4 +56,15 @@ public enum Column {
 		}
 		throw new IllegalArgumentException("No column with name " + dbName);
 	}
+	
+	@Override
+	public String asString() {
+		return toString();
+	}
+
+	@Override
+	public Column[] getColumns() {
+		return new Column[]{this};
+	}
+
 }

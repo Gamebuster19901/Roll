@@ -106,10 +106,6 @@ public class CommandContext<E> {
 		return null;
 	}
 	
-	public DatabaseConnection getConnection() {
-		return DatabaseConnection.INSTANCE;
-	}
-	
 	public EmbedBuilder getEmbed() {
 		return embedBuilder;
 	}
