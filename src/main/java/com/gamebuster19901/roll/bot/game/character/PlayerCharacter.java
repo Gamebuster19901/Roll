@@ -1,8 +1,6 @@
 package com.gamebuster19901.roll.bot.game.character;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
+import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.Main;
 import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Comparator;
@@ -15,32 +13,24 @@ import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
+import com.gamebuster19901.roll.bot.game.stat.Stats;
+import com.gamebuster19901.roll.util.TriFunction;
 
 import net.dv8tion.jda.api.entities.User;
 
 public class PlayerCharacter implements Statted {
 
-	private String name;
-	protected long id;
-	protected HashMap<Stat, StatValue<?>> baseStats = new LinkedHashMap<>();
-	protected HashMap<Stat, StatValue<?>> modifiers = new LinkedHashMap<>();
-	protected HashMap<Stat, StatValue<?>> overrides = new LinkedHashMap<>();
+	protected final long id;
+	protected final Stats stats;
 	
-	public PlayerCharacter(String name, HashMap<Stat, StatValue<?>> baseStats) {
-		this.name = name;
-		this.baseStats = baseStats;
-	}
-	
-	public PlayerCharacter(String name, HashMap<Stat, StatValue<?>> baseStats, HashMap<Stat, StatValue<?>> modifiers, HashMap<Stat, StatValue<?>> overrides) {
-		this.name = name;
-		this.baseStats = baseStats;
-		this.modifiers = modifiers;
-		this.overrides = overrides;
+	public PlayerCharacter(long id, String name, Stats stats) {
+		this.id = id;
+		this.stats = stats;
 	}
 	
 	@Override
 	public String getName() {
-		return name;
+		return stats.getName();
 	}
 	
 	public long getID() {
@@ -49,62 +39,81 @@ public class PlayerCharacter implements Statted {
 
 	@Override
 	public int getAbilityScore(Ability ability) {
-		// TODO Auto-generated method stub
-		return 0;
+		return stats.getAbilityScore(ability);
 	}
 
 	@Override
 	public int getModifier(GameLayer layer, Ability ability) {
-		// TODO Auto-generated method stub
-		return 0;
+		return stats.getModifier(layer, ability);
 	}
 
 	@Override
 	public ProficiencyLevel getProficiency(GameLayer layer, Ability ability) {
-		// TODO Auto-generated method stub
-		return null;
+		return stats.getProficiency(layer, ability);
 	}
 
 	@Override
 	public int getModifier(GameLayer layer, Skill skill) {
-		// TODO Auto-generated method stub
-		return 0;
+		return stats.getModifier(layer, skill);
 	}
 
 	@Override
 	public ProficiencyLevel getProficiency(Skill skill) {
-		// TODO Auto-generated method stub
-		return null;
+		return stats.getProficiency(skill);
 	}
 
 	@Override
 	public int getHP() {
-		// TODO Auto-generated method stub
-		return 0;
+		return stats.getHP();
 	}
 
 	@Override
 	public int getHP(GameLayer layer) {
-		// TODO Auto-generated method stub
-		return 0;
+		return stats.getHP(layer);
 	}
 
 	@Override
-	public int getTempHP() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getTempHP(GameLayer layer) {
+		return stats.getTempHP(layer);
 	}
 
 	@Override
 	public int getSpeed(GameLayer effect, MovementType movementType) {
-		// TODO Auto-generated method stub
-		return 0;
+		return stats.getSpeed(effect, movementType);
 	}
 
 	@Override
 	public int getAC(GameLayer layer) {
-		// TODO Auto-generated method stub
-		return 0;
+		return stats.getAC(layer);
+	}
+
+	@Override
+	public ProficiencyLevel getProficiency(GameLayer layer, Skill skill) {
+		return stats.getProficiency(layer, skill);
+	}
+
+	@Override
+	public int getMaxHP(GameLayer layer) {
+		return stats.getMaxHP(layer);
+	}
+
+	@Override
+	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type) {
+		return stats.getStat(layer, stat, type);
+	}
+
+	@Override
+	public void addStat(StatValue<?> value, TriFunction<GameLayer, Stat, StatValue<?>, Boolean> func) {
+		stats.addStat(value, func);
+	}
+
+	@Override
+	public void setVariables(GameLayer layer, Expression expression) {
+		stats.setVariables(layer, expression);
+	}
+	
+	public User getOwner() {
+		return getOwner(getID());
 	}
 	
 	public static User getOwner(long id) {

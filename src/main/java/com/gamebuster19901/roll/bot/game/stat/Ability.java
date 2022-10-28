@@ -41,4 +41,13 @@ public enum Ability implements Statistic, Proficientable {
 		throw new IllegalArgumentException("Unknown ability: " + ability);
 	}
 	
+	public static Ability fromStat(Stat stat) {
+		for(Ability a : values()) {
+			if(stat.getName().startsWith(a.name())) {
+				return a;
+			}
+		}
+		throw new IllegalArgumentException("Cannot derive ability from stat '" + stat.getName() + "'");
+	}
+	
 }

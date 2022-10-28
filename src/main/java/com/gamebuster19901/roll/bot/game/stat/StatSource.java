@@ -8,4 +8,25 @@ public interface StatSource {
 	
 	public String getStatSourceDescription();
 	
+	public static StatSource of(GameLayer layer, String desc) {
+		return new StatSource() {
+
+			@Override
+			public GameLayer getGameLayer() {
+				return layer;
+			}
+
+			@Override
+			public String getStatSourceDescription() {
+				return desc;
+			}
+			
+			@Override
+			public String toString() {
+				return getStatSourceDescription();
+			}
+			
+		};
+	}
+	
 }

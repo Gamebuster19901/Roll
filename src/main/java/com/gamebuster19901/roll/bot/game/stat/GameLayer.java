@@ -69,6 +69,30 @@ public enum GameLayer {
 	 */
 	VULNERABILITY(900),
 	
+	/**
+	 * Stat change which is the result of the DM
+	 * 
+	 * EX: DM can change the controller or owner of a character
+	 */
+	DM_RULING(Integer.MAX_VALUE / 2),
+	
+	/**
+	 * Values set by the database
+	 * 
+	 * Usually just IDs
+	 */
+	DATABASE(Integer.MAX_VALUE - 1),
+	
+	/**
+	 * Stat change which is the result of an office action
+	 * 
+	 * Intended to be used for moderation
+	 * 
+	 * Can never be overridden except by other office actions
+	 * 
+	 * EX: setting the name of an inappropriate character
+	 */
+	OFFICE_ACTION(Integer.MAX_VALUE);
 	;
 	
 	final int layer;

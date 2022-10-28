@@ -1,0 +1,17 @@
+Image Credits:
+
+Game-icons.net
+
+Slashing damage icon: Lorc
+Piercing damage icon: Lorc
+Bludgeoning damage icon: Delapouite
+Cold damage icon: Lorc
+Poison damage icon: Lorc
+Acid damage icon: Lorc
+Psychic Damage icon: Lorc
+Fire Damage icon: Lorc
+Necrotic Damage icon: DarkZaitzev
+Radiant Damage icon: Lorc
+Force Damage icon: Lorc
+Thunder Damage icon: Lorc
+Lighting Damage icon: Lorc

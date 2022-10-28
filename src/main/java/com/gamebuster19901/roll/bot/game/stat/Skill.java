@@ -77,5 +77,14 @@ public class Skill implements Statistic, Proficientable {
 	public Stat getProficiencyStat() {
 		return Proficiency.of(this);
 	}
+
+	public static Skill fromStat(Stat stat) {
+		for(Skill skill : DEFAULT_SKILLS) {
+			if(stat.getName().equals(skill.getName())) {
+				return skill;
+			}
+		}
+		throw new IllegalArgumentException("No default skill called '" + stat.getName() + "'");
+	}
 	
 }
