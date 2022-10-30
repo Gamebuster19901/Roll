@@ -16,7 +16,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 public enum DNDBeyondPDFValue {
 
-	CHARACTER_NAME("CharacterName", null, STRING),
+	CHARACTER_NAME("CharacterName", Stat.Name, STRING),
 	CLASS_LEVEL("CLASS  LEVEL", null, STRING),
 	PLAYER_NAME("PLAYER NAME", null, STRING),
 	RACE("RACE", null, STRING),
