@@ -79,7 +79,7 @@ public enum DNDBeyondPDFValue {
 	PERSUASION("Persuasion", Persuasion.getStat(), INTEGER),
 	RELIGION("Religion", Religion.getStat(), INTEGER),
 	SLEIGHT_OF_HAND("SleightofHand", Sleight_of_Hand.getStat(), INTEGER), //yes, the 'of' isn't properly capitalized in the PDF either...
-	STEALTH("Stealth", Stealth.getStat(), INTEGER),
+	STEALTH("Stealth ", Stealth.getStat(), INTEGER), //Extra space at the end for some reason
 	SURVIVAL("Survival", Survival.getStat(), INTEGER),
 	
 	ACROBATICS_PROF("AcrobaticsProf", Acrobatics.getProficiencyStat(), PROFICIENCY_CHAR),
