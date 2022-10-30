@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.gamebuster19901.roll.bot.command.argument.DNDBeyondPDFArgument;
+import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.character.FixedPlayerCharacterStatBuilder;
 import com.gamebuster19901.roll.bot.game.character.PlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.Stat;
@@ -21,6 +22,7 @@ import net.dv8tion.jda.api.entities.User;
 public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 
 	public static final Pattern PDF_OBJECT_PATTERN = Pattern.compile("\\d* \\d* obj.*?endobj", Pattern.DOTALL);
+	public static final Pattern MOVEMENT_PATTERN = Pattern.compile("(?<distance>\\d*)\\sft.\\s\\\\\\((?<type>\\w*)\\\\\\)"); // (?<distance>\d*)\sft.\s\\\((?<type>\w*)\\\)
 	private static final long maxID = Long.MAX_VALUE / 2;
 	
 	long characterID = -1;
@@ -58,10 +60,12 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 							case CHARACTER_NAME:
 								statBuilder.addStat(new StatValue(val.getStat(), StatSource.of(GameLayer.CHOSEN, "The name you chose for your character."), val.parse(text)));
 								break;
+							case MOVEMENT:
+								parseMovement(statBuilder, text);
+								break;
 							case DEFENSES:
 							case SAVE_MODS:
 							case SENSES:
-							case MOVEMENT:
 							case HIT_DICE_REMAINING:
 							case PROFICIENCIES_AND_LANGUAGES:
 							case SEX:
@@ -96,7 +100,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 				statBuilder.addStat(new StatValue(Stat.ID, StatSource.of(GameLayer.DATABASE, "D&D Beyond character id"), id));
 			}
 			else {
-				throw new IllegalStateException("D&D Beyond character id (" + id + "exceeded maximum expected value?! This is a critical issue! Report immediately!");
+				throw new IllegalStateException("D&D Beyond character id (" + id + ") exceeded maximum expected value?! This is a critical issue! Report immediately!");
 			}
 
 		}
@@ -105,6 +109,23 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 			throw new RuntimeException(e);
 		}
 		return statBuilder;
+	}
+
+	private static void parseMovement(FixedPlayerCharacterStatBuilder stats, PDFText text) {
+		Matcher matcher = MOVEMENT_PATTERN.matcher(text.toString());
+		matching:
+		while(matcher.find()) {
+			String speed = matcher.group("distance");
+			String foundType = matcher.group("type");
+			for(MovementType type : MovementType.values()) {
+				if(type.name().equals(foundType)) {
+					stats.addStat(new StatValue(type.getStat(), StatSource.of(GameLayer.CHOSEN, "D&D Beyond imported value"), Integer.parseInt(speed)));
+					continue matching;
+				}
+			}
+			throw new IllegalArgumentException("Unknown movement type " + foundType);
+		}
+		
 	}
 
 	public long getID() {
