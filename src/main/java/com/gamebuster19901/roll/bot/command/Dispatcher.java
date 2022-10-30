@@ -11,7 +11,7 @@ public class Dispatcher extends CommandDispatcher<CommandContext> {
 	@Override
 	public int execute(final StringReader input, final CommandContext source) throws CommandSyntaxException {
 		source.constructEmbedResponse(input.getString());
-		System.out.println(input.getString() + "asdf");
+		System.out.println(input.getString());
 		return super.execute(input, source);
 	}
 	

@@ -1,7 +1,5 @@
 package com.gamebuster19901.roll.bot.game.character;
 
-import java.sql.SQLException;
-
 import net.dv8tion.jda.api.entities.User;
 
 public class PlayerBuilder {
@@ -20,7 +18,7 @@ public class PlayerBuilder {
 		stats.validate();
 	}
 	
-	public PlayerCharacter build() throws SQLException {
+	public PlayerCharacter build() {
 		checkValid();
 		return new PlayerCharacter(stats);
 	}

@@ -34,6 +34,14 @@ public class ThreadService {
 	
 	private static ConcurrentLinkedDeque<Thread> threads = new ConcurrentLinkedDeque<Thread>();
 	
+	public static Thread run(Thread thread) {
+		if(!thread.isAlive()) {
+			thread.start();
+			threads.add(thread);
+		}
+		return thread;
+	}
+	
 	public static Thread run(String name, Runnable runnable) {
 		Thread thread = new Thread(runnable);
 		return run(name, thread);
@@ -100,6 +108,19 @@ public class ThreadService {
 			}
 		};
 		shutdownHandler.start();
+	}
+	
+	public static Thread getThread(String name) {
+		return getThread(name, Thread.class);
+	}
+	
+	public static <T extends Thread> T getThread(String name, Class<T> type) {
+		for(Thread t : threads.toArray(new Thread[]{})) {
+			if(t.getName().equals(name)) {
+				return (T)t;
+			}
+		}
+		return null;
 	}
 	
 }

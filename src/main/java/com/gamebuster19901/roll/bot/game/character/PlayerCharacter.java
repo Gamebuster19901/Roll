@@ -4,12 +4,13 @@ import java.sql.SQLException;
 
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.Main;
-import com.gamebuster19901.roll.bot.database.Column;
-import com.gamebuster19901.roll.bot.database.Comparator;
+import static com.gamebuster19901.roll.bot.database.Column.*;
+import static com.gamebuster19901.roll.bot.database.Comparator.*;
 import com.gamebuster19901.roll.bot.database.Comparison;
 import com.gamebuster19901.roll.bot.database.Insertion;
 import com.gamebuster19901.roll.bot.database.Result;
 import com.gamebuster19901.roll.bot.database.Table;
+import static com.gamebuster19901.roll.bot.database.Table.CHARACTERS;
 import com.gamebuster19901.roll.bot.database.sql.PreparedStatement;
 import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.Statted;
@@ -119,19 +120,23 @@ public class PlayerCharacter implements Statted {
 	}
 	
 	public static User getOwner(long id) {
-		Result result = Table.selectColumnsFromWhere(Column.DISCORD_ID, Table.CHARACTERS, new Comparison(Column.CHARACTER_ID, Comparator.EQUALS, id));
+		Result result = Table.selectColumnsFromWhere(DISCORD_ID, CHARACTERS, new Comparison(CHARACTER_ID, EQUALS, id));
 		result.next();
-		return Main.discordBot.jda.retrieveUserById(result.getLong(Column.DISCORD_ID)).complete();
+		return Main.discordBot.jda.retrieveUserById(result.getLong(DISCORD_ID)).complete();
 	}
 	
 	public static boolean exists(long id) {
-		return Table.existsWhere(Table.CHARACTERS, new Comparison(Column.CHARACTER_ID, Comparator.EQUALS, id));
+		return Table.existsWhere(CHARACTERS, new Comparison(CHARACTER_ID, EQUALS, id));
 	}
 	
 	public static final long genNewCharacterID(User owner) throws SQLException {
-		PreparedStatement s = Insertion.insertInto(Table.CHARACTERS).setColumns(Column.DISCORD_ID).to(owner.getIdLong()).prepare(true);
+		PreparedStatement s = Insertion.insertInto(CHARACTERS).setColumns(DISCORD_ID).to(owner.getIdLong()).prepare(true);
 		s.execute();
-		return s.getGeneratedKeys().getLong(Column.CHARACTER_ID);
+		return s.getGeneratedKeys().getLong(CHARACTER_ID);
+	}
+	
+	public static void removeCharacter(long characterID) throws SQLException {
+		Table.deleteWhere(CHARACTERS, new Comparison(CHARACTER_ID, EQUALS, characterID));
 	}
 	
 }

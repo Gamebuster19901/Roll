@@ -23,6 +23,7 @@ public class Interactions {
 	
 	public Interactions() {
 		CharacterImportInteraction.register(dispatcher);
+		ConfirmationButtonInteraction.register(dispatcher);
 	}
 	
 	public static void execute(CommandContext context, String command) throws CommandSyntaxException {
@@ -61,18 +62,6 @@ public class Interactions {
 	
 	public CommandDispatcher<CommandContext> getDispatcher() {
 		return this.dispatcher;
-	}
-	
-	public static boolean isValidPrefix(String prefix) {
-		if(prefix == null || prefix.isEmpty()) {
-			return false;
-		}
-		for(int c : prefix.toCharArray()) {
-			if(Character.isWhitespace(c) || Character.isSupplementaryCodePoint(c) || Character.isISOControl(c) || c == '@' || c == '#' || c == '`') {
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	public static String readString(StringReader reader) {

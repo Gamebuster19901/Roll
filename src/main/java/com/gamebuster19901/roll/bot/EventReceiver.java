@@ -12,6 +12,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -35,6 +36,15 @@ public class EventReceiver extends ListenerAdapter {
 			Commands.DISPATCHER.getDispatcher().execute(c.toString() , context);
 		} catch (CommandSyntaxException ex) {
 			context.sendMessage(StacktraceUtil.getStackTrace(ex));
+		}
+	}
+	
+	@Override
+	public void onButtonInteraction(ButtonInteractionEvent e) {
+		try {
+			Interactions.DISPATCHER.execute(e);
+		} catch (CommandSyntaxException e1) {
+			e1.printStackTrace();
 		}
 	}
 	
