@@ -6,8 +6,13 @@ import java.util.Collections;
 import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.bot.command.argument.DNDBeyondPDFArgument;
+import com.gamebuster19901.roll.bot.database.Column;
+import com.gamebuster19901.roll.bot.database.Insertion;
+import com.gamebuster19901.roll.bot.database.Table;
+import com.gamebuster19901.roll.bot.database.sql.PreparedStatement;
 import com.gamebuster19901.roll.bot.game.beyond.character.DNDBeyondPDFPlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
+import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.util.ThreadService;
 import com.mojang.brigadier.CommandDispatcher;
 
@@ -89,7 +94,12 @@ public class CharacterImportInteraction {
 	}
 	
 	public static void addCharacterToDatabase(GenericInteractionCreateEvent interaction, DNDBeyondPDFPlayerBuilder builder) throws SQLException {
-		builder.build();
+		PlayerCharacter character = builder.build();
+		PreparedStatement s = Insertion.insertInto(Table.CHARACTERS)
+				.setColumns(Column.CHARACTER_ID, Column.DISCORD_ID)
+				.to(character.getStat(Stat.ID, long.class), character.getStat(Stat.Owner, long.class)
+		).prepare(true);
+		s.execute();
 	}
 	
 }

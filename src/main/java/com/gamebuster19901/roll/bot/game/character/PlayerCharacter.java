@@ -8,6 +8,7 @@ import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Comparator;
 import com.gamebuster19901.roll.bot.database.Comparison;
 import com.gamebuster19901.roll.bot.database.Insertion;
+import com.gamebuster19901.roll.bot.database.Result;
 import com.gamebuster19901.roll.bot.database.Table;
 import com.gamebuster19901.roll.bot.database.sql.PreparedStatement;
 import com.gamebuster19901.roll.bot.game.MovementType;
@@ -118,7 +119,9 @@ public class PlayerCharacter implements Statted {
 	}
 	
 	public static User getOwner(long id) {
-		return Main.discordBot.jda.getUserById(Table.selectColumnsFromWhere(Column.DISCORD_ID, Table.CHARACTERS, new Comparison(Column.CHARACTER_ID, Comparator.EQUALS, id)).getLong(Column.CHARACTER_ID));
+		Result result = Table.selectColumnsFromWhere(Column.DISCORD_ID, Table.CHARACTERS, new Comparison(Column.CHARACTER_ID, Comparator.EQUALS, id));
+		result.next();
+		return Main.discordBot.jda.retrieveUserById(result.getLong(Column.DISCORD_ID)).complete();
 	}
 	
 	public static boolean exists(long id) {
