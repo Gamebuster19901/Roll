@@ -2,12 +2,10 @@ package com.gamebuster19901.roll.bot.game.character;
 
 import com.gamebuster19901.roll.Main;
 import com.gamebuster19901.roll.bot.game.Statted;
-import com.gamebuster19901.roll.bot.game.stat.FixedStats;
-import com.gamebuster19901.roll.bot.game.stat.StatBuilder;
 
 import net.dv8tion.jda.api.entities.User;
 
-public interface PlayerCharacterStats extends Statted, StatBuilder<FixedStats>{
+public interface PlayerCharacterStats extends Statted {
 	
 	public default User getOwner() {
 		return Main.discordBot.jda.retrieveUserById(getStat(Stat.Owner, long.class)).complete();

@@ -1,40 +1,28 @@
 package com.gamebuster19901.roll.bot.game.character;
 
-import static com.gamebuster19901.roll.bot.game.MovementType.*;
+import java.sql.SQLException;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-
-import org.apache.commons.collections4.multiset.HashMultiSet;
-
-import com.gamebuster19901.roll.bot.game.MovementType;
-import com.gamebuster19901.roll.bot.game.stat.Ability;
-import com.gamebuster19901.roll.bot.game.stat.GameLayer;
-import com.gamebuster19901.roll.bot.game.stat.StatSource;
-import com.gamebuster19901.roll.bot.game.stat.StatValue;
-import com.gamebuster19901.roll.bot.game.stat.Stats;
-import com.google.common.collect.HashMultimap;
+import net.dv8tion.jda.api.entities.User;
 
 public class PlayerBuilder {
 	
-	protected PlayerCharacterStats stats;
+	private final User owner;
+	protected PlayerCharacterStatBuilder stats;
 	
-	public PlayerBuilder(PlayerCharacterStats stats) {
-		
+	public PlayerBuilder(User owner, PlayerCharacterStatBuilder stats) {
+		this(owner, stats, 0);
 	};
 	
-	public void setStat(GameLayer layer, Stat stat, StatValue<?> value) {
-		
+	public PlayerBuilder(User owner, PlayerCharacterStatBuilder stats, long characterID) {
+		this.owner = owner;
+		this.stats = stats;
 	}
 	
 	public void checkValid() {
 		stats.validate();
 	}
 	
-	public PlayerCharacter build() {
+	public PlayerCharacter build() throws SQLException {
 		checkValid();
 		return new PlayerCharacter(stats);
 	}

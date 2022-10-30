@@ -1,5 +1,6 @@
 package com.gamebuster19901.roll.bot.command.argument;
 
+import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.bot.game.beyond.character.DNDBeyondPDFPlayerBuilder;
 import com.mojang.brigadier.StringReader;
@@ -22,7 +23,7 @@ public class DNDBeyondPDFArgument implements ArgumentType<DNDBeyondPDFPlayerBuil
 			character = "https://" + character;
 		}
 		if(character.startsWith(DND_BEYOND_PDF) && character.endsWith(PDF)) {
-			return new DNDBeyondPDFPlayerBuilder(character);
+			return new DNDBeyondPDFPlayerBuilder(((CommandContext)context).getAuthor(), character);
 		}
 		throw new Error(character);
 	}

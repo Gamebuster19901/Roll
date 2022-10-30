@@ -25,6 +25,7 @@ import com.gamebuster19901.roll.util.TriFunction;
  */
 public class FixedStats extends Stats {
 	
+	final String name;
 	final int ac, maxHP, tempHP, exp, totalLevel, initiative, proficiencyBonus;
 	final Dice hitDice;
 	final HashMap<MovementType, Integer> speed;
@@ -51,7 +52,7 @@ public class FixedStats extends Stats {
 		int proficiencyBonus,
 		Dice hitDice	
 	) {
-		super(name);
+		this.name = name;
 		this.ac = ac;
 		this.maxHP = maxHP;
 		this.tempHP = tempHP;

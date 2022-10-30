@@ -7,19 +7,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.gamebuster19901.roll.bot.command.argument.DNDBeyondPDFArgument;
+import com.gamebuster19901.roll.bot.game.character.FixedPlayerCharacterStatBuilder;
 import com.gamebuster19901.roll.bot.game.character.PlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.Stat;
+import com.gamebuster19901.roll.bot.game.stat.GameLayer;
+import com.gamebuster19901.roll.bot.game.stat.StatSource;
+import com.gamebuster19901.roll.bot.game.stat.StatValue;
 import com.gamebuster19901.roll.util.pdf.PDFText;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
+import net.dv8tion.jda.api.entities.User;
 
 public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 
 	public static final Pattern PDF_OBJECT_PATTERN = Pattern.compile("\\d* \\d* obj.*?endobj", Pattern.DOTALL);
 	private static final long maxID = Long.MAX_VALUE / 2;
 	
-	final long characterID = -1;
+	long characterID = -1;
 	
-	public DNDBeyondPDFPlayerBuilder(String charSheet) throws CommandSyntaxException {
+	public DNDBeyondPDFPlayerBuilder(User owner, String sheet) throws CommandSyntaxException {
+		super(owner, getStats(sheet));
+		characterID = Long.parseLong(sheet.substring(sheet.lastIndexOf('_') + 1).replace(DNDBeyondPDFArgument.PDF, ""));
+	}
+	
+	private static FixedPlayerCharacterStatBuilder getStats(String charSheet) {
+		FixedPlayerCharacterStatBuilder statBuilder = new FixedPlayerCharacterStatBuilder();
 		try {
 			if(!charSheet.startsWith("https://")) {
 				charSheet = charSheet + "https://";
@@ -43,7 +55,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 					else {
 						switch(val) {
 							case CHARACTER_NAME:
-								this.setName((String) val.parse(text));
+								statBuilder.addStat(new StatValue(val.getStat(), StatSource.of(GameLayer.CHOSEN, "The name you chose for your character."), val.parse(text)));
 								break;
 							case DEFENSES:
 							case SAVE_MODS:
@@ -65,7 +77,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 								System.out.println(text.getName() + " not implemented yet, ignoring");
 								break;
 							default:
-								this.set(val.getStat(), val.parse(text));
+								statBuilder.addStat(new StatValue(val.getStat(), StatSource.of(GameLayer.CHOSEN, "D&D Beyond imported value"), val.parse(text)));
 						}
 					}
 					System.out.println(text.getName() + ": " + text);
@@ -74,25 +86,22 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 			
 			long id = Long.parseLong(charSheet.substring(charSheet.lastIndexOf('_') + 1).replace(DNDBeyondPDFArgument.PDF, ""));
 			if(id <= maxID) {
-				this.setID(id);
+				statBuilder.addStat(new StatValue(Stat.ID, StatSource.of(GameLayer.DATABASE, "D&D Beyond character id"), id));
 			}
 			else {
 				throw new IllegalStateException("D&D Beyond character id (" + id + "exceeded maximum expected value?! This is a critical issue! Report immediately!");
 			}
-			
-			defaultStats.put(Stat.HP, get(Stat.Max_HP));
-			if(get(Stat.Max_HP) == null) {
-				throw new AssertionError("Max HP is null");
-			}
-			if(get(Stat.HP) == null) {
-				throw new AssertionError("HP is null even though it was set");
-			}
-			System.out.println(count + " matches");
+
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+		return statBuilder;
+	}
+
+	public long getID() {
+		return characterID;
 	}
 	
 }

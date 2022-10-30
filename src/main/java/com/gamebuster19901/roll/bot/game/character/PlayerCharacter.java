@@ -1,11 +1,15 @@
 package com.gamebuster19901.roll.bot.game.character;
 
+import java.sql.SQLException;
+
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.Main;
 import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Comparator;
 import com.gamebuster19901.roll.bot.database.Comparison;
+import com.gamebuster19901.roll.bot.database.Insertion;
 import com.gamebuster19901.roll.bot.database.Table;
+import com.gamebuster19901.roll.bot.database.sql.PreparedStatement;
 import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.Statted;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
@@ -13,18 +17,15 @@ import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
-import com.gamebuster19901.roll.bot.game.stat.Stats;
 import com.gamebuster19901.roll.util.TriFunction;
 
 import net.dv8tion.jda.api.entities.User;
 
 public class PlayerCharacter implements Statted {
 
-	protected final long id;
-	protected final Stats stats;
+	protected final PlayerCharacterStats stats;
 	
-	public PlayerCharacter(long id, String name, Stats stats) {
-		this.id = id;
+	public PlayerCharacter(PlayerCharacterStats stats) {
 		this.stats = stats;
 	}
 	
@@ -34,7 +35,7 @@ public class PlayerCharacter implements Statted {
 	}
 	
 	public long getID() {
-		return id;
+		return stats.getID();
 	}
 
 	@Override
@@ -122,6 +123,12 @@ public class PlayerCharacter implements Statted {
 	
 	public static boolean exists(long id) {
 		return Table.existsWhere(Table.CHARACTERS, new Comparison(Column.CHARACTER_ID, Comparator.EQUALS, id));
+	}
+	
+	public static final long genNewCharacterID(User owner) throws SQLException {
+		PreparedStatement s = Insertion.insertInto(Table.CHARACTERS).setColumns(Column.DISCORD_ID).to(owner.getIdLong()).prepare(true);
+		s.execute();
+		return s.getGeneratedKeys().getLong(Column.CHARACTER_ID);
 	}
 	
 }

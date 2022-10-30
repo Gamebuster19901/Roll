@@ -23,12 +23,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+import com.gamebuster19901.roll.bot.game.stat.GameLayer;
+import com.gamebuster19901.roll.bot.game.stat.StatSource;
 import com.gamebuster19901.roll.util.file.File;
 import com.mysql.cj.exceptions.CJCommunicationsException;
 import com.mysql.cj.exceptions.ConnectionIsClosedException;
 
 public class Database implements Connection {
 
+	public static final StatSource DATABASE = StatSource.of(GameLayer.DATABASE, "");
 	public static String SCHEMA;
 	
 	public static Database INSTANCE;

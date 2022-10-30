@@ -13,7 +13,13 @@ import com.gamebuster19901.roll.util.TriFunction;
 
 public interface Statted {
 
-	public String getName();
+	public default String getName() {
+		return getName(GameLayer.OFFICE_ACTION);
+	}
+	
+	public default String getName(GameLayer layer) {
+		return getStat(layer, Stat.Name, String.class);
+	}
 	
 	public default int getRawModifier(Ability ability) {
 		return getModifier(GameLayer.CLASS_OR_BACKGROUND_FEATURE, ability);

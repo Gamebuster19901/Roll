@@ -13,7 +13,7 @@ import com.gamebuster19901.roll.util.TriFunction;
 
 public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 	
-	protected final HashSet<Stat> requiredStats = new HashSet<Stat>();
+	public final HashSet<Stat> requiredStats = new HashSet<Stat>();
 	{
 		requiredStats.addAll(Arrays.asList(new Stat[] {
 			Stat.Name,
@@ -37,7 +37,7 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 		
 	};
 	
-	protected HashSet<StatValue<?>> defaultStats = new HashSet<StatValue<?>>();;
+	public HashSet<StatValue<?>> defaultStats = new HashSet<StatValue<?>>();;
 	{
 		defaultStats.add(new StatValue<Integer>(MovementType.Burrowing.getStat(), StatSource.of(GameLayer.GAME_RULE, ""), 0));
 		defaultStats.add(new StatValue<Integer>(MovementType.Climbing.getStat(), StatSource.of(GameLayer.GAME_RULE, ""), 0));
@@ -45,10 +45,6 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 		defaultStats.add(new StatValue<Integer>(MovementType.Swimming.getStat(), StatSource.of(GameLayer.GAME_RULE, ""), 0));
 	}
 	HashMap<Stat, StatValue<?>> stats = new LinkedHashMap<>();
-
-	public FixedStatBuilder(String name) {
-		super(name);
-	}
 
 	@Override
 	public int getHP(GameLayer layer) {

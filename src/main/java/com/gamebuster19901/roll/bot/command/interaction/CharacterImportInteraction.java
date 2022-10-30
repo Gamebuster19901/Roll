@@ -1,5 +1,6 @@
 package com.gamebuster19901.roll.bot.command.interaction;
 
+import java.sql.SQLException;
 import java.util.Collections;
 
 import com.gamebuster19901.roll.bot.command.CommandContext;
@@ -12,7 +13,6 @@ import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -73,7 +73,11 @@ public class CharacterImportInteraction {
 								}
 							}
 							else {
-								addCharacterToDatabase(e, builder.build());
+								try {
+									addCharacterToDatabase(e, builder);
+								} catch (SQLException e1) {
+									throw new RuntimeException(e1);
+								}
 							}
 						}
 					});
@@ -83,9 +87,8 @@ public class CharacterImportInteraction {
 		);
 	}
 	
-	public static void addCharacterToDatabase(GenericInteractionCreateEvent interaction, PlayerCharacter character) {
-		CommandContext context = new CommandContext(interaction);
-		context.editMessage(null);
+	public static void addCharacterToDatabase(GenericInteractionCreateEvent interaction, DNDBeyondPDFPlayerBuilder builder) throws SQLException {
+		builder.build();
 	}
 	
 }

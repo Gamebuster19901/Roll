@@ -1,20 +1,45 @@
 package com.gamebuster19901.roll.bot.game.character;
 
+import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.bot.game.stat.FixedStatBuilder;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
-import com.gamebuster19901.roll.bot.game.stat.StatSource;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
+import com.gamebuster19901.roll.util.TriFunction;
 
-import net.dv8tion.jda.api.entities.User;
+public class FixedPlayerCharacterStatBuilder extends PlayerCharacterStatBuilder<FixedPlayerCharacterStats> implements PlayerCharacterStats {
 
-public class FixedPlayerCharacterStatBuilder extends FixedStatBuilder implements PlayerCharacterStats {
+	private final FixedStatBuilder fixedStats;
+	
+	public FixedPlayerCharacterStatBuilder() {
+		FixedStatBuilder fixedStats = new FixedStatBuilder();
+		fixedStats.requiredStats.add(Stat.Owner);
+		fixedStats.requiredStats.add(Stat.ID);
+		this.fixedStats = fixedStats;
+	}
 
-	public FixedPlayerCharacterStatBuilder(User user, long id, String name) {
-		super(name);
-		this.requiredStats.add(Stat.Owner);
-		this.requiredStats.add(Stat.ID);
-		this.addStat(new StatValue<Long>(Stat.Owner, StatSource.of(GameLayer.CHOSEN, "Owner DiscordID"), user.getIdLong()));
-		this.addStat(new StatValue<Long>(Stat.ID, StatSource.of(GameLayer.DATABASE, "Character ID"), id));
+	@Override
+	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type) {
+		return fixedStats.getStat(layer, stat, type);
+	}
+
+	@Override
+	public void addStat(StatValue<?> value, TriFunction<GameLayer, Stat, StatValue<?>, Boolean> func) {
+		fixedStats.addStat(value, func);
+	}
+
+	@Override
+	public void setVariables(GameLayer layer, Expression expression) {
+		fixedStats.setVariables(layer, expression);
+	}
+
+	@Override
+	public void validate() {
+		fixedStats.validate();
+	}
+
+	@Override
+	public FixedPlayerCharacterStats build() {
+		return new FixedPlayerCharacterStats(fixedStats.build());
 	}
 
 }
