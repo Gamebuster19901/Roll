@@ -26,6 +26,7 @@ public class CharacterImportInteraction {
 			.then(Commands.argument("pdf", DNDBeyondPDFArgument.DND_BEYOND_PDF_TYPE)
 				.executes((context) -> {
 					DNDBeyondPDFPlayerBuilder builder = context.getArgument("pdf", DNDBeyondPDFPlayerBuilder.class);
+
 					long id = builder.getID();
 					
 					ThreadService.run("Character Importer(" + id + ")" , new CharacterOverwriteThread(){

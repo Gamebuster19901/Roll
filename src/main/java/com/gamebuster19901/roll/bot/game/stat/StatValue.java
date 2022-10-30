@@ -1,5 +1,7 @@
 package com.gamebuster19901.roll.bot.game.stat;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.gamebuster19901.roll.bot.game.character.Stat;
 
 public class StatValue<T> {
@@ -8,10 +10,15 @@ public class StatValue<T> {
 	private final StatSource source;
 	private final T value;
 	
-	public StatValue(Stat stat, StatSource source, T value) {
+	public StatValue(@NotNull Stat stat, @NotNull StatSource source, @NotNull T value) {
 		this.stat = stat;
 		this.source = source;
 		this.value = value;
+		
+		//THROW NULLPOINTER IF ANY ARE NULL
+		stat.toString();
+		source.toString();
+		value.toString();
 	}
 	
 	public Stat getStat() {

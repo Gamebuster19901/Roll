@@ -2,6 +2,8 @@ package com.gamebuster19901.roll.bot.game;
 
 import javax.annotation.CheckForNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.bot.game.stat.Ability;

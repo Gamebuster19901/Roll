@@ -26,12 +26,13 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 	long characterID = -1;
 	
 	public DNDBeyondPDFPlayerBuilder(User owner, String sheet) throws CommandSyntaxException {
-		super(owner, getStats(sheet));
+		super(owner, getStats(owner, sheet));
 		characterID = Long.parseLong(sheet.substring(sheet.lastIndexOf('_') + 1).replace(DNDBeyondPDFArgument.PDF, ""));
 	}
 	
-	private static FixedPlayerCharacterStatBuilder getStats(String charSheet) {
+	private static FixedPlayerCharacterStatBuilder getStats(User owner, String charSheet) {
 		FixedPlayerCharacterStatBuilder statBuilder = new FixedPlayerCharacterStatBuilder();
+		statBuilder.addStat(new StatValue(Stat.Owner, StatSource.of(GameLayer.DATABASE, "D&D Beyond Character ID"), owner.getIdLong()));
 		try {
 			if(!charSheet.startsWith("https://")) {
 				charSheet = charSheet + "https://";
@@ -50,7 +51,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 					PDFText text = new PDFText(result);
 					DNDBeyondPDFValue val = DNDBeyondPDFValue.getValueType(text);
 					if(val == null) {
-						System.out.println("I don't know how to handle a " + text.getName() + " value, ignoring");
+						//System.out.println("I don't know how to handle a " + text.getName() + " value, ignoring");
 					}
 					else {
 						switch(val) {
@@ -77,7 +78,13 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 								System.out.println(text.getName() + " not implemented yet, ignoring");
 								break;
 							default:
-								statBuilder.addStat(new StatValue(val.getStat(), StatSource.of(GameLayer.CHOSEN, "D&D Beyond imported value"), val.parse(text)));
+								if(val.getStat() != null) {
+									System.out.println("Adding " + val.getStat().getName());
+									statBuilder.addStat(new StatValue(val.getStat(), StatSource.of(GameLayer.CHOSEN, "D&D Beyond imported value"), val.parse(text)));
+								}
+								else {
+									//System.out.println("Don't know how to add a " + text.getName() + " stat, ignoring");
+								}
 						}
 					}
 					System.out.println(text.getName() + ": " + text);

@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.entities.User;
 
 public class PlayerBuilder {
 	
-	private final User owner;
 	protected PlayerCharacterStatBuilder stats;
 	
 	public PlayerBuilder(User owner, PlayerCharacterStatBuilder stats) {
@@ -14,7 +13,6 @@ public class PlayerBuilder {
 	};
 	
 	public PlayerBuilder(User owner, PlayerCharacterStatBuilder stats, long characterID) {
-		this.owner = owner;
 		this.stats = stats;
 	}
 	

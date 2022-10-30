@@ -95,7 +95,7 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 		}
 		for(Stat requiredValue : requiredStats) {
 			if(stats.get(requiredValue) == null) {
-				throw new IllegalStateException("Stats are missing `" + requiredValue + "` value!");
+				throw new IllegalStateException("Stats are missing `" + requiredValue.getName() + "` value!");
 			}
 		}
 	}
