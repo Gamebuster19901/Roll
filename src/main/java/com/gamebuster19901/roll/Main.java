@@ -18,6 +18,10 @@ import com.google.gson.Gson;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 public class Main {
+	public static final File RUN_DIR = new File("./run");
+	static {
+		RUN_DIR.mkdirs();
+	}
 	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 	public static long botOwner = -1;
 

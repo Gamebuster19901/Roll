@@ -118,7 +118,7 @@ public enum DNDBeyondPDFValue {
 	MOVEMENT("Speed", null, STRING),
 	
 	MAX_HP("MaxHP", Stat.Max_HP, INTEGER),
-	CURRENT_HP("CurrentHP", Stat.HP, INTEGER),
+	CURRENT_HP("CurrentHP", Stat.HP, INTEGER_DEFERRED),
 	TEMPORARY_HP("TempHP", Stat.Temp_HP, INTEGER),
 	HIT_DICE("Total", Stat.Hit_Dice, (text) -> {return new Dice(text.toString().replace(" ", ""));}),
 	HIT_DICE_REMAINING("HD", null, STRING),
@@ -160,6 +160,7 @@ public enum DNDBeyondPDFValue {
 	static enum FunctionType {
 			STRING((text) -> {return text.toString();}),
 			INTEGER((text) -> {return text.toString().replace("-", "").isEmpty() ? 0 : Integer.parseInt(text.toString().replace(",", ""));}),
+			INTEGER_DEFERRED((text) -> {return text.toString().replace("-", "").isEmpty() ? -1 : Integer.parseInt(text.toString().replace(",", ""));}),
 			BOOL_NONEMPTY((text) -> {return !text.toString().isBlank();}),
 			PROFICIENCY_BOOL((text) -> {return text.toString().isBlank() ? NOT_PROFICIENT : PROFICIENT;}),
 			PROFICIENCY_CHAR((text) -> {

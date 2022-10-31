@@ -16,7 +16,7 @@ import com.google.gson.JsonSerializer;
 class GsonInitalizer {
 	static Gson initialize() {
 		return new GsonBuilder()
-				
+		.setPrettyPrinting()
 		//.registerTypeAdapter(PlayerCharacter.class, new PlayerCharacterSerializer())
 		.registerTypeAdapter(Expression.class, new ExpressionSerializer())
 		.registerTypeAdapter(Expression.class, new ExpressionDeserializer())

@@ -2,12 +2,15 @@ package com.gamebuster19901.roll.bot.game;
 
 import javax.annotation.CheckForNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
+import com.gamebuster19901.roll.bot.game.stat.StatSource;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
 import com.gamebuster19901.roll.util.TriFunction;
 
@@ -126,6 +129,15 @@ public interface Statted {
 	
 	public default void addStat(StatValue<?> value) {
 		addStat(value, getOverwriteFunction(value));
+	}
+	
+	public default void addStat(@NotNull Stat stat, GameLayer layer, String description, @NotNull Object value) {
+		addStat(stat, StatSource.of(layer, description), value);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public default void addStat(@NotNull Stat stat, @NotNull StatSource source, @NotNull Object value) {
+		addStat(new StatValue(stat, source, value));
 	}
 	
 	/**

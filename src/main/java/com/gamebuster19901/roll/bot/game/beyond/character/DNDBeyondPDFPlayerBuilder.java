@@ -13,7 +13,6 @@ import com.gamebuster19901.roll.bot.game.character.PlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.StatSource;
-import com.gamebuster19901.roll.bot.game.stat.StatValue;
 import com.gamebuster19901.roll.util.pdf.PDFText;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
@@ -25,6 +24,8 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 	public static final Pattern MOVEMENT_PATTERN = Pattern.compile("(?<distance>\\d*)\\sft.\\s\\\\\\((?<type>\\w*)\\\\\\)"); // (?<distance>\d*)\sft.\s\\\((?<type>\w*)\\\)
 	private static final long maxID = Long.MAX_VALUE / 2;
 	
+	private static final StatSource DND_BEYOND_CHAR_IMPORT = StatSource.of(GameLayer.CHOSEN, "D&D Beyond character imported value");
+	
 	long characterID = -1;
 	
 	public DNDBeyondPDFPlayerBuilder(User owner, String sheet) throws CommandSyntaxException {
@@ -34,7 +35,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 	
 	private static FixedPlayerCharacterStatBuilder getStats(User owner, String charSheet) {
 		FixedPlayerCharacterStatBuilder statBuilder = new FixedPlayerCharacterStatBuilder();
-		statBuilder.addStat(new StatValue(Stat.Owner, StatSource.of(GameLayer.DATABASE, "D&D Beyond Character ID"), owner.getIdLong()));
+		statBuilder.addStat(Stat.Owner, GameLayer.DATABASE, "D&D Beyond Character ID", owner.getIdLong());
 		try {
 			if(!charSheet.startsWith("https://")) {
 				charSheet = charSheet + "https://";
@@ -45,23 +46,30 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 			InputStream is = connection.getInputStream();
 			Matcher matcher = PDF_OBJECT_PATTERN.matcher(new String(is.readAllBytes()));
 			
-			int count = 0;
+			int maxHP = -1;
+			int hp = -1;
 			while(matcher.find()) {
-				count++;
 				String result = matcher.toMatchResult().group();
 				if(result.contains("\n/FT/Tx\n")) {
 					PDFText text = new PDFText(result);
 					DNDBeyondPDFValue val = DNDBeyondPDFValue.getValueType(text);
+
 					if(val == null) {
 						//System.out.println("I don't know how to handle a " + text.getName() + " value, ignoring");
 					}
 					else {
 						switch(val) {
 							case CHARACTER_NAME:
-								statBuilder.addStat(new StatValue(val.getStat(), StatSource.of(GameLayer.CHOSEN, "The name you chose for your character."), val.parse(text)));
+								statBuilder.addStat(val.getStat(), GameLayer.CHOSEN, "The name you chose for your character.", val.parse(text));
 								break;
 							case MOVEMENT:
 								parseMovement(statBuilder, text);
+								break;
+							case MAX_HP:
+								maxHP = (int) val.parse(text);
+								break;
+							case CURRENT_HP:
+								hp = (int) val.parse(text);
 								break;
 							case DEFENSES:
 							case SAVE_MODS:
@@ -84,7 +92,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 							default:
 								if(val.getStat() != null) {
 									System.out.println("Adding " + val.getStat().getName());
-									statBuilder.addStat(new StatValue(val.getStat(), StatSource.of(GameLayer.CHOSEN, "D&D Beyond imported value"), val.parse(text)));
+									statBuilder.addStat(val.getStat(), GameLayer.CHOSEN, "D&D Beyond imported value", val.parse(text));
 								}
 								else {
 									//System.out.println("Don't know how to add a " + text.getName() + " stat, ignoring");
@@ -95,9 +103,16 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 				}
 			}
 			
+			if(hp < 0) {
+				hp = maxHP;
+			}
+			
+			statBuilder.addStat(Stat.Max_HP, DND_BEYOND_CHAR_IMPORT, maxHP);
+			statBuilder.addStat(Stat.HP, DND_BEYOND_CHAR_IMPORT, hp);
+			
 			long id = Long.parseLong(charSheet.substring(charSheet.lastIndexOf('_') + 1).replace(DNDBeyondPDFArgument.PDF, ""));
 			if(id <= maxID) {
-				statBuilder.addStat(new StatValue(Stat.ID, StatSource.of(GameLayer.DATABASE, "D&D Beyond character id"), id));
+				statBuilder.addStat(Stat.ID, DND_BEYOND_CHAR_IMPORT, id);
 			}
 			else {
 				throw new IllegalStateException("D&D Beyond character id (" + id + ") exceeded maximum expected value?! This is a critical issue! Report immediately!");
@@ -119,7 +134,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 			String foundType = matcher.group("type");
 			for(MovementType type : MovementType.values()) {
 				if(type.name().equals(foundType)) {
-					stats.addStat(new StatValue(type.getStat(), StatSource.of(GameLayer.CHOSEN, "D&D Beyond imported value"), Integer.parseInt(speed)));
+					stats.addStat(type.getStat(), DND_BEYOND_CHAR_IMPORT, Integer.parseInt(speed));
 					continue matching;
 				}
 			}

@@ -20,7 +20,7 @@ public class PlayerBuilder {
 	
 	public PlayerCharacter build() {
 		checkValid();
-		return new PlayerCharacter(stats);
+		return new PlayerCharacter(stats.build());
 	}
 	
 }

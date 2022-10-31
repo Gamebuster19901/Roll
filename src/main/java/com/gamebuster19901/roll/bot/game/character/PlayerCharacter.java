@@ -1,11 +1,17 @@
 package com.gamebuster19901.roll.bot.game.character;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.SQLException;
 
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.Main;
 import static com.gamebuster19901.roll.bot.database.Column.*;
 import static com.gamebuster19901.roll.bot.database.Comparator.*;
+
+import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Comparison;
 import com.gamebuster19901.roll.bot.database.Insertion;
 import com.gamebuster19901.roll.bot.database.Result;
@@ -24,6 +30,10 @@ import com.gamebuster19901.roll.util.TriFunction;
 import net.dv8tion.jda.api.entities.User;
 
 public class PlayerCharacter implements Statted {
+	public static final Path CHARACTER_FOLDER = Main.RUN_DIR.toPath().resolve("Characters");
+	static {
+		CHARACTER_FOLDER.toFile().mkdirs();
+	}
 
 	protected final PlayerCharacterStats stats;
 	
@@ -119,10 +129,30 @@ public class PlayerCharacter implements Statted {
 		return getOwner(getID());
 	}
 	
+	public File getCharacterFolder() {
+		return getCharacterFolder(getID());
+	}
+	
+	protected File getJsonFile() {
+		return getCharacterPath(getID()).resolve("stats.json").toFile();
+	}
+	
+	public File getCharacterImage() {
+		return CHARACTER_FOLDER.resolve("image.png").toFile();
+	}
+	
 	public static User getOwner(long id) {
 		Result result = Table.selectColumnsFromWhere(DISCORD_ID, CHARACTERS, new Comparison(CHARACTER_ID, EQUALS, id));
 		result.next();
 		return Main.discordBot.jda.retrieveUserById(result.getLong(DISCORD_ID)).complete();
+	}
+	
+	private static File getCharacterFolder(long id) {
+		return getCharacterPath(id).toFile();
+	}
+	
+	private static Path getCharacterPath(long id) {
+		return CHARACTER_FOLDER.resolve(id + "");
 	}
 	
 	public static boolean exists(long id) {
@@ -137,6 +167,24 @@ public class PlayerCharacter implements Statted {
 	
 	public static void removeCharacter(long characterID) throws SQLException {
 		Table.deleteWhere(CHARACTERS, new Comparison(CHARACTER_ID, EQUALS, characterID));
+		getCharacterFolder(characterID).delete();
+	}
+	
+	public static PlayerCharacter addCharacterToDatabase(PlayerCharacter character, boolean overwrite) throws SQLException, IOException {
+		if(overwrite && exists(character.getID())) {
+			removeCharacter(character.getID());
+		}
+		PreparedStatement s = Insertion.insertInto(Table.CHARACTERS)
+				.setColumns(Column.CHARACTER_ID, Column.DISCORD_ID)
+				.to(character.getStat(Stat.ID, long.class), character.getStat(Stat.Owner, long.class)
+		).prepare(true);
+		s.execute();
+		character.getCharacterFolder().mkdirs();
+		character.getJsonFile().createNewFile();
+		FileWriter fw = new FileWriter(character.getJsonFile());
+		fw.write(Main.gson.toJson(character));
+		fw.close();
+		return character;
 	}
 	
 }

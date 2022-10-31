@@ -13,7 +13,7 @@ public class Dice {
 
 	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d*){0,1}");
 	
-	int cursor;
+	transient int cursor;
 	final int amount;
 	final int die;
 	Dice child;

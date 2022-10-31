@@ -6,14 +6,13 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 import com.ezylang.evalex.Expression;
-import com.gamebuster19901.roll.bot.game.Dice;
 import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.util.TriFunction;
 
 public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 	
-	public final HashSet<Stat> requiredStats = new HashSet<Stat>();
+	public transient final HashSet<Stat> requiredStats = new HashSet<Stat>();
 	{
 		requiredStats.addAll(Arrays.asList(new Stat[] {
 			Stat.Name,
@@ -37,7 +36,7 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 		
 	};
 	
-	public HashSet<StatValue<?>> defaultStats = new HashSet<StatValue<?>>();;
+	public transient HashSet<StatValue<?>> defaultStats = new HashSet<StatValue<?>>();;
 	{
 		defaultStats.add(new StatValue<Integer>(MovementType.Burrowing.getStat(), StatSource.of(GameLayer.GAME_RULE, ""), 0));
 		defaultStats.add(new StatValue<Integer>(MovementType.Climbing.getStat(), StatSource.of(GameLayer.GAME_RULE, ""), 0));
@@ -103,7 +102,7 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 	@Override
 	public FixedStats build() {
 		validate();
-		return new FixedStats(getName(), getAC(), getHP(), getMaxHP(), getTempHP(), getSpeeds(), getStats(), getStatMods(), getStatProficiencies(), getSkills(), getSkillProficiencies(), this.getStat(Stat.EXP, int.class), 0, this.getStat(Stat.Initiative, int.class), this.getStat(Stat.Proficiency_Bonus, int.class), this.getStat(Stat.Hit_Dice, Dice.class));
+		return new FixedStats(stats);
 	}
 	
 	private HashMap<MovementType, Integer> getSpeeds() {

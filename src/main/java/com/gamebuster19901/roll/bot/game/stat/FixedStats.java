@@ -3,8 +3,6 @@ package com.gamebuster19901.roll.bot.game.stat;
 import java.util.HashMap;
 
 import com.ezylang.evalex.Expression;
-import com.gamebuster19901.roll.bot.game.Dice;
-import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.util.TriFunction;
 
@@ -25,102 +23,15 @@ import com.gamebuster19901.roll.util.TriFunction;
  */
 public class FixedStats extends Stats {
 	
-	final String name;
-	final int ac, maxHP, tempHP, exp, totalLevel, initiative, proficiencyBonus;
-	final Dice hitDice;
-	final HashMap<MovementType, Integer> speed;
-	final HashMap<Ability, Integer> stats, statMods;
-	final HashMap<Ability, ProficiencyLevel> statProficiencies;
-	final HashMap<Skill, Integer> skills;
-	final HashMap<Skill, ProficiencyLevel> skillProficiencies;
-	
-	public FixedStats( //yikes this is ugly
-		String name, 
-		int ac,
-		int hp, 
-		int maxHP, 
-		int tempHP, 
-		HashMap<MovementType, Integer> speed, 
-		HashMap<Ability, Integer> stats, 
-		HashMap<Ability, Integer> statMods,
-		HashMap<Ability, ProficiencyLevel> statProficiencies, 
-		HashMap<Skill, Integer> skills,
-		HashMap<Skill, ProficiencyLevel> skillProficiencies,
-		int exp,
-		int totalLevel,
-		int initiative,
-		int proficiencyBonus,
-		Dice hitDice	
-	) {
-		this.name = name;
-		this.ac = ac;
-		this.maxHP = maxHP;
-		this.tempHP = tempHP;
-		this.speed = speed;
-		this.stats = stats;
-		this.statMods = statMods;
-		this.statProficiencies = statProficiencies;
-		this.skills = skills;
-		this.skillProficiencies = skillProficiencies;
-		this.exp = exp;
-		this.totalLevel = totalLevel;
-		this.initiative = initiative;
-		this.proficiencyBonus = proficiencyBonus;
-		this.hitDice = hitDice;
-	}
+	final HashMap<Stat, StatValue<?>> values;
 
-	@Override
-	public int getHP(GameLayer layer) {
-		return maxHP;
-	}
-	
-	@Override
-	public int getMaxHP(GameLayer layer) {
-		return maxHP;
-	}
-
-	@Override
-	public int getTempHP(GameLayer layer) {
-		return tempHP;
-	}
-
-	@Override
-	public int getSpeed(GameLayer layer, MovementType movementType) {
-		Integer ret;
-		ret = speed.get(movementType);
-		return ret != null  && ret > -1? ret : 0;
-	}
-
-	@Override
-	public int getAC(GameLayer layer) {
-		return ac;
+	public FixedStats(HashMap<Stat, StatValue<?>> stats) {
+		values = stats;
 	}
 
 	@Override
 	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type) {
-		if(stat.isAbilityScoreStat()) {
-			if(stat.isAbilityModifierStat()) {
-				return (T) statMods.get(Ability.fromStat(stat));
-			}
-			return (T) stats.get(Ability.fromStat(stat));
-		}
-		if(stat.isSkillStat()) {
-			return (T) skills.get(Skill.fromStat(stat));
-		}
-		if(stat.isSpeedStat()) {
-			return (T) speed.get(MovementType.fromStat(stat));
-		}
-		if(stat.equals(Stat.AC)) {
-			return (T)(Object)getAC();
-		}
-		if(stat.equals(Stat.HP)) {
-			return (T)(Object)getMaxHP();
-		}
-		if(stat.equals(Stat.Temp_HP)) {
-			return (T)(Object)getTempHP();
-		}
-
-		return null;
+		return values.get(stat).getValueAs(type);
 	}
 
 	@Override
