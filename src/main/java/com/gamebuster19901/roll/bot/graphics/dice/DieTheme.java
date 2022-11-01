@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 
 import com.gamebuster19901.roll.bot.game.Die;
 import com.gamebuster19901.roll.bot.game.Roll;
-import com.gamebuster19901.roll.bot.graphics.dice.animation.Spin;
 
 public class DieTheme {
 	
@@ -55,7 +54,7 @@ public class DieTheme {
 			case d6:
 			case d8:
 				maxSize = die.getDieType().getTextSize();
-				dieImage = ImageIO.read(getClass().getResourceAsStream("/com/gamebuster19901/roll/" + die.getDieType() + "/" + Spin.horizontal + "/0000.png"));
+				dieImage = ImageIO.read(getClass().getResourceAsStream("/com/gamebuster19901/roll/dice/" + die.getDieType() + ".png"));
 				g = (Graphics2D) dieImage.getGraphics();
 				
 				g.setColor(getTextColor());
