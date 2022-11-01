@@ -4,8 +4,9 @@ import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.Statistic;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
+import com.gamebuster19901.roll.gson.Metamorphic;
 
-public class Stat implements Statistic {
+public @Metamorphic class Stat implements Statistic {
 
 	public static final Stat Name = new Stat("Name");
 	public static final Stat HP = new Stat("HP");
@@ -74,6 +75,10 @@ public class Stat implements Statistic {
 	@Override
 	public Stat getStat() {
 		return this;
+	}
+	
+	public String toString() {
+		return name;
 	}
 	
 	public boolean isSpeedStat() {

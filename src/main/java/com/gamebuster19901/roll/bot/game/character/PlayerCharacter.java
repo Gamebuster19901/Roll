@@ -25,6 +25,7 @@ import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
+import com.gamebuster19901.roll.gson.Metamorphic;
 import com.gamebuster19901.roll.util.TriFunction;
 
 import net.dv8tion.jda.api.entities.User;
@@ -35,7 +36,7 @@ public class PlayerCharacter implements Statted {
 		CHARACTER_FOLDER.toFile().mkdirs();
 	}
 
-	protected final PlayerCharacterStats stats;
+	protected final @Metamorphic PlayerCharacterStats stats;
 	
 	public PlayerCharacter(PlayerCharacterStats stats) {
 		this.stats = stats;
