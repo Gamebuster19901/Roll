@@ -1,4 +1,7 @@
-Image Credits:
+Programming:
+Gamebuster19901
+
+Images:
 
 Game-icons.net
 
@@ -15,3 +18,6 @@ Radiant Damage icon: Lorc
 Force Damage icon: Lorc
 Thunder Damage icon: Lorc
 Lighting Damage icon: Lorc
+Proficient icon: DarkZaitzev
+Half Proficient icon: DarkZaitzev, Gamebuster19901
+Expert icon: DarkZaitzev
