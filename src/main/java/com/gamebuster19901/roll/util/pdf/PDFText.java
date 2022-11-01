@@ -33,7 +33,7 @@ public class PDFText {
 				valueMatcher = HEX_VALUE_PATTERN.matcher(text);
 				if(valueMatcher.find()) {
 					String val = valueMatcher.group("val");
-					ByteBuffer buff = ByteBuffer.allocate(val.length());
+					ByteBuffer buff = ByteBuffer.allocate(val.length() / 2);
 					for(int i = 0; i < val.length(); i+=2) {
 						buff.put((byte)Integer.parseInt(val.substring(i, i+2), 16));
 					}
