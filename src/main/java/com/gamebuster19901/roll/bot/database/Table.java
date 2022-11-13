@@ -12,6 +12,7 @@ public enum Table {
 	
 	CHARACTERS,
 	CLASSES,
+	PLAYERS,
 	RACES,
 	THEMES,
 	
@@ -29,10 +30,10 @@ public enum Table {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static Result selectColumnsFromWhere(Columns columns, Table table, Comparison comparison) {
+	public static Result selectColumnsFromWhere(Columns columns, Table table, Comparison comparison, Pagination pagination) {
 		try {
 			PreparedStatement st;
-			st = Database.INSTANCE.prepareStatement("SELECT " + columns + " FROM " + table + " WHERE " + comparison);
+			st = Database.INSTANCE.prepareStatement("SELECT " + columns + " FROM " + table + " WHERE " + comparison + pagination);
 			comparison.insertValues(st);
 	
 			return st.query();
@@ -40,6 +41,10 @@ public enum Table {
 		catch(SQLException e) {
 			throw new IOError(e);
 		}
+	}
+	
+	public static Result selectColumnsFromWhere(Columns columns, Table table, Comparison comparison) {
+		return selectColumnsFromWhere(columns, table, comparison, Pagination.NONE);
 	}
 	
 	@SuppressWarnings("rawtypes")

@@ -24,6 +24,7 @@ public class Interactions {
 	public Interactions() {
 		CharacterImportInteraction.register(dispatcher);
 		ConfirmationButtonInteraction.register(dispatcher);
+		CharacterSheetInteraction.register(dispatcher);
 	}
 	
 	public static void execute(CommandContext context, String command) throws CommandSyntaxException {
@@ -41,7 +42,7 @@ public class Interactions {
 			else if (arg.getType() == Type.BUTTON) {
 				command.append(arg.getId());
 			}
-			else if (arg.getType() == Type.SELECT_MENU) {
+			else if (arg.getType() == Type.STRING_SELECT) {
 				command.append(arg.getId());
 			}
 		}

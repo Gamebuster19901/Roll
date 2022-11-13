@@ -4,15 +4,15 @@ import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 
 class ImportCharacterCommand {
 
 	@SuppressWarnings("unchecked")
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
-		dispatcher.register(Commands.literal("importcharacter")
+		dispatcher.register(Commands.global("importcharacter")
 				.executes((context) -> {
 					CommandContext<?> c = context.getSource();
 					TextInput pdfURL = TextInput.create("pdfURL", "PDF URL", TextInputStyle.SHORT)

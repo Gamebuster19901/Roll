@@ -39,6 +39,29 @@ public class StatValue<T> {
 	
 	@SuppressWarnings("unchecked")
 	public <T> T getValueAs(Class<T> type) {
+		if(type.isEnum() && value instanceof String) {
+			return (T) Enum.valueOf((Class)type, (String)value);
+		}
+		if(Number.class.isAssignableFrom(type) || type.isPrimitive()) {
+			if(type == int.class || type == Integer.class) {
+				return (T)(Integer)((Number)value).intValue();
+			}
+			if(type == long.class || type == Long.class) {
+				return (T)(Long)((Number)value).longValue();
+			}
+			if(type == float.class || type == Float.class) {
+				return (T)(Float)((Number)value).floatValue();
+			}
+			if(type == double.class || type == Double.class) {
+				return (T)(Double)((Number)value).doubleValue();
+			}
+			if(type == short.class || type == Short.class) {
+				return (T)(Short)((Number)value).shortValue();
+			}
+			if(type == byte.class || type == Byte.class) {
+				return (T)(Float)((Number)value).floatValue();
+			}
+		}
 		return (T) value;
 	}
 	

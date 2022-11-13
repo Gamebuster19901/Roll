@@ -4,11 +4,8 @@ import java.time.Instant;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -25,7 +22,7 @@ public class CommandContext<E> {
 	private EmbedBuilder embedBuilder;
 	
 	public CommandContext(E e) {
-		if(e instanceof MessageReceivedEvent || e instanceof SlashCommandInteractionEvent || e instanceof ModalInteractionEvent || e instanceof ButtonInteractionEvent) {
+		if(e instanceof MessageReceivedEvent || e instanceof Interaction) {
 			this.event = e;
 		}
 		else {
@@ -73,6 +70,9 @@ public class CommandContext<E> {
 	}
 	
 	public void replyMessage(String message) {
+		if(message.length() > 2000) {
+			message = message.substring(0, 2000);
+		}
 		replyMessage(new MessageCreateBuilder().setContent(message).build(), false);
 	}
 	

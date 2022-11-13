@@ -12,9 +12,10 @@ import com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
 import com.gamebuster19901.roll.bot.game.stat.StatSource;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
+import com.gamebuster19901.roll.gson.GSerializable;
 import com.gamebuster19901.roll.util.TriFunction;
 
-public interface Statted {
+public interface Statted extends GSerializable {
 
 	public default String getName() {
 		return getName(GameLayer.OFFICE_ACTION);
@@ -22,6 +23,10 @@ public interface Statted {
 	
 	public default String getName(GameLayer layer) {
 		return getStat(layer, Stat.Name, String.class);
+	}
+	
+	public default long getID() {
+		return getStat(GameLayer.DATABASE, Stat.ID, long.class);
 	}
 	
 	public default int getRawModifier(Ability ability) {

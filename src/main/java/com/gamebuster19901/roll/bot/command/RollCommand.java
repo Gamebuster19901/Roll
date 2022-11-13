@@ -22,7 +22,7 @@ class RollCommand {
 
 	@SuppressWarnings("rawtypes")
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
-		dispatcher.register(Commands.literal("roll")
+		dispatcher.register(Commands.global("roll")
 			.then(Commands.argument("dice", DiceArgumentType.DICE_ARGUMENT_TYPE)
 				.executes((context) -> {
 					CommandContext<?> c = context.getSource();

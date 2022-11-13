@@ -10,8 +10,9 @@ public enum Column implements Columns {
 	//MULTIPLE TABLES:
 	ALL_COLUMNS("*", Table.values()),
 	GENERATED_KEY("GENERATED_KEY", Table.values()), //Used for getting generated key
+	NAME("name", CHARACTERS),
 	
-	DISCORD_ID("discordID", CHARACTERS, CLASSES, THEMES, RACES),
+	DISCORD_ID("discordID", CHARACTERS, CLASSES, THEMES, PLAYERS, RACES),
 	
 	/*
 	 * Characters
@@ -22,6 +23,11 @@ public enum Column implements Columns {
 	 * Classes
 	 */
 	CLASS_ID("classID", CLASSES),
+	
+	/*
+	 * Players
+	 */
+	CURRENT_CHARACTER("currentCharacter", CHARACTERS),
 	
 	/*
 	 * Races
@@ -44,7 +50,7 @@ public enum Column implements Columns {
 	
 	private Column(String name, Table...tables ) {
 		if(tables == null || tables.length == 0) {
-			throw new VerifyError("Column " + name + " has no tables!");
+			throw new VerifyError("Column `" + name + "` is not part of any table!");
 		}
 		this.name = name;
 		validTables.addAll(Arrays.asList(tables));
@@ -64,7 +70,7 @@ public enum Column implements Columns {
 				return column;
 			}
 		}
-		throw new IllegalArgumentException("No column with name " + dbName);
+		throw new IllegalArgumentException("No column with name `" + dbName + "`");
 	}
 	
 	@Override

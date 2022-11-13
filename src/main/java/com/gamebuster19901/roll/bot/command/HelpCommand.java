@@ -10,7 +10,7 @@ class HelpCommand {
 
 	@SuppressWarnings("rawtypes")
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
-		dispatcher.register(Commands.literal("help").executes((context) -> {
+		dispatcher.register(Commands.global("help").executes((context) -> {
 			return sendHelpInfo(context.getSource());
 		}));
 	}

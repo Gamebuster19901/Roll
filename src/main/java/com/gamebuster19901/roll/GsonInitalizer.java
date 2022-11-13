@@ -3,7 +3,7 @@ package com.gamebuster19901.roll;
 import java.lang.reflect.Type;
 
 import com.ezylang.evalex.Expression;
-import com.gamebuster19901.roll.gson.MetamorphicTypeAdapterFactory;
+import com.gamebuster19901.roll.gson.GSerializableTypeAdapterFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -18,10 +18,8 @@ class GsonInitalizer {
 	static Gson initialize() {
 		return new GsonBuilder()
 		.setPrettyPrinting()
-		.registerTypeAdapterFactory(new MetamorphicTypeAdapterFactory())
-		//.registerTypeAdapter(PlayerCharacter.class, new PlayerCharacterSerializer())
-		.registerTypeAdapter(Expression.class, new ExpressionSerializer())
-		.registerTypeAdapter(Expression.class, new ExpressionDeserializer())
+		.registerTypeAdapterFactory(new GSerializableTypeAdapterFactory())
+		.enableComplexMapKeySerialization()
 		.create();
 	}
 	

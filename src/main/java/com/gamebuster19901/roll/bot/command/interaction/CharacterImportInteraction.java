@@ -7,6 +7,8 @@ import java.util.Collections;
 import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.bot.command.argument.DNDBeyondPDFArgument;
+import com.gamebuster19901.roll.bot.command.embed.StatEmbedBuilder;
+import com.gamebuster19901.roll.bot.command.embed.StatInteractionBuilder;
 import com.gamebuster19901.roll.bot.game.beyond.character.DNDBeyondPDFPlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
 import com.gamebuster19901.roll.util.ThreadService;
@@ -40,14 +42,15 @@ public class CharacterImportInteraction {
 							MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
 							if(PlayerCharacter.exists(id)) {
 								if(PlayerCharacter.getOwner(id).getIdLong() == context.getSource().getAuthor().getIdLong()) {
-									messageBuilder.setContent("You already have a character with ID `" + id + "`, would you like to overwrite the previous character?");
+									String name = PlayerCharacter.getName(id);
+									messageBuilder.setContent("You already have a character with ID `" + id + "`, would you like to overwrite `" + name + "`?");
 									messageBuilder.setActionRow(Button.primary("overwrite " + id + " reject", "No"), Button.danger("overwrite " + id + " confirm", "Yes"));
 									
 									MessageEditBuilder responseBuilder = new MessageEditBuilder();
-									String rejectMessage = "Refusing to overwrite character `" + id+ "`.";
+									String rejectMessage = "Refusing to overwrite `" + name + "`.";
 									
 									MessageCreateData askMessage = messageBuilder.build();
-									InteractionHook askReply = e.reply(askMessage).setEphemeral(true).complete();
+									InteractionHook askReply = e.reply(askMessage).setEphemeral(false).complete();
 									boolean interrupted = false;
 									boolean failed = false;
 									synchronized(Thread.currentThread()) {
@@ -79,7 +82,7 @@ public class CharacterImportInteraction {
 										try {
 											PlayerCharacter.removeCharacter(id);
 											PlayerCharacter character = addCharacterToDatabase(e, builder);
-											askReply.editOriginal(responseBuilder.setContent("Overwrote " + character.getName()).setComponents(Collections.emptyList()).build()).complete();
+											askReply.editOriginal(responseBuilder.setContent("Overwrote " + character.getName()).setComponents(new StatInteractionBuilder(character).getComponents()).setEmbeds(new StatEmbedBuilder(character, responseBuilder).getEmbed()).build()).complete();
 										} catch (SQLException | IOException e1) {
 											// TODO Auto-generated catch block
 											e1.printStackTrace();
@@ -92,7 +95,9 @@ public class CharacterImportInteraction {
 							}
 							else {
 								try {
-									addCharacterToDatabase(e, builder);
+									PlayerCharacter character = addCharacterToDatabase(e, builder);
+									MessageCreateBuilder builder = new MessageCreateBuilder();
+									e.reply(builder.setContent("Added `" + character.getName() + "` to your collection.").setEmbeds(new StatEmbedBuilder(character, builder).getEmbed()).build());
 								} catch (SQLException | IOException e1) {
 									throw new RuntimeException(e1);
 								}

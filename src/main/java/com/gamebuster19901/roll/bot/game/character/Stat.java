@@ -4,9 +4,8 @@ import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.Statistic;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
-import com.gamebuster19901.roll.gson.Metamorphic;
 
-public @Metamorphic class Stat implements Statistic {
+public class Stat implements Statistic {
 
 	public static final Stat Name = new Stat("Name");
 	public static final Stat HP = new Stat("HP");

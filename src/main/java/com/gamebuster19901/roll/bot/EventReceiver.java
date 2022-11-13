@@ -1,10 +1,13 @@
 package com.gamebuster19901.roll.bot;
 
+import java.sql.SQLNonTransientConnectionException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gamebuster19901.roll.Main;
 import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Commands;
+import com.gamebuster19901.roll.bot.command.argument.GlobalLiteralArgumentBuilder.GlobalLiteralCommandNode;
 import com.gamebuster19901.roll.bot.command.interaction.Interactions;
 import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Comparator;
@@ -93,6 +96,9 @@ public class EventReceiver extends ListenerAdapter {
 		public void onGuildReady(GuildReadyEvent e) {
 			List<CommandData> commands = new ArrayList<>();
 			Commands.DISPATCHER.getDispatcher().getRoot().getChildren().forEach((command) -> {
+				if(command instanceof GlobalLiteralCommandNode) {
+					return; //Don't register global commands as guild commands
+				}
 				SlashCommandData data = net.dv8tion.jda.api.interactions.commands.build.Commands.slash(command.getName(), command.getUsageText());
 				
 				if(command.getChildren().size() > 0) {

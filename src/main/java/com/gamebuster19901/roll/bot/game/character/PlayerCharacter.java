@@ -1,7 +1,11 @@
 package com.gamebuster19901.roll.bot.game.character;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOError;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -25,8 +29,10 @@ import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
-import com.gamebuster19901.roll.gson.Metamorphic;
+import com.gamebuster19901.roll.bot.graphics.ImageResource;
 import com.gamebuster19901.roll.util.TriFunction;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 
 import net.dv8tion.jda.api.entities.User;
 
@@ -36,10 +42,12 @@ public class PlayerCharacter implements Statted {
 		CHARACTER_FOLDER.toFile().mkdirs();
 	}
 
-	protected final @Metamorphic PlayerCharacterStats stats;
+	protected final PlayerCharacterStats stats;
+	protected ImageResource image;
 	
 	public PlayerCharacter(PlayerCharacterStats stats) {
 		this.stats = stats;
+		this.image = DefaultCharacterImageResource.INSTANCE;
 	}
 	
 	@Override
@@ -126,6 +134,15 @@ public class PlayerCharacter implements Statted {
 		stats.setVariables(layer, expression);
 	}
 	
+	public void setImage(ImageResource image) {
+		this.image = image;
+		try {
+			addCharacterToDatabase(this, true);
+		} catch (SQLException | IOException e) {
+			throw new IOError(e);
+		}
+	}
+	
 	public User getOwner() {
 		return getOwner(getID());
 	}
@@ -135,11 +152,11 @@ public class PlayerCharacter implements Statted {
 	}
 	
 	protected File getJsonFile() {
-		return getCharacterPath(getID()).resolve("stats.json").toFile();
+		return getCharacterFile(getID());
 	}
 	
-	public File getCharacterImage() {
-		return CHARACTER_FOLDER.resolve("image.png").toFile();
+	public BufferedImage getCharacterImage() {
+		return image.getImage();
 	}
 	
 	public static User getOwner(long id) {
@@ -150,6 +167,10 @@ public class PlayerCharacter implements Statted {
 	
 	private static File getCharacterFolder(long id) {
 		return getCharacterPath(id).toFile();
+	}
+	
+	private static File getCharacterFile(long id) {
+		return getCharacterPath(id).resolve("stats.json").toFile();
 	}
 	
 	private static Path getCharacterPath(long id) {
@@ -176,8 +197,14 @@ public class PlayerCharacter implements Statted {
 			removeCharacter(character.getID());
 		}
 		PreparedStatement s = Insertion.insertInto(Table.CHARACTERS)
-				.setColumns(Column.CHARACTER_ID, Column.DISCORD_ID)
-				.to(character.getStat(Stat.ID, long.class), character.getStat(Stat.Owner, long.class)
+				.setColumns(
+						Column.CHARACTER_ID, 
+						Column.DISCORD_ID, 
+						Column.NAME)
+				.to(
+					character.getStat(Stat.ID, long.class), 
+					character.getStat(Stat.Owner, long.class), 
+					character.getStat(Stat.Name, String.class)
 		).prepare(true);
 		s.execute();
 		character.getCharacterFolder().mkdirs();
@@ -186,6 +213,22 @@ public class PlayerCharacter implements Statted {
 		fw.write(Main.gson.toJson(character));
 		fw.close();
 		return character;
+	}
+	
+	public static PlayerCharacter deserialize(long characterID) {
+		try {
+			return Main.gson.fromJson(new FileReader(getCharacterFile(characterID)), PlayerCharacter.class);
+		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+			throw new IOError(e);
+		}
+	}
+	
+	public static String getName(long characterID) {
+		Result result = Table.selectColumnsFromWhere(NAME, CHARACTERS, new Comparison(CHARACTER_ID, EQUALS, characterID));
+		if(result.next()) {
+			return result.getString(NAME);
+		}
+		return "";
 	}
 	
 }
