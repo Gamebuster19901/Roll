@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import java.sql.SQLException;
-
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +14,7 @@ import javax.security.auth.login.LoginException;
 
 import com.gamebuster19901.roll.bot.DiscordBot;
 import com.gamebuster19901.roll.bot.database.sql.Database;
+import com.gamebuster19901.roll.util.ThreadService;
 import com.google.gson.Gson;
 
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
@@ -31,6 +33,7 @@ public class Main {
 	private static ConcurrentLinkedDeque<String> consoleCommandsAwaitingProcessing = new ConcurrentLinkedDeque<String>();
 
 	public static boolean stopping = false;
+	public static Instant lastDBInitialization;
 	
 	@SuppressWarnings("rawtypes")
 	public static void main(String[] args) throws InterruptedException, ClassNotFoundException, IOException, SQLException {
@@ -74,12 +77,11 @@ public class Main {
 			}
 		}
 		while(Database.INSTANCE == null);
-		
 		Thread.sleep(5000);
 		
 		discordBot.setOnline();
 		while(true) {
-			//stuff
+
 		}
 		
 		//System.exit(-1);
@@ -97,6 +99,52 @@ public class Main {
 			}
 		}
 		return new DiscordBot(botOwner, keyFile);
+	}
+
+	public static synchronized void recoverDB() {
+		Thread old = ThreadService.getThread("Database Reviver");
+		if(old != null) {
+			if(old.getState() != Thread.State.TERMINATED) {
+				return; //already being recovered
+			}
+		}
+		if(Database.lastDBInitialization.plus(Duration.ofSeconds(5)).isAfter(Instant.now())) { //5 second grace period after recovering db before trying again
+			ThreadService.run("Database Reviver", () -> {
+				if(Database.INSTANCE != null) {
+					try {
+						Database.INSTANCE.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				Database.INSTANCE = null;
+				while(Main.stopping == false && (Database.INSTANCE == null)) {
+					try {
+						Database.INSTANCE.close();
+						Database.INSTANCE = null;
+						while(Database.INSTANCE == null) {
+							discordBot.setNoDB();
+							try {
+								Database.INSTANCE = new Database();
+								discordBot.setOnline();
+							}
+							catch(Throwable t) {
+								System.err.println("Attempting to recover from database connection failure...");
+								t.printStackTrace(System.err);
+								if(Database.INSTANCE != null) {
+									try {Database.INSTANCE.close();}catch(Throwable t2) {}
+								}
+								Database.INSTANCE = null;
+								Thread.sleep(1000);
+							}
+						}
+					}
+					catch(Throwable t) {
+						t.printStackTrace();
+					}
+				}
+			});
+		}
 	}
 	
 }

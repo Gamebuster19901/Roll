@@ -18,6 +18,7 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -32,6 +33,7 @@ import com.mysql.cj.exceptions.ConnectionIsClosedException;
 public class Database implements Connection {
 
 	public static final StatSource DATABASE = StatSource.of(GameLayer.DATABASE, "");
+	public static Instant lastDBInitialization;
 	public static String SCHEMA;
 	
 	public static Database INSTANCE;
@@ -49,6 +51,7 @@ public class Database implements Connection {
 		if(file.isSecret()) {
 			List<String> lines = Files.readAllLines(file.toPath());
 			parent = DriverManager.getConnection(lines.get(0), lines.get(1), lines.get(2));
+			lastDBInitialization = Instant.now();
 		}
 		else {
 			throw new IOException(file.getAbsolutePath() + " is not secret!");

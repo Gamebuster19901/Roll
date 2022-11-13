@@ -14,6 +14,9 @@ import com.gamebuster19901.roll.bot.database.Table;
 import com.gamebuster19901.roll.bot.database.sql.Database;
 import com.gamebuster19901.roll.util.StacktraceUtil;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mysql.cj.exceptions.CJCommunicationsException;
+import com.mysql.cj.exceptions.ConnectionIsClosedException;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
@@ -44,6 +47,14 @@ public class EventReceiver extends ListenerAdapter {
 				}
 			}
 			catch(Throwable t) {
+				Throwable t2 = t;
+				while(t2 != null) {
+					if(t instanceof ConnectionIsClosedException || t instanceof CommunicationsException || t instanceof CJCommunicationsException || t instanceof SQLNonTransientConnectionException) {
+						Main.recoverDB();
+						break;
+					}
+					t2 = t2.getCause();
+				}
 				if(e.getInteraction() instanceof IReplyCallback) {
 					new CommandContext(e.getInteraction()).replyMessage(StacktraceUtil.getStackTrace(t));
 				}
