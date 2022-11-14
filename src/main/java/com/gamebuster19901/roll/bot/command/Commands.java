@@ -14,6 +14,7 @@ public class Commands {
 	public static final Commands DISPATCHER = new Commands();
 	
 	public Commands() {
+		CharacterCommand.register(dispatcher);
 		HelpCommand.register(dispatcher);
 		RollCommand.register(dispatcher);
 		ImportCharacterCommand.register(dispatcher);
