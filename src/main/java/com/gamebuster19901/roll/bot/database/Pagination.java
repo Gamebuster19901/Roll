@@ -27,6 +27,6 @@ public class Pagination {
 	
 	
 	public String toString() {
-		return " ORDER BY " + orderColumn + " " + order + " OFFSET " + (pageSize * page) + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
+		return " ORDER BY " + orderColumn + " " + order + " LIMIT " + (pageSize) + " OFFSET " + (pageSize * page);
 	}
 }
