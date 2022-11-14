@@ -78,8 +78,11 @@ public class EventReceiver extends ListenerAdapter {
 			CommandContext context = new CommandContext(e);
 			try {
 				Commands.DISPATCHER.getDispatcher().execute(c.toString() , context);
-			} catch (CommandSyntaxException ex) {
-				context.sendMessage(StacktraceUtil.getStackTrace(ex));
+			} catch (CommandSyntaxException t) {
+				context.sendMessage(StacktraceUtil.getStackTrace(t));
+			} catch (Throwable t) {
+				context.sendMessage(StacktraceUtil.getStackTrace(t));
+				throw t;
 			}
 		}
 		
