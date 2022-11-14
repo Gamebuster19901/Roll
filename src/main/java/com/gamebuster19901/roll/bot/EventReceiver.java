@@ -96,8 +96,8 @@ public class EventReceiver extends ListenerAdapter {
 		public void onGuildReady(GuildReadyEvent e) {
 			List<CommandData> commands = new ArrayList<>();
 			Commands.DISPATCHER.getDispatcher().getRoot().getChildren().forEach((command) -> {
-				if(command instanceof GlobalLiteralCommandNode) {
-					return; //Don't register global commands as guild commands
+				if(command instanceof GlobalLiteralCommandNode && !Main.discordBot.isDev()) {
+					return; //Don't register global commands as guild commands if we're not in a dev environment
 				}
 				SlashCommandData data = net.dv8tion.jda.api.interactions.commands.build.Commands.slash(command.getName(), command.getUsageText());
 				

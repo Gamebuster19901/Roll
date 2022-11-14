@@ -36,6 +36,7 @@ public class DiscordBot {
 	private static final List<GatewayIntent> GATEWAYS = Arrays.asList(new GatewayIntent[] {GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_EMOJIS_AND_STICKERS});
 	private String botOwner;
 	public final JDA jda;
+	private Boolean dev;
 	
 	public DiscordBot(String botOwner, File secretFile) throws LoginException, IOException {
 		BufferedReader reader = null;
@@ -47,7 +48,12 @@ public class DiscordBot {
 			JDABuilder builder = JDABuilder.createDefault(secret, GATEWAYS).setMemberCachePolicy(MemberCachePolicy.ALL).setChunkingFilter(ChunkingFilter.ALL);
 			builder.addEventListeners(new EventReceiver());
 			this.jda = builder.build();
-			setupGlobalCommands();
+			dev = Boolean.parseBoolean(reader.readLine());
+			if(!dev) {
+			}
+			else {
+				setupGlobalCommands();
+			}
 		} 
 		catch (IOException e) {
 			LOGGER.log(Level.SEVERE, e, () -> e.getMessage());
@@ -88,10 +94,14 @@ public class DiscordBot {
 		return jda.getSelfUser();
 	}
 	
+	public Boolean isDev() {
+		return dev;
+	}
+	
 	private void setupGlobalCommands() {
 		List<CommandData> commands = new ArrayList<>();
 		Commands.DISPATCHER.getDispatcher().getRoot().getChildren().forEach((command) -> {
-			if(command instanceof GlobalLiteralCommandNode) {
+			if(command instanceof GlobalLiteralCommandNode && !this.dev) {
 				SlashCommandData data = net.dv8tion.jda.api.interactions.commands.build.Commands.slash(command.getName(), command.getUsageText());
 				if(command.getChildren().size() > 0) {
 					data.addOption(OptionType.STRING, "argument", "argument");
