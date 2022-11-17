@@ -262,6 +262,26 @@ public class PlayerCharacter implements Statted {
 		return null; //no active character
 	}
 	
+	public static void setActiveCharacter(User user, PlayerCharacter character) {
+		setActiveCharacter(user.getIdLong(), character.getID());
+	}
+	
+	public static void setActiveCharacter(User user, long characterID) {
+		setActiveCharacter(user.getIdLong(), characterID);
+	}
+	
+	public static void setActiveCharacter(long userID, PlayerCharacter character) {
+		setActiveCharacter(userID, character.getID());
+	}
+	
+	public static void setActiveCharacter(long userID, long characterID) {
+		try {
+			Table.updateWhere(PLAYERS, CURRENT_CHARACTER, characterID, new Comparison(Column.DISCORD_ID, EQUALS, userID));
+		} catch (SQLException e) {
+			throw new IOError(e);
+		}
+	}
+	
 	/**
 	 * Gets all characters that are owned by the specified owner.
 	 * 

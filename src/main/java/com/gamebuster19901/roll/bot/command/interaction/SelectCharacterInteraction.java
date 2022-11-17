@@ -20,14 +20,21 @@ public class SelectCharacterInteraction {
 			.then(Commands.argument("character", StattedArgumentType.CHARACTER)
 				.executes((context) -> {
 					PlayerCharacter character = context.getArgument("character", PlayerCharacter.class);
-					ComponentInteraction e = (ComponentInteraction) context.getSource().getEvent(ComponentInteraction.class);
+					CommandContext c = context.getSource();
+					ComponentInteraction e = (ComponentInteraction) c.getEvent(ComponentInteraction.class);
 					MessageEditCallbackAction edit = e.deferEdit();
 					ReplyCallbackAction reply = e.deferReply(true);
-					if(character.getOwner().getIdLong() == context.getSource().getAuthor().getIdLong()) {
+					if(character.getOwner().getIdLong() == c.getAuthor().getIdLong()) {
 						edit.queue();
 						MessageEditBuilder editBuilder = new MessageEditBuilder();
-						editBuilder.setContent("You are now playing as " + character.getName() + ".").setEmbeds(new StatEmbedBuilder(character, editBuilder).getEmbed()).setComponents(new StatInteractionBuilder(character).getComponents());
-						e.getHook().editOriginal(editBuilder.build()).queue();
+						try {
+							PlayerCharacter.setActiveCharacter(context.getSource().getAuthor(), character);
+							editBuilder.setContent("You are now playing as " + character.getName() + ".").setEmbeds(new StatEmbedBuilder(character, editBuilder).getEmbed()).setComponents(new StatInteractionBuilder(character).getComponents());
+							e.getHook().editOriginal(editBuilder.build()).queue();
+						}
+						catch (Throwable t) {
+							editBuilder.setContent("Could not set your active character to " + character.getName() + " due to an error: " + t.getMessage()).setEmbeds(new StatEmbedBuilder(character, editBuilder).getEmbed()).setComponents(new StatInteractionBuilder(character).getComponents());
+						}
 					}
 					else {
 						reply.setContent("You do not own " + character.getName()).queue();
