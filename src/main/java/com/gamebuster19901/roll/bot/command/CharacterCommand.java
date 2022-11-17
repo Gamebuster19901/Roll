@@ -6,13 +6,17 @@ import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 
 class CharacterCommand {
 
+	private static final MessageEmbed TITLE_EMBED = new EmbedBuilder().setTitle("Select Character").build();
+	
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.global("character").executes((context) -> {
 			CommandContext<?> c = context.getSource();
@@ -28,8 +32,9 @@ class CharacterCommand {
 				selectBuilder.addOption(name, id + "");
 			}
 			
-			e.getHook().editOriginalComponents(ActionRow.of(selectBuilder.build())).queue();
-			e.getHook().editOriginalEmbeds(new EmbedBuilder().setTitle("Select Character").build()).queue();
+			MessageEditBuilder editBuilder = new MessageEditBuilder();
+			editBuilder.setComponents(ActionRow.of(selectBuilder.build())).setEmbeds(TITLE_EMBED);
+			e.getHook().editOriginal(editBuilder.build()).queue();
 			
 			return 1;
 		}));
