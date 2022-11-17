@@ -58,7 +58,7 @@ public class GSerializableTypeAdapterFactory implements TypeAdapterFactory {
 					boolean overwritten = false;
 					TypeToken<T> actualTypeToken = type;
 					Class<T> clazz = (Class<T>) type.getRawType();
-					System.out.println(clazz);
+					//System.out.println(clazz);
 					if(e.isJsonObject()) {
 						JsonObject obj = e.getAsJsonObject();
 						if(obj.has("class")) {
@@ -67,7 +67,7 @@ public class GSerializableTypeAdapterFactory implements TypeAdapterFactory {
 							actualTypeToken = TypeToken.get(clazz);
 						}
 					}
-					System.out.println(clazz + " " + overwritten + " " + e);
+					//System.out.println(clazz + " " + overwritten + " " + e);
 					try {
 						return gson.getDelegateAdapter(GSerializableTypeAdapterFactory.this, actualTypeToken).fromJsonTree(e);
 					}
