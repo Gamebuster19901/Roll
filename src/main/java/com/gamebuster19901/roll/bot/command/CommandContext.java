@@ -45,7 +45,7 @@ public class CommandContext<E> {
 		if(type.isAssignableFrom(event.getClass())) {
 			return (T)event;
 		}
-		throw new ClassCastException(event + " cannot be cast to " + type.getClass());
+		throw new ClassCastException(event + " cannot be cast to " + type.getCanonicalName());
 	}
 	
 	public boolean isDiscordContext() {
