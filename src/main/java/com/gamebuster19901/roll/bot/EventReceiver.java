@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -116,6 +117,15 @@ public class EventReceiver extends ListenerAdapter {
 		
 		@Override
 		public void onModalInteraction(ModalInteractionEvent e) {
+			try {
+				Interactions.execute(e);
+			} catch (CommandSyntaxException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		@Override
+		public void onStringSelectInteraction(StringSelectInteractionEvent e) {
 			try {
 				Interactions.execute(e);
 			} catch (CommandSyntaxException e1) {

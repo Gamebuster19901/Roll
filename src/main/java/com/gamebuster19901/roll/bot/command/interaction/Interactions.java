@@ -13,6 +13,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.Component.Type;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 
@@ -25,6 +26,7 @@ public class Interactions {
 		CharacterImportInteraction.register(dispatcher);
 		ConfirmationButtonInteraction.register(dispatcher);
 		CharacterSheetInteraction.register(dispatcher);
+		SelectCharacterInteraction.register(dispatcher);
 	}
 	
 	public static void execute(CommandContext context, String command) throws CommandSyntaxException {
@@ -46,11 +48,20 @@ public class Interactions {
 				command.append(arg.getId());
 			}
 		}
+		System.out.println(command);
 		DISPATCHER.getDispatcher().execute(command.toString(), new CommandContext(e));
 	}
 	
 	public static void execute(ButtonInteractionEvent e) throws CommandSyntaxException {
 		DISPATCHER.getDispatcher().execute(e.getButton().getId(), new CommandContext(e));
+	}
+	
+	public static void execute(StringSelectInteractionEvent e) throws CommandSyntaxException {
+		StringBuilder command = new StringBuilder();
+		command.append(e.getSelectMenu().getId());
+		command.append(' ');
+		command.append(e.getValues().get(0));
+		DISPATCHER.getDispatcher().execute(command.toString(), new CommandContext(e));
 	}
 	
 	public static LiteralArgumentBuilder<CommandContext<?>> literal(String name) {

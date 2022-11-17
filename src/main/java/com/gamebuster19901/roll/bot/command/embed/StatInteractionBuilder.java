@@ -85,11 +85,11 @@ public class StatInteractionBuilder {
 	}
 	
 	private StringSelectMenu getSelectMenu(List<StatEmbedPage> validPages) {
-		Builder menuBuilder = StringSelectMenu.create("statsSelect");
+		Builder menuBuilder = StringSelectMenu.create("charsheet");
 
 		for(StatEmbedPage page : validPages) {
 			if(page != this.page) {
-				menuBuilder.addOption(page.name(), page.name());
+				menuBuilder.addOption(page.name(), "page " + statted.getID() + " " + page.name());
 			}
 		}
 		

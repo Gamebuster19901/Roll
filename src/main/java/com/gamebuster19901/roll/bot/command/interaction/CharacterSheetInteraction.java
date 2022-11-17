@@ -11,7 +11,6 @@ import com.gamebuster19901.roll.bot.game.Statted;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ComponentInteraction;
 import net.dv8tion.jda.api.requests.restaction.interactions.MessageEditCallbackAction;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
@@ -21,11 +20,11 @@ public class CharacterSheetInteraction {
 	static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.literal("charsheet")
 			.then(Commands.literal("page")
-				.then(Commands.argument("statted", StattedArgumentType.CHARACTER)
+				.then(Commands.argument("statted", StattedArgumentType.CHARACTER_NULLABLE)
 					.then(Commands.argument("page", StatPageArgumentType.ARGUMENT)
 						.executes((context) -> {
 							CommandContext<?> c = context.getSource();
-							ButtonInteractionEvent e = c.getEvent(ButtonInteractionEvent.class);
+							ComponentInteraction e = c.getEvent(ComponentInteraction.class);
 							MessageEditBuilder editBuilder = new MessageEditBuilder();
 							Statted statted = context.getArgument("statted", Statted.class);
 							MessageEditCallbackAction editAction = e.deferEdit();
@@ -38,11 +37,11 @@ public class CharacterSheetInteraction {
 			)
 			.then(Commands.literal("menu")
 					.then(Commands.argument("state", StringArgumentType.word())
-						.then(Commands.argument("statted", StattedArgumentType.CHARACTER)
+						.then(Commands.argument("statted", StattedArgumentType.CHARACTER_NULLABLE)
 							.then(Commands.argument("page", StatPageArgumentType.ARGUMENT)
 								.executes((context) -> {
 									CommandContext<?> c = context.getSource();
-									ButtonInteractionEvent e = c.getEvent(ButtonInteractionEvent.class);
+									ComponentInteraction e = c.getEvent(ComponentInteraction.class);
 									MessageEditBuilder editBuilder = new MessageEditBuilder();
 									Statted statted = context.getArgument("statted", Statted.class);
 									MessageEditCallbackAction editAction = e.deferEdit();

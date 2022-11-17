@@ -17,14 +17,11 @@ class CharacterCommand {
 		dispatcher.register(Commands.global("character").executes((context) -> {
 			CommandContext<?> c = context.getSource();
 			SlashCommandInteractionEvent e = c.getEvent(SlashCommandInteractionEvent.class);
-			if(e.isAcknowledged()) {
-				throw new AssertionError();
-			}
 			ReplyCallbackAction r = e.deferReply();
 			r.queue();
 			
 			Result result = PlayerCharacter.getCharacterDataByOwner(c.getAuthor(), 23, 0);
-			StringSelectMenu.Builder selectBuilder = StringSelectMenu.create("Select Character");
+			StringSelectMenu.Builder selectBuilder = StringSelectMenu.create("selectcharacter");
 			while(result.next()) {
 				String name = result.getString(Column.NAME);
 				long id = result.getLong(Column.CHARACTER_ID);
