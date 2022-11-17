@@ -70,7 +70,6 @@ public class StatEmbedBuilder {
 			builder.addField(ability.shortHand + statted.getProficiency(ability).getEmoji(),
 					statted.getAbilityScore(ability) + "[" + modifierText(statted.getModifier(ability)) + "]" , true);
 		}
-		MessageChannel channel;
 		if(statted instanceof PlayerCharacter) {
 			try {
 				PlayerCharacter player = (PlayerCharacter) statted;
