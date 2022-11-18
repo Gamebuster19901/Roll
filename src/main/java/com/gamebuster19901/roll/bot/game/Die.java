@@ -6,8 +6,10 @@ public class Die {
 	protected final DieType dieType;
 	
 	public Die(int sides) {
-		if(sides == 0) {
-			throw new IllegalArgumentException("Die cannot have 0 sides!");
+		if(!(this instanceof Value)) {
+			if(sides == 0) {
+				throw new IllegalArgumentException("Die cannot have 0 sides!");
+			}
 		}
 		this.sides = sides;
 
