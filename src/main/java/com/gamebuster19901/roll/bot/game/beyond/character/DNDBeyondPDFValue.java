@@ -52,7 +52,7 @@ public enum DNDBeyondPDFValue {
 	WIS_PROF("WisProf", Wisdom.getProficiencyStat(), PROFICIENCY_BOOL),
 	CHA_PROF("ChaProf", Charisma.getProficiencyStat(), PROFICIENCY_BOOL),
 	
-	SAVING_STR("ST Strength", CHARISMA_SAVE.getStat(), INTEGER),
+	SAVING_STR("ST Strength", STRENGTH_SAVE.getStat(), INTEGER),
 	SAVING_DEX("ST Dexterity", DEXTERITY_SAVE.getStat(), INTEGER),
 	SAVING_CON("ST Constitution", CONSTITUTION_SAVE.getStat(), INTEGER),
 	SAVING_INT("ST Intelligence", INTELLIGENCE_SAVE.getStat(), INTEGER),
