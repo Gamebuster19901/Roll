@@ -34,6 +34,7 @@ public class GSerializableTypeAdapterFactory implements TypeAdapterFactory {
 						//we want the class to be listed first
 
 						newObj.addProperty("class", ((GSerializable)value).getClassName());
+						newObj.addProperty("implements", GSerializable.DATA_VERSION);
 						for(Entry<String, JsonElement> entry : obj.entrySet()) {
 							newObj.add(entry.getKey(), entry.getValue());
 						}
@@ -55,18 +56,18 @@ public class GSerializableTypeAdapterFactory implements TypeAdapterFactory {
 					if(e.isJsonNull()) {
 						return null;
 					}
-					boolean overwritten = false;
 					TypeToken<T> actualTypeToken = type;
 					Class<T> clazz = (Class<T>) type.getRawType();
 					//System.out.println(clazz);
 					if(e.isJsonObject()) {
 						JsonObject obj = e.getAsJsonObject();
 						if(obj.has("class")) {
-							overwritten = true;
 							clazz = (Class<T>) Class.forName(obj.get("class").getAsString());
 							actualTypeToken = TypeToken.get(clazz);
+							GUpdater.update(obj, actualTypeToken.getType());
 						}
 					}
+					
 					//System.out.println(clazz + " " + overwritten + " " + e);
 					try {
 						return gson.getDelegateAdapter(GSerializableTypeAdapterFactory.this, actualTypeToken).fromJsonTree(e);
