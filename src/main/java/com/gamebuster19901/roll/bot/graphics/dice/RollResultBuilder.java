@@ -21,7 +21,6 @@ public class RollResultBuilder extends DieGraphicBuilder {
 	@Override
 	public ByteArrayOutputStream buildImage() throws IOException {
 		ByteArrayOutputStream ret = new ByteArrayOutputStream(4194304);//4MiB
-		BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Entry<Die, Integer> die;
 		BufferedImage dieImage = null;
 		if(roll.getDieCount() <= 0) {
@@ -30,6 +29,7 @@ public class RollResultBuilder extends DieGraphicBuilder {
 		if(roll.getDieCount() > 1000) {
 			throw new IllegalArgumentException("Too many dice");
 		}
+		BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		DieTheme dieTheme = theme.getDieTheme();
 		for(int d = 0; d < roll.getDieCount(); d++) {
 			int x = d % 10;

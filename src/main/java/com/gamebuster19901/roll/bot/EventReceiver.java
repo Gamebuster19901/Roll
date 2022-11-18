@@ -80,7 +80,7 @@ public class EventReceiver extends ListenerAdapter {
 			try {
 				Commands.DISPATCHER.getDispatcher().execute(c.toString() , context);
 			} catch (Throwable t) {
-				context.sendMessage(StacktraceUtil.getStackTrace(t));
+				context.sendMessage(t.getMessage());
 				throw new RuntimeException(t);
 			}
 		}

@@ -39,7 +39,7 @@ class RollCommand {
 						new Thread(() -> {try {
 							graphic.buildImage().writeTo(out);
 							out.close();
-						} catch (IOException ex) {
+						} catch (Throwable ex) {
 							e.reply(ex.getMessage() + "\n\n Printing stacktrace to console.").queue();
 							ex.printStackTrace();
 							throw new RuntimeException(ex);
