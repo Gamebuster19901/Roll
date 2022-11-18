@@ -50,7 +50,7 @@ class RollCommand {
 								.setFooter("Result: " + result + ". Min: " + roll.getMinValue() + " Max: " + roll.getMaxValue())
 								.build());
 						if(roll.isSortable()) {
-							action.addActionRow(Button.primary("Sort", "Sort Dice"), Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
+							action.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 						}
 						action.queue();
 							//e.reply("Rolling " + dice).addFiles(FileUpload.fromData(in, "test.png")).complete();

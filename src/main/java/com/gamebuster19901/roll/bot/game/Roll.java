@@ -1,10 +1,11 @@
 package com.gamebuster19901.roll.bot.game;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Roll {
@@ -68,8 +69,20 @@ public class Roll {
 	}
 	
 	
-	public Set<Entry<Die, Integer>> getValues() {
-		return Set.copyOf(result.entrySet());
+	public List<Entry<Die, Integer>> getValues() {
+		return List.copyOf(result.entrySet());
+	}
+	
+	public List<Entry<Die, Integer>> getSortedValues() {
+		ArrayList<Entry<Die, Integer>> set = new ArrayList<Entry<Die, Integer>>();
+		set.addAll(result2);
+		set.sort(new Comparator<Entry<Die, Integer>>() {
+			@Override
+			public int compare(Entry<Die, Integer> o1, Entry<Die, Integer> o2) {
+				return o1.getValue().compareTo(o2.getValue());
+			}
+		});
+		return set;
 	}
 	
 	public int getDieCount() {

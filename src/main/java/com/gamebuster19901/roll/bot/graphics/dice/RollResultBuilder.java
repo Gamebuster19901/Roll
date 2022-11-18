@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map.Entry;
+import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 
@@ -14,8 +15,14 @@ import com.gamebuster19901.roll.bot.graphics.Themed;
 
 public class RollResultBuilder extends DieGraphicBuilder {
 	
+	private boolean sort = false;
+	
 	public RollResultBuilder(Themed theme, Roll roll) {
 		super(theme, roll);
+	}
+	
+	public void setSorted(boolean sort) {
+		this.sort = sort;
 	}
 
 	@Override
@@ -31,10 +38,11 @@ public class RollResultBuilder extends DieGraphicBuilder {
 		}
 		BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		DieTheme dieTheme = theme.getDieTheme();
+		Entry<Die, Integer>[] values = sort ? roll.getSortedValues().toArray(new Entry[0]) : roll.getValues().toArray(new Entry[0]);
 		for(int d = 0; d < roll.getDieCount(); d++) {
 			int x = d % 10;
 			int y = d / 10;
-			die = roll.getValue(d);
+			die = values[d];
 			dieImage = dieTheme.renderDie(roll, die);
 
 
