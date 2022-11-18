@@ -81,7 +81,9 @@ public class EventReceiver extends ListenerAdapter {
 				Commands.DISPATCHER.getDispatcher().execute(c.toString() , context);
 			} catch (Throwable t) {
 				context.sendMessage(t.getMessage());
-				throw new RuntimeException(t);
+				if(!(t instanceof CommandSyntaxException)) {
+					throw new RuntimeException(t);
+				}
 			}
 		}
 		
