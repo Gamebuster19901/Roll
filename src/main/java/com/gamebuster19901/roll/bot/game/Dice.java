@@ -5,17 +5,22 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.EnumUtils;
+
 import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.exception.DieParseException;
+import com.gamebuster19901.roll.util.regex.RegexUtil;
 import com.mojang.brigadier.StringReader;
 
 public class Dice {
 
-	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d*){0,1}");
+	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d*){0,1}(?<type>[\\w\\s]*)");
 	
 	transient int cursor;
 	final int amount;
 	final int die;
+	final String type;
+	final DamageType damageType;
 	Dice child;
 	List<Die> dice = new ArrayList<>();
 	
@@ -25,11 +30,10 @@ public class Dice {
 	
 	public Dice(String s, int cursor) {
 		this(ROLLING_REGEX.matcher(s), cursor);
-
 	}
 	
 	public Dice(StringReader s) {
-		this(Commands.readString(s), s.getCursor());
+		this(Commands.readUntilEnd(s), s.getCursor());
 	}
 	
 	private Dice(Matcher matcher, int cursor) {
@@ -37,6 +41,7 @@ public class Dice {
 		this.cursor = cursor;
 		try {
 			this.cursor = matcher.start("amount");
+			
 			
 			String amt = matcher.group("amount");
 			int amount = 1;
@@ -52,17 +57,41 @@ public class Dice {
 			
 			this.amount = amount;
 			
-			String die = matcher.group("die");
-			this.cursor = matcher.start("die");
-			if(die != null && !die.isEmpty()) {
-				this.die = Integer.parseInt(die.substring(1));
+			if(RegexUtil.groupExists("die", matcher)) {
+				
+				matcher.groupCount();
+				String die = matcher.group("die");
+				this.cursor = matcher.start("die");
+				if(die != null && !die.isEmpty()) {
+					this.die = Integer.parseInt(die.substring(1));
+				}
+				else {
+					this.die = 0;
+				}
 			}
 			else {
 				this.die = 0;
 			}
 			
+			String type = matcher.group("type");
+			if(type == null || type.isBlank()) {
+				this.type = null;
+				this.damageType = null;
+			}
+			else {
+				this.type = type;
+				if (EnumUtils.isValidEnum(DamageType.class, type)) {
+					this.damageType = DamageType.valueOf(type);
+				}
+				else {
+					this.damageType = null;
+				}
+			}
+			
 			System.out.println("amount: " + this.amount);
 			System.out.println("die:" + this.die);
+			System.out.println("type:" + type);
+			System.out.println("damageType:" + damageType);
 			
 			if(!matcher.hitEnd()) {
 				child = new Dice(matcher, cursor + matcher.end());
@@ -99,7 +128,12 @@ public class Dice {
 				}
 			}
 			else if(die == 0) {
-				dice.add(new Value(amount));
+				if(type == null) {
+					dice.add(new Value(amount));
+				}
+				else {
+					dice.add(new RollValue(type));
+				}
 			}
 		}
 		else {
@@ -122,17 +156,25 @@ public class Dice {
 	}
 	
 	public int getMaxValue() {
+		return getMaxValue(null);
+	}
+	
+	public int getMinValue() {
+		return getMinValue(null);
+	}
+	
+	public int getMaxValue(Statted statted) {
 		int ret = 0;
 		for(Die die : getAllDice()) {
-			ret = ret + die.getMaxValue();
+			ret = ret + die.getMaxValue(statted);
 		}
 		return ret;
 	}
 	
-	public int getMinValue() {
+	public int getMinValue(Statted statted) {
 		int ret = 0;
 		for(Die die : getAllDice()) {
-			ret = ret + die.getMinValue();
+			ret = ret + die.getMinValue(statted);
 		}
 		return ret;
 	}
@@ -142,10 +184,20 @@ public class Dice {
 		Dice dice = this;
 		do {
 			if(dice.die != 0) {
-				ret.append(dice.amount + "d" + dice.die);
+				if(dice.type != null) {
+					ret.append(dice.amount + "d" + dice.die + type);
+				}
+				else {
+					ret.append(dice.amount + "d" + dice.die);
+				}
 			}
 			else {
-				ret.append(dice.amount);
+				if(dice.type == null) {
+					ret.append(dice.amount);
+				}
+				else {
+					ret.append(dice.type);
+				}
 			}
 			dice = dice.child;
 			if(dice != null) {

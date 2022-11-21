@@ -3,6 +3,7 @@ package com.gamebuster19901.roll.bot.game;
 public enum DieType {
 	other(0),
 	modifier(1, 0, 0, 220),
+	stat(1, 0, 0, 220),
 	//d2(2),
 	d4(4, 0, 15, 120),
 	d6(6, 0, 0, 120),

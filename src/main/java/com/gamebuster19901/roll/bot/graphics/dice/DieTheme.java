@@ -14,6 +14,8 @@ import javax.imageio.ImageIO;
 
 import com.gamebuster19901.roll.bot.game.Die;
 import com.gamebuster19901.roll.bot.game.Roll;
+import com.gamebuster19901.roll.bot.game.RollValue;
+import com.gamebuster19901.roll.bot.game.character.Stat;
 
 public class DieTheme {
 	
@@ -71,6 +73,23 @@ public class DieTheme {
 			case modifier:
 				g.setColor(getTextColor());
 				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, maxSize, maxSize);
+				break;
+			case stat:
+				dieImage = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB); //blank image
+				g = (Graphics2D) dieImage.getGraphics();
+				g.setColor(getTextColor());
+				if(Math.abs(die.getSides()) > 2) { //so coin tosses are not always red/green
+					if(die.getSides() > -1 && die.getSides() == value) {
+						g.setColor(getGoodColor());
+					}
+					else if(value == 1 || value < 0) {
+						g.setColor(getBadColor());
+					}
+				}
+				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, 211, 211);
+				g.setColor(Color.YELLOW);
+				renderText(g, ((RollValue)die).getStat().getSimpleName(), 0, 100, 256, 45);
+				
 				break;
 			case other:
 			case d100:

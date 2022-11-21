@@ -44,4 +44,14 @@ public class FixedStats extends Stats {
 		//NO-OP
 	}
 
+	@Override
+	public boolean hasStat(GameLayer layer, Stat stat) {
+		return values.containsKey(stat);
+	}
+
+	@Override
+	public boolean hasStatAt(GameLayer layer, Stat stat) { //fixedStats doesn't implement layer system
+		return hasStat(stat);
+	}
+
 }

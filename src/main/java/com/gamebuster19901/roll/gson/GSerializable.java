@@ -2,7 +2,7 @@ package com.gamebuster19901.roll.gson;
 
 public interface GSerializable {
 	
-	public static final int DATA_VERSION = 1;
+	public static final int DATA_VERSION = 2;
 
 	public default String getClassName() {
 		return getClass().getTypeName();

@@ -28,5 +28,15 @@ public class FixedPlayerCharacterStats extends PCStats implements PlayerCharacte
 	public void setVariables(GameLayer layer, Expression expression) {
 		stats.setVariables(layer, expression);
 	}
+
+	@Override
+	public boolean hasStat(GameLayer layer, Stat stat) {
+		return stats.hasStat(layer, stat);
+	}
+
+	@Override
+	public boolean hasStatAt(GameLayer layer, Stat stat) {
+		return stats.hasStatAt(layer, stat);
+	}
 	
 }

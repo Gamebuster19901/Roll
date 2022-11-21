@@ -74,6 +74,16 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type) {
 		return stats.get(stat).getValueAs(type);
 	}
+	
+	@Override
+	public boolean hasStat(GameLayer layer, Stat stat) {
+		return stats.containsKey(stat);
+	}
+
+	@Override
+	public boolean hasStatAt(GameLayer layer, Stat stat) { //fixed stats do not implement layer system
+		return stats.containsKey(stat);
+	}
 
 	@Override
 	public void addStat(StatValue<?> value, TriFunction<GameLayer, Stat, StatValue<?>, Boolean> func) {

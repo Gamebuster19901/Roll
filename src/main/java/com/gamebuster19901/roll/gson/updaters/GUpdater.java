@@ -1,6 +1,7 @@
-package com.gamebuster19901.roll.gson;
+package com.gamebuster19901.roll.gson.updaters;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -12,8 +13,12 @@ public abstract class GUpdater implements Comparable<Number>{
 	
 	public static final TreeMap<Integer, HashSet<GUpdater>> updaters = new TreeMap<>();
 	
+	static {
+		add(new V2());
+	}
+	
 	private final int version;
-	private final HashSet<String> clazzes = new HashSet<String>();
+	protected final HashSet<String> clazzes = new HashSet<String>();
 	
 	public GUpdater(int version, Class...classes) {
 		this.version = version;
@@ -31,7 +36,9 @@ public abstract class GUpdater implements Comparable<Number>{
 	
 	protected abstract void updateImpl(JsonElement json);
 	
-	public abstract boolean accepts(String clazz);
+	public boolean accepts(String clazz) {
+		return clazzes.contains(clazz);
+	}
 	
 	@Override
 	public boolean equals(Object o) {
@@ -65,9 +72,19 @@ public abstract class GUpdater implements Comparable<Number>{
 					if(updater.accepts(clazz)) {
 						updater.updateImpl(json);
 					}
+					else {
+						System.out.println("Updater does not accept " + clazz);
+					}
 				}
 			}
 		}
+	}
+	
+	private static void add(Updaters updaters) {
+		if(!GUpdater.updaters.containsKey(updaters.version())) {
+			GUpdater.updaters.put(updaters.version(), new HashSet<>());
+		}
+		GUpdater.updaters.get(updaters.version()).addAll(Arrays.asList(updaters.getUpdaters()));
 	}
 	
 }

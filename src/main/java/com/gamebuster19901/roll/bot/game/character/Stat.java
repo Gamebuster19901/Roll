@@ -30,7 +30,11 @@ public class Stat implements Statistic {
 	
 	String name;
 	
+	@SuppressWarnings("null")
 	public Stat(String name) {
+		if(name == null) {
+			name.getBytes();
+		}
 		this.name = name;
 	}
 
@@ -38,10 +42,14 @@ public class Stat implements Statistic {
 		return name;
 	}
 	
+	public String getSimpleName() {
+		return  name;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if(o instanceof Stat) {
-			return getName().equals(((Stat) o).getName());
+			return getName().equalsIgnoreCase(((Stat) o).getName());
 		}
 		return false;
 	}
@@ -63,12 +71,20 @@ public class Stat implements Statistic {
 	
 	@Deprecated
 	public static Stat of(Ability ability) {
-		return new AbilityStat(ability.name());
+		return new AbilityScoreStat(ability.name() + " Score");
 	}
 	
 	@Deprecated
 	public static Stat modOf(Ability ability) {
 		return new AbilityModStat(ability.name() + " Mod");
+	}
+	
+	public static Stat fromUserInput(String stat) {
+		Ability ability = Ability.getIfAbility(stat);
+		if(ability != null) {
+			return ability.getModStat();
+		}
+		return new Stat(stat);
 	}
 
 	@Override
@@ -89,23 +105,32 @@ public class Stat implements Statistic {
 	}
 	
 	public boolean isAbilityScoreStat() {
-		return this instanceof AbilityStat;
+		return this instanceof AbilityScoreStat;
 	}
 	
 	public boolean isAbilityModifierStat() {
 		return this instanceof AbilityModStat;
 	}
 	
-	private static final class AbilityStat extends Stat {
-		public AbilityStat(String name) {
+	private static final class AbilityScoreStat extends Stat {
+		public AbilityScoreStat(String name) {
 			super(name);
+		}
+		
+		@Override
+		public String getSimpleName() {
+			return name.substring(0, 3) + " Score";
 		}
 	}
 	
 	public static final class AbilityModStat extends Stat {
 		public AbilityModStat(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public String getSimpleName() {
+			return name.substring(0, 3) + " Mod";
 		}
 	}
 	

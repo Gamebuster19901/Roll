@@ -21,6 +21,16 @@ public class FixedPlayerCharacterStatBuilder extends PlayerCharacterStatBuilder 
 	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type) {
 		return fixedStatBuilder.getStat(layer, stat, type);
 	}
+	
+	@Override
+	public boolean hasStat(GameLayer layer, Stat stat) {
+		return fixedStatBuilder.hasStat(layer, stat);
+	}
+
+	@Override
+	public boolean hasStatAt(GameLayer layer, Stat stat) {
+		return fixedStatBuilder.hasStat(layer, stat);
+	}
 
 	@Override
 	public void addStat(StatValue<?> value, TriFunction<GameLayer, Stat, StatValue<?>, Boolean> func) {

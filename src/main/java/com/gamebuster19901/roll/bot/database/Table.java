@@ -35,7 +35,7 @@ public enum Table {
 			PreparedStatement st;
 			st = Database.INSTANCE.prepareStatement("SELECT " + columns + " FROM " + table + " WHERE " + comparison + pagination);
 			comparison.insertValues(st);
-	
+			System.out.println(st);
 			return st.query();
 		}
 		catch(SQLException e) {

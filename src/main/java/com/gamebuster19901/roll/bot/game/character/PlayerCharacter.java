@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOError;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -134,6 +135,16 @@ public class PlayerCharacter implements Statted {
 	public void addStat(StatValue<?> value, TriFunction<GameLayer, Stat, StatValue<?>, Boolean> func) {
 		stats.addStat(value, func);
 	}
+	
+	@Override
+	public boolean hasStat(GameLayer layer, Stat stat) {
+		return stats.hasStat(layer, stat);
+	}
+
+	@Override
+	public boolean hasStatAt(GameLayer layer, Stat stat) {
+		return stats.hasStatAt(layer, stat);
+	}
 
 	@Override
 	public void setVariables(GameLayer layer, Expression expression) {
@@ -163,6 +174,10 @@ public class PlayerCharacter implements Statted {
 	
 	public BufferedImage getCharacterImage() {
 		return image.getImage();
+	}
+	
+	public InputStream getCharacterImageStream() throws IOException {
+		return image.getImageStream();
 	}
 	
 	public static User getOwner(long id) {

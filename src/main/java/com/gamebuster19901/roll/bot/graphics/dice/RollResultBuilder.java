@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map.Entry;
-import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 

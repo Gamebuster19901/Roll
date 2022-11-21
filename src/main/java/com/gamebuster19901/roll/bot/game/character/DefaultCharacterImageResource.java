@@ -2,6 +2,7 @@ package com.gamebuster19901.roll.bot.game.character;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 
 import javax.imageio.ImageIO;
@@ -22,6 +23,11 @@ public final class DefaultCharacterImageResource implements ImageResource {
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
+	}
+	
+	@Override
+	public InputStream getImageStream() {
+		return ImageResource.class.getResourceAsStream(FILE);
 	}
 
 	@Override

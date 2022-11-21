@@ -32,6 +32,15 @@ public enum Ability implements Statistic, Proficientable {
 		return Proficiency.of(this);
 	}
 	
+	public static Ability getIfAbility(String ability) {
+		for(Ability a : values()) {
+			if(a.name().equalsIgnoreCase(ability) || a.shortHand.equalsIgnoreCase(ability)) {
+				return a;
+			}
+		}
+		return null;
+	}
+	
 	public static Ability getAbility(String ability) {
 		for(Ability a : values()) {
 			if(a.name().equalsIgnoreCase(ability) || a.shortHand.equalsIgnoreCase(ability)) {

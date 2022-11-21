@@ -3,6 +3,7 @@ package com.gamebuster19901.roll.gson;
 import java.io.IOException;
 import java.util.Map.Entry;
 
+import com.gamebuster19901.roll.gson.updaters.GUpdater;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
@@ -62,9 +63,9 @@ public class GSerializableTypeAdapterFactory implements TypeAdapterFactory {
 					if(e.isJsonObject()) {
 						JsonObject obj = e.getAsJsonObject();
 						if(obj.has("class")) {
+							GUpdater.update(obj, obj.get("class").getAsString());
 							clazz = (Class<T>) Class.forName(obj.get("class").getAsString());
 							actualTypeToken = TypeToken.get(clazz);
-							GUpdater.update(obj, actualTypeToken.getType());
 						}
 					}
 					

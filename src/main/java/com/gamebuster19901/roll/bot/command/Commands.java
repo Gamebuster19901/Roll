@@ -57,6 +57,14 @@ public class Commands {
 		return ret.toString();
 	}
 	
+	public static String readUntilEnd(StringReader reader) {
+		StringBuilder ret = new StringBuilder("");
+		while(reader.canRead()) {
+			ret.append(reader.read());
+		}
+		return ret.toString();
+	}
+	
 	public static String readQuotedString(StringReader reader) throws CommandSyntaxException {
 		StringBuilder ret = new StringBuilder("");
 		if(reader.canRead()) {

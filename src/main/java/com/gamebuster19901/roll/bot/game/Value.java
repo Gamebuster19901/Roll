@@ -5,6 +5,10 @@ public class Value extends Die {
 	public Value(int value) {
 		super(value);
 	}
+	
+	public Value(int value, DamageType type) {
+		super(value, type);
+	}
 
 	public String toString() {
 		if(sides > -1) {
@@ -21,9 +25,18 @@ public class Value extends Die {
 		return sides;
 	}
 	
+	public int roll(Statted statted) {
+		return sides;
+	}
+	
 	@Override
 	public DieType getDieType() {
 		return DieType.modifier;
+	}
+	
+	@Override
+	public Value invert() {
+		return new Value(-getSides());
 	}
 	
 }

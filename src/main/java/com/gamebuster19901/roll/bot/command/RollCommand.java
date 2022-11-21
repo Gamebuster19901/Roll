@@ -6,11 +6,13 @@ import java.io.PipedOutputStream;
 import com.gamebuster19901.roll.bot.command.argument.DiceArgumentType;
 import com.gamebuster19901.roll.bot.game.Dice;
 import com.gamebuster19901.roll.bot.game.Roll;
+import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
 import com.gamebuster19901.roll.bot.graphics.Theme;
 import com.gamebuster19901.roll.bot.graphics.dice.DieGraphicBuilder;
 import com.gamebuster19901.roll.bot.graphics.dice.RollResultBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -28,7 +30,8 @@ class RollCommand {
 					SlashCommandInteractionEvent e = c.getEvent(SlashCommandInteractionEvent.class);
 					Dice dice = context.getArgument("dice", Dice.class);
 					try {
-						Roll roll = new Roll(dice);
+						PlayerCharacter character = PlayerCharacter.getActiveCharacter(c.getAuthor().getIdLong());
+						Roll roll = new Roll(dice, character);
 						int result = roll.getValue();
 						c.getEmbed().appendDescription("\n\nResult: " + result);
 						DieGraphicBuilder graphic = new RollResultBuilder(Theme.DEFAULT_THEME, roll);
@@ -43,22 +46,24 @@ class RollCommand {
 							ex.printStackTrace();
 							throw new RuntimeException(ex);
 						}}).start();
+						EmbedBuilder embedBuilder = c.getEmbed().setDescription("Rolling " + roll.getDice())
+								.setImage("attachment://test.png")
+								.setFooter("Result: " + result + ". Min: " + roll.getMinValue() + " Max: " + roll.getMaxValue());
+						if(character != null) {
+							embedBuilder.setAuthor(character.getName(), null, "attachment://character.png");
+						}
 						ReplyCallbackAction action = e.deferReply()
 							.setFiles(FileUpload.fromData(in, "test.png"))
-							.setEmbeds(c.getEmbed().setDescription("Rolling " + roll.getDice())
-								.setImage("attachment://test.png")
-								.setFooter("Result: " + result + ". Min: " + roll.getMinValue() + " Max: " + roll.getMaxValue())
-								.build());
+							.setEmbeds(embedBuilder.build());
+						if(character != null) {
+							action.addFiles(FileUpload.fromData(character.getCharacterImageStream(), "character.png"));
+						}
 						if(roll.isSortable()) {
 							//action.addActionRow(Button.primary("Sort", "Sort Dice"), Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 						}
 						action.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 						action.queue();
-							//e.reply("Rolling " + dice).addFiles(FileUpload.fromData(in, "test.png")).complete();
-
-	
-						//c.sendMessage(c.getEmbed());
-						System.out.println(result);
+							
 						return 1;
 					}
 					catch(Throwable t) {
