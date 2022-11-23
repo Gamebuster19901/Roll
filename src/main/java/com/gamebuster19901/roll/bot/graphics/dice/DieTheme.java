@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 import com.gamebuster19901.roll.bot.game.Die;
 import com.gamebuster19901.roll.bot.game.Roll;
 import com.gamebuster19901.roll.bot.game.RollValue;
-import com.gamebuster19901.roll.bot.game.character.Stat;
 
 public class DieTheme {
 	
