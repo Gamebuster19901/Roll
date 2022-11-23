@@ -14,7 +14,7 @@ import com.mojang.brigadier.StringReader;
 
 public class Dice {
 
-	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d*){0,1}(?<type>[\\w\\s]*)");
+	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d+){0,1}(?<type>(?>(?!d\\d+)[\\w\\s])*)");
 	
 	transient int cursor;
 	final int amount;
