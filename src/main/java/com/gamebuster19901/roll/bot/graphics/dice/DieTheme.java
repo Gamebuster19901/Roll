@@ -18,8 +18,8 @@ import com.gamebuster19901.roll.bot.game.RollValue;
 
 public class DieTheme {
 	
-	public static final DieTheme DEFAULT_DIE_THEME = new DieTheme(new Font("Aakar", Font.BOLD, 200), Color.BLUE, Color.GREEN.darker(), Color.RED, Color.WHITE);
-	public static final DieTheme DEBUG_DIE_THEME = new DieTheme(new Font("Aakar", Font.BOLD, 200), Color.BLUE, Color.GREEN.darker(), Color.RED, Color.WHITE, true);
+	public static final DieTheme DEFAULT_DIE_THEME = new DieTheme(new Font("Ubuntu Mono", Font.BOLD, 200), Color.BLUE, Color.GREEN.darker(), Color.RED, Color.WHITE);
+	public static final DieTheme DEBUG_DIE_THEME = new DieTheme(new Font("Ubuntu Mono", Font.BOLD, 200), Color.BLUE, Color.GREEN.darker(), Color.RED, Color.WHITE, true);
 	
 	private final Font font;
 	private final Color textColor;
