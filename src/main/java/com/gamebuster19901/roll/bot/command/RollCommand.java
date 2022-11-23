@@ -5,8 +5,11 @@ import java.io.PipedOutputStream;
 
 import com.gamebuster19901.roll.bot.command.argument.DiceArgumentType;
 import com.gamebuster19901.roll.bot.game.Dice;
+import com.gamebuster19901.roll.bot.game.Die;
 import com.gamebuster19901.roll.bot.game.Roll;
+import com.gamebuster19901.roll.bot.game.RollValue;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
+import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.bot.graphics.Theme;
 import com.gamebuster19901.roll.bot.graphics.dice.DieGraphicBuilder;
 import com.gamebuster19901.roll.bot.graphics.dice.RollResultBuilder;
@@ -49,9 +52,40 @@ class RollCommand {
 						EmbedBuilder embedBuilder = c.getEmbed().setDescription("Rolling " + roll.getDice())
 								.setImage("attachment://test.png")
 								.setFooter("Result: " + result + ". Min: " + roll.getMinValue() + " Max: " + roll.getMaxValue());
+						StringBuilder warn = new StringBuilder();
 						if(character != null) {
 							embedBuilder.setAuthor(character.getName(), null, "attachment://character.png");
+							for(Die die : dice.getAllDice()) {
+								if(die instanceof RollValue) {
+									Stat stat = ((RollValue)die).getStat();
+									if(!character.hasStat(stat)) {
+										warn.append('\n');
+										warn.append('`');
+										warn.append(stat.getName());
+										warn.append('`');
+									}
+								}
+							}
 						}
+						else {
+							for(Die die : dice.getAllDice()) {
+								if(die instanceof RollValue) {
+									warn.append('\n');
+									warn.append('`');
+									warn.append(((RollValue)die).getStat().getName());
+									warn.append('`');
+								}
+							}
+						}
+						if(warn.length() > 0) {
+							if(character == null) {
+								embedBuilder.appendDescription("\n\nNOTICE: NO ACTIVE CHARACTER! THE FOLLOWING VARIABLES WERE SET TO `0`:\n\n" + warn);
+							}
+							else {
+								embedBuilder.appendDescription("\n\nNOTICE: `" + character.getName() + "` DOES NOT HAVE THE FOLLOWING STATS! THEY HAVE BEEN SET TO `0`:\n\n" + warn);
+							}
+						}
+						embedBuilder.appendDescription("\n");
 						ReplyCallbackAction action = e.deferReply()
 							.setFiles(FileUpload.fromData(in, "test.png"))
 							.setEmbeds(embedBuilder.build());
