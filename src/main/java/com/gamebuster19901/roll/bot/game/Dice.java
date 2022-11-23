@@ -132,7 +132,12 @@ public class Dice {
 					dice.add(new Value(amount));
 				}
 				else {
-					dice.add(new RollValue(type));
+					if(amount < 0) {
+						dice.add(new RollValue(type, true));
+					}
+					else {
+						dice.add(new RollValue(type));
+					}
 				}
 			}
 		}
@@ -196,7 +201,12 @@ public class Dice {
 					ret.append(dice.amount);
 				}
 				else {
-					ret.append(dice.type);
+					if(dice.amount < 0) {
+						ret.append("-" + dice.type);
+					}
+					else {
+						ret.append(dice.type);
+					}
 				}
 			}
 			dice = dice.child;
