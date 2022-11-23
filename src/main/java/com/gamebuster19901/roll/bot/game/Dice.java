@@ -14,9 +14,10 @@ import com.mojang.brigadier.StringReader;
 
 public class Dice {
 
-	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d+){0,1}(?<type>(?>(?!d\\d+)[\\w\\s])*)");
+	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d+){0,1}(?<type>(?:(?!d\\d+)[\\w\\s])*)");
 	
-	transient int cursor;
+	transient boolean badDie = false;
+	
 	final int amount;
 	final int die;
 	final String type;
@@ -38,9 +39,10 @@ public class Dice {
 	
 	private Dice(Matcher matcher, int cursor) {
 		matcher.find();
-		this.cursor = cursor;
+		//System.out.println("Cursor:" + cursor);
+		//System.out.println("End:" + matcher.end());
 		try {
-			this.cursor = matcher.start("amount");
+			cursor = matcher.start("amount");
 			
 			
 			String amt = matcher.group("amount");
@@ -61,7 +63,7 @@ public class Dice {
 				
 				matcher.groupCount();
 				String die = matcher.group("die");
-				this.cursor = matcher.start("die");
+				cursor = matcher.start("die");
 				if(die != null && !die.isEmpty()) {
 					this.die = Integer.parseInt(die.substring(1));
 				}
@@ -87,15 +89,29 @@ public class Dice {
 					this.damageType = null;
 				}
 			}
-			
+			/*
 			System.out.println("amount: " + this.amount);
 			System.out.println("die:" + this.die);
 			System.out.println("type:" + type);
 			System.out.println("damageType:" + damageType);
 			
-			if(!matcher.hitEnd()) {
-				child = new Dice(matcher, cursor + matcher.end());
+			System.out.println(matcher.requireEnd());
+			System.out.println(matcher.start() + ", " + matcher.end());
+			*/
+			if(matcher.start() != matcher.end()) {
+				Dice chld = new Dice(matcher, cursor + matcher.end());
+				//For some reason java regex is being buggy, and matcher.hitEnd() is returning true prematurely
+				//So the only way to tell if we have actually hit the end of the string is to check if matcher.start and matcher.end
+				//are both the same value. If they are then we know the generated die is bad and we should not add it as a child.
+				if(!chld.badDie) { 
+					child = chld;
+				}
 			}
+			else {
+				badDie = true;
+			}
+
+			//System.out.println(matcher.lookingAt());
 			group();
 		}
 		catch(Throwable t) {
