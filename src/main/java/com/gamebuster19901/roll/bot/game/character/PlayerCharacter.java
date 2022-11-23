@@ -272,6 +272,10 @@ public class PlayerCharacter implements Statted {
 		Result result = Table.selectColumnsFromWhere(CURRENT_CHARACTER, PLAYERS, new Comparison(DISCORD_ID, EQUALS, discordID));
 		if(result.hasNext()) {
 			result.next();
+			long id = result.getLong(CURRENT_CHARACTER);
+			if(id == 0) {
+				return null;
+			}
 			return PlayerCharacter.deserialize(result.getLong(CURRENT_CHARACTER));
 		}
 		return null; //no active character

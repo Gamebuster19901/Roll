@@ -23,7 +23,7 @@ public class RollValue extends Value {
 	
 	@Override
 	public int getMaxValue(Statted statted) {
-		if(statted.hasStat(value)) {
+		if(statted != null && statted.hasStat(value)) {
 			return statted.getStat(value, int.class);
 		}
 		return 0;
@@ -31,7 +31,7 @@ public class RollValue extends Value {
 	
 	@Override
 	public int getMinValue(Statted statted) {
-		if(statted.hasStat(value)) {
+		if(statted != null && statted.hasStat(value)) {
 			return statted.getStat(value, int.class);
 		}
 		return 0;
