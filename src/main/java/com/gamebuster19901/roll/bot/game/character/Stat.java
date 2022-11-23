@@ -13,6 +13,7 @@ public class Stat implements Statistic {
 	public static final Stat Temp_HP = new Stat("Temp HP");
 	public static final Stat AC = new Stat("AC");
 	public static final Stat EXP = new Stat("EXP");
+	public static final Stat Proficiency = new Stat("Proficiency");
 	public static final Stat Initiative = new Stat("Initiative");
 	public static final Stat Proficiency_Bonus = new Stat("Proficiency Bonus");
 	public static final Stat Hit_Dice = new Stat("Hit Dice");
@@ -80,9 +81,28 @@ public class Stat implements Statistic {
 	}
 	
 	public static Stat fromUserInput(String stat) {
+		if(stat.equalsIgnoreCase("hp")) {
+			return HP;
+		}
+		if(stat.equalsIgnoreCase("prof") || stat.equalsIgnoreCase("proficiency")) {
+			return Proficiency;
+		}
+		if(stat.equalsIgnoreCase("init") || stat.equalsIgnoreCase("initiative")) {
+			return Initiative;
+		}
+		if(stat.equalsIgnoreCase("ac")) {
+			return AC;
+		}
+		if(stat.equalsIgnoreCase("xp") || stat.equalsIgnoreCase("exp")) {
+			return EXP;
+		}
 		Ability ability = Ability.getIfAbility(stat);
 		if(ability != null) {
 			return ability.getModStat();
+		}
+		Skill skill = Skill.getIfSkill(stat);
+		if(skill != null) {
+			return skill.getStat();
 		}
 		return new Stat(stat);
 	}

@@ -86,5 +86,14 @@ public class Skill implements Statistic, Proficientable {
 		}
 		throw new IllegalArgumentException("No default skill called '" + stat.getName() + "'");
 	}
+
+	public static Skill getIfSkill(String stat) {
+		for(Skill skill : DEFAULT_SKILLS) {
+			if(skill.getName().equalsIgnoreCase(stat)) {
+				return skill;
+			}
+		}
+		return null;
+	}
 	
 }
