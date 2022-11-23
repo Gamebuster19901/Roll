@@ -31,7 +31,12 @@ public class FixedStats extends Stats {
 
 	@Override
 	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type) {
-		return values.get(stat).getValueAs(type);
+		try {
+			return values.get(stat).getValueAs(type);
+		}
+		catch(Throwable t) {
+			throw new RuntimeException("Issue retrieveing " + stat + " stat", t);
+		}
 	}
 
 	@Override
