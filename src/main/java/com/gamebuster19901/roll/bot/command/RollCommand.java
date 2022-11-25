@@ -19,10 +19,11 @@ import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 public class RollCommand {
 
@@ -49,6 +50,8 @@ public class RollCommand {
 	
 	public static int roll(CommandContext<?> c, String name, Dice dice, Statted statted) {
 		IReplyCallback e = c.getEvent(IReplyCallback.class);
+		InteractionHook hook = e.getHook();
+		e.deferReply().queue();
 		try {
 			Roll roll = new Roll(name, dice, statted);
 			int result = roll.getValue();
@@ -88,17 +91,19 @@ public class RollCommand {
 				fileUploads.add(FileUpload.fromData(inResultGraphic, "result.png"));
 				embedBuilder.setThumbnail("attachment://result.png");
 			}
-			ReplyCallbackAction action = e.deferReply()
-				.setFiles(fileUploads)
-				.setEmbeds(embedBuilder.build());
+			
+			MessageCreateBuilder message = new MessageCreateBuilder();
+			
+			message.setFiles(fileUploads).setEmbeds(embedBuilder.build());
+			
 			if(statted != null && statted instanceof PlayerCharacter) {
-				action.addFiles(FileUpload.fromData(((PlayerCharacter)statted).getCharacterImageStream(), "statted.png"));
+				message.addFiles(FileUpload.fromData(((PlayerCharacter)statted).getCharacterImageStream(), "statted.png"));
 			}
 			if(roll.isSortable()) {
 				//action.addActionRow(Button.primary("Sort", "Sort Dice"), Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 			}
-			action.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
-			action.queue();
+			message.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
+			hook.sendMessage(message.build()).queue();
 				
 			return 1;
 		}
