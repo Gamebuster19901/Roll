@@ -17,4 +17,5 @@ public interface ParseExceptions {
 	
 	public DynamicCommandExceptionType INVALID_SKILL = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept a skill named `" + value + "`"));
 	public DynamicCommandExceptionType INVALID_ABILITY = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept an ability named `" + value + "`"));
+	public DynamicCommandExceptionType INVALID_THROW = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept a save type named `" + value + "`"));
 }

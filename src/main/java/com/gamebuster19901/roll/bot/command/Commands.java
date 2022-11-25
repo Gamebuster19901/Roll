@@ -19,6 +19,7 @@ public class Commands {
 		RollCommand.register(dispatcher);
 		ImportCharacterCommand.register(dispatcher);
 		CheckCommand.register(dispatcher);
+		SaveCommand.register(dispatcher);
 	}
 	
 	@Deprecated

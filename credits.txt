@@ -21,3 +21,4 @@ Lighting Damage icon: Lorc
 Proficient icon: DarkZaitzev
 Half Proficient icon: DarkZaitzev, Gamebuster19901
 Expert icon: DarkZaitzev
+Death Save Fail Icons: Lorc

@@ -27,6 +27,10 @@ public enum SaveType implements Statistic {
 		this.name =  name;
 		this.ability = null;
 	}
+	
+	public String getName() {
+		return name;
+	}
 
 	@Override
 	public Stat getStat() {
