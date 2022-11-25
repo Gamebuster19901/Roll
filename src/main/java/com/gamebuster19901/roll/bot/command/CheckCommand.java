@@ -23,7 +23,7 @@ class CheckCommand {
 			)
 			.then(Commands.argument("skill", SkillArgumentType.ANY_SKILL)
 				.executes((context) -> {
-					return rollSkill(context.getSource(), context.getArgument("skill", Skill.class));
+					return rollCheck(context.getSource(), context.getArgument("skill", Skill.class));
 				})
 			)
 		);
@@ -32,7 +32,7 @@ class CheckCommand {
 	
 	
 	private static int rollCheck(CommandContext<IReplyCallback> c, Ability ability) {
-		if(PlayerCharacter.hasActiveCharacter(c.getAuthor())) {
+		if(hasActiveCharacter(c)) {
 			Statted character = PlayerCharacter.getActiveCharacter(c.getAuthor());
 			Dice dice = new Dice("d20+" + ability.shortHand);
 			RollCommand.roll(c, ability.name() + " check", dice, character);
@@ -40,13 +40,21 @@ class CheckCommand {
 		return 1;
 	}
 	
-	private static int rollSkill(CommandContext<IReplyCallback> c, Skill skill) {
-		if(PlayerCharacter.hasActiveCharacter(c.getAuthor())) {
+	private static int rollCheck(CommandContext<IReplyCallback> c, Skill skill) {
+		if(hasActiveCharacter(c)) {
 			Statted character = PlayerCharacter.getActiveCharacter(c.getAuthor());
 			Dice dice = new Dice("d20+" + skill.getName());
 			RollCommand.roll(c, skill.getName() + " check", dice, character);
 		}
 		return 1;
+	}
+	
+	private static boolean hasActiveCharacter(CommandContext<IReplyCallback> c) {
+		boolean ret = PlayerCharacter.hasActiveCharacter(c.getAuthor());
+		if(ret == false) {
+			c.getEvent(IReplyCallback.class).reply("You cannot roll a check, you have no active character!").queue();
+		}
+		return ret;
 	}
 	
 }
