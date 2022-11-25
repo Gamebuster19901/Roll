@@ -16,7 +16,7 @@ public class AbilityArgumentType implements ArgumentType<Ability> {
 
 	public static final AbilityArgumentType ANY_ABILITY = AbilityArgumentType.of(Ability.values());
 	
-	public Ability[] abilities;
+	private Ability[] abilities;
 	
 	private AbilityArgumentType(Ability[] abilities) {
 		this.abilities = abilities;

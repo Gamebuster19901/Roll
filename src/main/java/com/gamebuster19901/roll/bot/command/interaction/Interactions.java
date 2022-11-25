@@ -61,7 +61,13 @@ public class Interactions {
 		command.append(e.getSelectMenu().getId());
 		command.append(' ');
 		command.append(e.getValues().get(0));
-		DISPATCHER.getDispatcher().execute(command.toString(), new CommandContext(e));
+		try {
+			DISPATCHER.getDispatcher().execute(command.toString(), new CommandContext(e));
+		}
+		catch(Throwable t) {
+			t.printStackTrace();
+			throw t;
+		}
 	}
 	
 	public static LiteralArgumentBuilder<CommandContext<?>> literal(String name) {
