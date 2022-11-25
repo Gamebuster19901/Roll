@@ -92,6 +92,10 @@ public class Result implements TableRetriever {
 		return getRow().getDouble(column);
 	}
 	
+	public boolean isNull(Column column) {
+		return getRow().isNull(column);
+	}
+	
 	public int size() {
 		return getRowCount();
 	}

@@ -240,6 +240,11 @@ public class ResultSet implements java.sql.ResultSet, TableRetriever {
 		return getDouble(column.toString());
 	}
 
+	public boolean isNull(Column column) throws SQLException  {
+		parent.getBytes(column.toString());
+		return parent.wasNull();
+	}
+	
 	@Override
 	@Deprecated
 	public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
