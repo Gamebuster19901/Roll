@@ -1,11 +1,16 @@
 package com.gamebuster19901.roll.bot.command.argument;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.bot.command.exception.ParseExceptions;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
 public class SkillArgumentType implements ArgumentType<Skill>{
 	
@@ -26,6 +31,14 @@ public class SkillArgumentType implements ArgumentType<Skill>{
 			}
 		}
 		throw ParseExceptions.INVALID_SKILL.create(lookingFor);
+	}
+	
+	@Override
+	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+		for(Skill skill : skills) {
+			builder = builder.suggest(skill.getName());
+		}
+		return builder.buildFuture();
 	}
 	
 	public static SkillArgumentType of(Skill... skills) {
