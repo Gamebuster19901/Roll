@@ -287,7 +287,11 @@ public class PlayerCharacter implements Statted {
 	
 	public static boolean hasActiveCharacter(long discordID) {
 		Result result = Table.selectColumnsFromWhere(CURRENT_CHARACTER, PLAYERS, new Comparison(DISCORD_ID, EQUALS, discordID));
-		return result.hasNext();
+		if(result.hasNext()) {
+			result.next();
+			return !result.isNull(CURRENT_CHARACTER);
+		}
+		return false;
 	}
 	
 	public static void setActiveCharacter(User user, PlayerCharacter character) {
