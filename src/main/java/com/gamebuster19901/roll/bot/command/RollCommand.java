@@ -10,7 +10,7 @@ import com.gamebuster19901.roll.bot.game.Statted;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
 import com.gamebuster19901.roll.bot.graphics.Theme;
 import com.gamebuster19901.roll.bot.graphics.dice.DieGraphicBuilder;
-import com.gamebuster19901.roll.bot.graphics.dice.RollResultBuilder;
+import com.gamebuster19901.roll.bot.graphics.dice.RollGraphicBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -45,7 +45,7 @@ public class RollCommand {
 			Roll roll = new Roll(dice, statted);
 			int result = roll.getValue();
 			c.getEmbed().appendDescription("\n\nResult: " + result);
-			DieGraphicBuilder graphic = new RollResultBuilder(Theme.DEFAULT_THEME, roll);
+			DieGraphicBuilder graphic = new RollGraphicBuilder(Theme.DEFAULT_THEME, roll);
 			PipedInputStream in = new PipedInputStream();
 
 			PipedOutputStream out = new PipedOutputStream(in);

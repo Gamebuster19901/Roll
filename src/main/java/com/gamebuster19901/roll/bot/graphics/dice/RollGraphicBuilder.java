@@ -12,11 +12,11 @@ import com.gamebuster19901.roll.bot.game.Die;
 import com.gamebuster19901.roll.bot.game.Roll;
 import com.gamebuster19901.roll.bot.graphics.Themed;
 
-public class RollResultBuilder extends DieGraphicBuilder {
+public class RollGraphicBuilder extends DieGraphicBuilder {
 	
 	private boolean sort = false;
 	
-	public RollResultBuilder(Themed theme, Roll roll) {
+	public RollGraphicBuilder(Themed theme, Roll roll) {
 		super(theme, roll);
 	}
 	
