@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 
 import com.gamebuster19901.roll.bot.game.Die;
@@ -131,6 +132,28 @@ public class DieTheme {
 		}
 		return dieImage;
 	}
+	
+	@Nullable
+	public BufferedImage renderResult(Roll roll) {
+		if(roll.getValues().size() < 2) { //we don't need to render the result if only one die was rolled
+			return null;
+		}
+		BufferedImage resultImage = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) resultImage.getGraphics();
+		int result = roll.getValue();
+		Color color = textColor;
+		if(result == roll.getMaxValue()) {
+			color = goodColor;
+		}
+		else if (result == roll.getMinValue()) {
+			color = badColor;
+		}
+		g.setColor(color);
+		renderText(g, "" + result, 0, 0, 256, 256);
+		
+		return resultImage;
+	}
+	
 	
 	private void renderLowerText(Graphics2D g, String text) {
 		renderText(g, text, 0, 100, 256, 45);

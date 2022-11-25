@@ -1,7 +1,9 @@
 package com.gamebuster19901.roll.bot.command;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.HashSet;
 
 import com.gamebuster19901.roll.bot.command.argument.DiceArgumentType;
 import com.gamebuster19901.roll.bot.game.Dice;
@@ -11,6 +13,8 @@ import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
 import com.gamebuster19901.roll.bot.graphics.Theme;
 import com.gamebuster19901.roll.bot.graphics.dice.DieGraphicBuilder;
 import com.gamebuster19901.roll.bot.graphics.dice.RollGraphicBuilder;
+import com.gamebuster19901.roll.bot.graphics.dice.RollResultGraphicBuilder;
+import com.gamebuster19901.roll.util.pipe.PipeHelper;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -40,31 +44,52 @@ public class RollCommand {
 	}
 	
 	public static int roll(CommandContext<?> c, Dice dice, Statted statted) {
+		return roll(c, "", dice, statted);
+	}
+	
+	public static int roll(CommandContext<?> c, String name, Dice dice, Statted statted) {
 		IReplyCallback e = c.getEvent(IReplyCallback.class);
 		try {
-			Roll roll = new Roll(dice, statted);
+			Roll roll = new Roll(name, dice, statted);
 			int result = roll.getValue();
 			c.getEmbed().appendDescription("\n\nResult: " + result);
-			DieGraphicBuilder graphic = new RollGraphicBuilder(Theme.DEFAULT_THEME, roll);
-			PipedInputStream in = new PipedInputStream();
+			DieGraphicBuilder diceGraphic = new RollGraphicBuilder(Theme.DEFAULT_THEME, roll);
+			DieGraphicBuilder resultGraphic = new RollResultGraphicBuilder(Theme.DEFAULT_THEME, roll);
+			PipedInputStream inDiceGraphic = new PipedInputStream();
+			PipedInputStream inResultGraphic = new PipedInputStream();
 
-			PipedOutputStream out = new PipedOutputStream(in);
-			new Thread(() -> {try {
-				graphic.buildImage().writeTo(out);
-				out.close();
-			} catch (Throwable ex) {
-				e.reply(ex.getMessage() + "\n\n Printing stacktrace to console.").queue();
-				ex.printStackTrace();
-				throw new RuntimeException(ex);
-			}}).start();
-			EmbedBuilder embedBuilder = c.getEmbed().setDescription("Rolling " + roll.getDice())
-					.setImage("attachment://test.png")
+			
+			PipedOutputStream outDiceGraphic = new PipedOutputStream(inDiceGraphic);
+			ByteArrayOutputStream baos = resultGraphic.buildImage();
+			PipedOutputStream outResultGraphic = (baos == null) ? null : new PipedOutputStream(inResultGraphic);
+			
+			PipeHelper.pipe(e, diceGraphic.buildImage(), outDiceGraphic);
+			if(outResultGraphic != null) {
+				PipeHelper.pipe(e, resultGraphic.buildImage(), outResultGraphic);
+			}
+			
+			String rollingText = "Rolling ";
+			if(roll.getName().isBlank()) {
+				rollingText = rollingText + "`" + roll.getDice() + "`:";
+			}
+			else {
+				rollingText = rollingText + " " + roll.getName() + " [`" + roll.getDice() + "`]:";
+			}
+			
+			EmbedBuilder embedBuilder = c.getEmbed().setDescription(rollingText)
+					.setImage("attachment://dice.png")
 					.setFooter("Result: " + result + ". Min: " + roll.getMinValue() + " Max: " + roll.getMaxValue());
 			if(statted != null) {
 				embedBuilder.setAuthor(statted.getName(), null, "attachment://statted.png");
 			}
+			HashSet<FileUpload> fileUploads = new HashSet<>();
+			fileUploads.add(FileUpload.fromData(inDiceGraphic, "dice.png"));
+			if(outResultGraphic != null) {
+				fileUploads.add(FileUpload.fromData(inResultGraphic, "result.png"));
+				embedBuilder.setThumbnail("attachment://result.png");
+			}
 			ReplyCallbackAction action = e.deferReply()
-				.setFiles(FileUpload.fromData(in, "test.png"))
+				.setFiles(fileUploads)
 				.setEmbeds(embedBuilder.build());
 			if(statted != null && statted instanceof PlayerCharacter) {
 				action.addFiles(FileUpload.fromData(((PlayerCharacter)statted).getCharacterImageStream(), "statted.png"));
