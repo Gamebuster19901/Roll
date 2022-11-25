@@ -48,6 +48,7 @@ public class DieTheme {
 		int maxSize = 256;
 		Die die = dieResult.getKey();
 		int value = dieResult.getValue();
+		String valueType = die.getValueType();
 		Statted statted = roll.getStatted();
 		switch(die.getDieType()) {
 			case d10:
@@ -70,10 +71,23 @@ public class DieTheme {
 				}
 				
 				renderText(g, value + "", die.getDieType().getOffsetX(), die.getDieType().getOffsetY(), maxSize, maxSize);
+				
+				if(valueType != null) {
+					g.setColor(Color.YELLOW);
+					renderLowerText(g, valueType);
+				}
+				else {
+					System.out.println(die);
+					System.out.println(die.getClass().getName());
+				}
 				break;
 			case modifier:
 				g.setColor(getTextColor());
 				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, maxSize, maxSize);
+				if(valueType != null) {
+					g.setColor(Color.YELLOW);
+					renderLowerText(g, valueType);
+				}
 				break;
 			case stat:
 				dieImage = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB); //blank image
@@ -86,7 +100,8 @@ public class DieTheme {
 				else {
 					g.setColor(Color.MAGENTA);
 				}
-				renderText(g, ((RollValue)die).getStat().getSimpleName(), 0, 100, 256, 45);
+				String lowerText = value >= 0 ? ((RollValue)die).getStat().getSimpleName() : "-" + ((RollValue)die).getStat().getSimpleName();
+				renderLowerText(g, lowerText);
 				
 				break;
 			case other:
@@ -106,15 +121,19 @@ public class DieTheme {
 				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, 211, 211);
 				g.setColor(Color.YELLOW);
 				if(die.getSides() > 0) {
-					renderText(g, "d" + die.getSides(), 0, 100, 256, 45);
+					renderLowerText(g, "d" + die.getSides());
 				}
 				else {
-					renderText(g, "-d" + Math.abs(die.getSides()), 0, 100, 256, 45);
+					renderLowerText(g, "-d" + Math.abs(die.getSides()));
 				}
 				
 				break;
 		}
 		return dieImage;
+	}
+	
+	private void renderLowerText(Graphics2D g, String text) {
+		renderText(g, text, 0, 100, 256, 45);
 	}
 	
 	private void renderText(Graphics2D g, String text, int offsetX, int offsetY, int maxWidth, int maxHeight) {

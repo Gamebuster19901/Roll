@@ -19,9 +19,9 @@ public class Dice {
 	transient boolean badDie = false;
 	
 	final int amount;
+	final boolean integerSupplied;
 	final int die;
 	final String type;
-	final DamageType damageType;
 	Dice child;
 	List<Die> dice = new ArrayList<>();
 	
@@ -44,17 +44,22 @@ public class Dice {
 		try {
 			cursor = matcher.start("amount");
 			
-			
 			String amt = matcher.group("amount");
 			int amount = 1;
 			if(amt.equals("-")) {
 				amount = -1;
+				integerSupplied = false;
 			}
 			else if(amt.equals("+")) {
+				integerSupplied = false;
 				//no-op
 			}
 			else if(amt != null && !amt.isEmpty()) {
 				amount = Integer.parseInt(amt);
+				integerSupplied = true;
+			}
+			else {
+				integerSupplied = false;
 			}
 			
 			this.amount = amount;
@@ -78,23 +83,17 @@ public class Dice {
 			String type = matcher.group("type");
 			if(type == null || type.isBlank()) {
 				this.type = null;
-				this.damageType = null;
 			}
 			else {
 				this.type = type;
-				if (EnumUtils.isValidEnum(DamageType.class, type)) {
-					this.damageType = DamageType.valueOf(type);
-				}
-				else {
-					this.damageType = null;
-				}
 			}
-			/*
+			
 			System.out.println("amount: " + this.amount);
+			System.out.println("integerSupplied: " + integerSupplied);
 			System.out.println("die:" + this.die);
 			System.out.println("type:" + type);
-			System.out.println("damageType:" + damageType);
 			
+			/*
 			System.out.println(matcher.requireEnd());
 			System.out.println(matcher.start() + ", " + matcher.end());
 			*/
@@ -136,10 +135,10 @@ public class Dice {
 			if(die > 0) {
 				for(int i = 0; i < Math.abs(amount); i++) {
 					if(amount > 0) {
-						dice.add(new Die(die));
+						dice.add(new Die(die, type));
 					}
 					else {
-						dice.add(new Die(-die));
+						dice.add(new Die(-die, type));
 					}
 				}
 			}
@@ -148,11 +147,21 @@ public class Dice {
 					dice.add(new Value(amount));
 				}
 				else {
-					if(amount < 0) {
-						dice.add(new RollValue(type, true));
+					if(!integerSupplied) {
+						if(amount < 0) {
+							dice.add(new RollValue(type, true));
+						}
+						else {
+							dice.add(new RollValue(type));
+						}
 					}
 					else {
-						dice.add(new RollValue(type));
+						if(amount > 0) {
+							dice.add(new Value(amount, type));
+						}
+						else {
+							dice.add(new Value(-amount, type));
+						}
 					}
 				}
 			}
@@ -206,7 +215,7 @@ public class Dice {
 		do {
 			if(dice.die != 0) {
 				if(dice.type != null) {
-					ret.append(dice.amount + "d" + dice.die + type);
+					ret.append(dice.amount + "d" + dice.die + dice.type);
 				}
 				else {
 					ret.append(dice.amount + "d" + dice.die);
@@ -217,11 +226,16 @@ public class Dice {
 					ret.append(dice.amount);
 				}
 				else {
-					if(dice.amount < 0) {
-						ret.append("-" + dice.type);
+					if(!dice.integerSupplied) {
+						if(dice.amount < 0) {
+							ret.append("-" + dice.type);
+						}
+						else {
+							ret.append(dice.type);
+						}
 					}
 					else {
-						ret.append(dice.type);
+						ret.append(dice.amount + dice.type);
 					}
 				}
 			}
