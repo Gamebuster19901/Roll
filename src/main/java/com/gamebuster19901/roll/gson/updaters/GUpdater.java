@@ -15,6 +15,7 @@ public abstract class GUpdater implements Comparable<Number>{
 	
 	static {
 		add(new V2());
+		add(new V3());
 	}
 	
 	private final int version;
