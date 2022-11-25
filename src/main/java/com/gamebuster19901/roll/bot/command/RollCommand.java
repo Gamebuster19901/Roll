@@ -5,11 +5,17 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.HashSet;
 
+import com.gamebuster19901.roll.bot.command.argument.AbilityArgumentType;
 import com.gamebuster19901.roll.bot.command.argument.DiceArgumentType;
+import com.gamebuster19901.roll.bot.command.argument.SaveArgumentType;
+import com.gamebuster19901.roll.bot.command.argument.SkillArgumentType;
 import com.gamebuster19901.roll.bot.game.Dice;
 import com.gamebuster19901.roll.bot.game.Roll;
+import com.gamebuster19901.roll.bot.game.SaveType;
 import com.gamebuster19901.roll.bot.game.Statted;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
+import com.gamebuster19901.roll.bot.game.stat.Ability;
+import com.gamebuster19901.roll.bot.game.stat.Skill;
 import com.gamebuster19901.roll.bot.graphics.Theme;
 import com.gamebuster19901.roll.bot.graphics.dice.DieGraphicBuilder;
 import com.gamebuster19901.roll.bot.graphics.dice.RollGraphicBuilder;
@@ -30,6 +36,21 @@ public class RollCommand {
 	@SuppressWarnings("rawtypes")
 	static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.global("roll")
+			.then(Commands.argument("ability", AbilityArgumentType.ANY_ABILITY)
+				.executes((context) -> {
+					return CheckCommand.rollCheck(context.getSource(), context.getArgument("ability", Ability.class));
+				})
+			)
+			.then(Commands.argument("skill", SkillArgumentType.ANY_SKILL)
+				.executes((context) -> {
+					return CheckCommand.rollCheck(context.getSource(), context.getArgument("skill", Skill.class));
+				})
+			)
+			.then(Commands.argument("death", SaveArgumentType.DEATH_SAVE)
+				.executes((context) -> {
+					return SaveCommand.rollSave(context.getSource(), context.getArgument("death", SaveType.class)); //all ability saves would be parsed as checks before it gets here, so the only valid save at this point are death saves
+				})
+			)
 			.then(Commands.argument("dice", DiceArgumentType.DICE_ARGUMENT_TYPE)
 				.executes((context) -> {
 					return roll(context, PlayerCharacter.getActiveCharacter(context.getSource().getAuthor()));

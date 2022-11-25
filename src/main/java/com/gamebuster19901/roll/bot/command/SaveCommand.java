@@ -24,7 +24,7 @@ public class SaveCommand {
 	}
 	
 	
-	private static int rollSave(CommandContext<IReplyCallback> c, SaveType save) {
+	static int rollSave(CommandContext<IReplyCallback> c, SaveType save) {
 		if(hasActiveCharacter(c)) {
 			Statted character = PlayerCharacter.getActiveCharacter(c.getAuthor());
 			Dice dice;

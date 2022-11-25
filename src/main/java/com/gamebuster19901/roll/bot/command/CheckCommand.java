@@ -31,7 +31,7 @@ class CheckCommand {
 	}
 	
 	
-	private static int rollCheck(CommandContext<IReplyCallback> c, Ability ability) {
+	static int rollCheck(CommandContext<IReplyCallback> c, Ability ability) {
 		if(hasActiveCharacter(c)) {
 			Statted character = PlayerCharacter.getActiveCharacter(c.getAuthor());
 			Dice dice = new Dice("d20+" + ability.shortHand);
@@ -40,7 +40,7 @@ class CheckCommand {
 		return 1;
 	}
 	
-	private static int rollCheck(CommandContext<IReplyCallback> c, Skill skill) {
+	static int rollCheck(CommandContext<IReplyCallback> c, Skill skill) {
 		if(hasActiveCharacter(c)) {
 			Statted character = PlayerCharacter.getActiveCharacter(c.getAuthor());
 			Dice dice = new Dice("d20+" + skill.getName());
@@ -49,7 +49,7 @@ class CheckCommand {
 		return 1;
 	}
 	
-	private static boolean hasActiveCharacter(CommandContext<IReplyCallback> c) {
+	static boolean hasActiveCharacter(CommandContext<IReplyCallback> c) {
 		boolean ret = PlayerCharacter.hasActiveCharacter(c.getAuthor());
 		if(ret == false) {
 			c.getEvent(IReplyCallback.class).reply("You cannot roll a check, you have no active character!").queue();
