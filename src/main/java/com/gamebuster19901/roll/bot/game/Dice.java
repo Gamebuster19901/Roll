@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.EnumUtils;
-
 import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.exception.DieParseException;
 import com.gamebuster19901.roll.util.regex.RegexUtil;
