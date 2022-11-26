@@ -54,6 +54,7 @@ public class StatEmbedBuilder {
 				buildActionPage(builder);
 				break;
 			case Skills:
+				buildSkillPage(builder);
 				break;
 			case Backstory:
 				break;
@@ -107,10 +108,30 @@ public class StatEmbedBuilder {
 	}
 	
 	private void buildSkillPage(EmbedBuilder builder) {
+		LinkedHashSet<Field> left = new LinkedHashSet<Field>();
+		LinkedHashSet<Field> middle = new LinkedHashSet<Field>();
+		LinkedHashSet<Field> right = new LinkedHashSet<Field>();
+		int i = 0;
+		
+		LinkedHashSet<Field> current;
 		for(Skill skill : Skill.DEFAULT_SKILLS) {
-			builder.addField(skill.getName() + statted.getProficiency(skill).getEmoji(),
-					modifierText(statted.getStat(skill.getStat(), int.class)) , false);
+			if(i % 3 == 0) {
+				current = left;
+			}
+			else if (i % 3 == 1){
+				current = middle;
+			}
+			else {
+				current = right;
+			}
+			current.add(new Field(skill.getName() + statted.getProficiency(skill).getEmoji(),
+					modifierText(statted.getStat(skill.getStat(), int.class)) , true));
+			
+			i++;
 		}
+		
+		weave(builder, left, middle, right);
+		
 		MessageChannel channel;
 		if(statted instanceof PlayerCharacter) {
 			try {
@@ -142,6 +163,10 @@ public class StatEmbedBuilder {
 	
 	private Field abilityField(Ability ability) {
 		return new Field(ability.shortHand + statted.getProficiency(ability).getEmoji(), statted.getAbilityScore(ability) + "[" + modifierText(statted.getModifier(ability)) + "]", true);
+	}
+	
+	private Field skillField(Skill skill) {
+		return new Field(skill.getName() + statted.getProficiency(skill).getEmoji(), statted.getStat(skill.getStat(), int.class) + "", true);
 	}
 	
 	private void addIfHasStat(HashSet<Field> section, Stat stat, Class<?> type) {
