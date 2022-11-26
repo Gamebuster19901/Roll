@@ -46,7 +46,7 @@ public class SelectCharacterInteraction {
 						MessageEditBuilder editBuilder = new MessageEditBuilder();
 						try {
 							PlayerCharacter.setActiveCharacter(context.getSource().getAuthor(), character);
-							editBuilder.setContent("You are now playing as " + character.getName() + ".").setEmbeds(new StatEmbedBuilder(character, editBuilder).getEmbed()).setComponents(new StatInteractionBuilder(character).getComponents());
+							editBuilder.setContent(c.getAuthor().getAsMention() + ", you are now playing as " + character.getName() + ".").setEmbeds(new StatEmbedBuilder(character, editBuilder).getEmbed()).setComponents(new StatInteractionBuilder(character).getComponents());
 							e.getHook().editOriginal(editBuilder.build()).queue();
 						}
 						catch (Throwable t) {
