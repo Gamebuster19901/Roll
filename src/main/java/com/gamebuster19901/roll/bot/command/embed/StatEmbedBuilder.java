@@ -3,25 +3,34 @@ package com.gamebuster19901.roll.bot.command.embed;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.imageio.ImageIO;
 
+import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.Statted;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
+import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.AbstractMessageBuilder;
 
 public class StatEmbedBuilder {
-
+	
 	private final Statted statted;
 	private final AbstractMessageBuilder messageBuilder;
 	private StatEmbedPage page;
+	private HashSet<Stat> hiddenStats = new HashSet<Stat>(); //for future use
 	
 	public StatEmbedBuilder(Statted statted, AbstractMessageBuilder messageBuilder) {
 		this(statted, StatEmbedPage.Stats, messageBuilder);
@@ -66,10 +75,22 @@ public class StatEmbedBuilder {
 	}
 	
 	private void buildStatPage(EmbedBuilder builder) {
+		LinkedHashSet<Field> left = new LinkedHashSet<Field>();
+		LinkedHashSet<Field> middle = new LinkedHashSet<Field>();
+		LinkedHashSet<Field> right = new LinkedHashSet<Field>();
+		
 		for(Ability ability : Ability.values()) {
-			builder.addField(ability.shortHand + statted.getProficiency(ability).getEmoji(),
-					statted.getAbilityScore(ability) + "[" + modifierText(statted.getModifier(ability)) + "]" , true);
+			left.add(abilityField(ability));
 		}
+		right.add(new Field(Stat.HP.getName(), statted.getHP() + "/" + statted.getMaxHP(), true));
+		addIfHasStat(right, Stat.AC, int.class);
+		addIfHasStatWithModification(right, Stat.Initiative, int.class, (number) -> {return number.doubleValue() < 0d ? number.toString() : "+" + number.toString();});
+		addIfHasStatWithModification(right, Stat.Proficiency_Bonus, int.class, (number) -> {return number.doubleValue() < 0d ? number.toString() : "+" + number.toString();});
+		addIfHasStatAnd(right, MovementType.Walking.getStat(), int.class, (stat) -> {return !stat.equals(Integer.valueOf(0));});
+		addIfHasStatAnd(right, MovementType.Flying.getStat(), int.class, (stat) -> {return !stat.equals(Integer.valueOf(0));});
+		
+		weave(builder, left, middle, right);
+		
 		if(statted instanceof PlayerCharacter) {
 			try {
 				PlayerCharacter player = (PlayerCharacter) statted;
@@ -117,6 +138,67 @@ public class StatEmbedBuilder {
 			return "+" + modifier;
 		}
 		return "" + modifier;
+	}
+	
+	private Field abilityField(Ability ability) {
+		return new Field(ability.shortHand + statted.getProficiency(ability).getEmoji(), statted.getAbilityScore(ability) + "[" + modifierText(statted.getModifier(ability)) + "]", true);
+	}
+	
+	private void addIfHasStat(HashSet<Field> section, Stat stat, Class<?> type) {
+		if(statted.hasStat(stat)) {
+			section.add(new Field(stat.getName(), statted.getStat(stat, type).toString(), true));
+		}
+	}
+	
+	private <T> void addIfHasStatWithModification(HashSet<Field> section, Stat stat, Class<T> type, Function<T, String> modifier) {
+		if(statted.hasStat(stat)) {
+			T val = statted.getStat(stat, type);
+			section.add(new Field(stat.getName(), modifier.apply(val), true));
+		}
+	}
+	
+	private <T> void addIfHasStatAnd(HashSet<Field> section, Stat stat, Class<T> type, Predicate<T> predicate) {
+		if(statted.hasStat(stat)) {
+			T val = statted.getStat(stat, type);
+			if(predicate.test(val)) {
+				section.add(new Field(stat.getName(), statted.getStat(stat, type).toString(), true));
+			}
+		}
+	}
+	
+	private <T> void addIfHasStatAndModify(HashSet<Field> section, Stat stat, Class<T> type, Predicate<T> predicate, Function<T,String> modifier) {
+		if(statted.hasStat(stat)) {
+			T val = statted.getStat(stat, type);
+			if(predicate.test(val)) {
+				section.add(new Field(stat.getName(), modifier.apply(val), true));
+			}
+		}
+	}
+	
+	private void weave(EmbedBuilder builder, HashSet<Field> left, HashSet<Field> middle, HashSet<Field> right) {
+		Iterator<Field> lIt = left.iterator();
+		Iterator<Field> mIt = middle.iterator();
+		Iterator<Field> rIt = right.iterator();
+		for(int i = 0, max = Math.max(Math.max(left.size(), middle.size()), right.size()); i < max; i++) {
+			if(lIt.hasNext()) {
+				builder.addField(lIt.next());
+			}
+			else {
+				builder.addBlankField(true);
+			}
+			if(mIt.hasNext()) {
+				builder.addField(mIt.next());
+			}
+			else {
+				builder.addBlankField(true);
+			}
+			if(rIt.hasNext()) {
+				builder.addField(rIt.next());
+			}
+			else {
+				builder.addBlankField(true);
+			}
+		}
 	}
 	
 }
