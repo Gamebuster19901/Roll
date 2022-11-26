@@ -125,6 +125,14 @@ public interface Statted extends GSerializable {
 		return getStat(layer, Stat.AC, int.class);
 	}
 	
+	public default int getInitiative() {
+		return getInitiative(GameLayer.EFFECT);
+	}
+	
+	public default int getInitiative(GameLayer layer) {
+		return getStat(layer, Stat.Initiative, int.class);
+	}
+	
 	@CheckForNull
 	public default <T> T getStat(Stat stat, Class<T> type) {
 		return getStat(GameLayer.EFFECT, stat, type);
