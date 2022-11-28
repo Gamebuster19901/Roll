@@ -15,6 +15,7 @@ public abstract class GUpdater implements Comparable<Number>{
 	
 	static {
 		add(new V2());
+		add(new V3());
 	}
 	
 	private final int version;
@@ -73,7 +74,7 @@ public abstract class GUpdater implements Comparable<Number>{
 						updater.updateImpl(json);
 					}
 					else {
-						System.out.println("Updater does not accept " + clazz);
+						//System.out.println("Updater does not accept " + clazz);
 					}
 				}
 			}

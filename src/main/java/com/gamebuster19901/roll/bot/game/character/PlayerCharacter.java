@@ -281,6 +281,19 @@ public class PlayerCharacter implements Statted {
 		return null; //no active character
 	}
 	
+	public static boolean hasActiveCharacter(User user) {
+		return hasActiveCharacter(user.getIdLong());
+	}
+	
+	public static boolean hasActiveCharacter(long discordID) {
+		Result result = Table.selectColumnsFromWhere(CURRENT_CHARACTER, PLAYERS, new Comparison(DISCORD_ID, EQUALS, discordID));
+		if(result.hasNext()) {
+			result.next();
+			return !result.isNull(CURRENT_CHARACTER);
+		}
+		return false;
+	}
+	
 	public static void setActiveCharacter(User user, PlayerCharacter character) {
 		setActiveCharacter(user.getIdLong(), character.getID());
 	}
@@ -295,7 +308,12 @@ public class PlayerCharacter implements Statted {
 	
 	public static void setActiveCharacter(long userID, long characterID) {
 		try {
-			Table.updateWhere(PLAYERS, CURRENT_CHARACTER, characterID, new Comparison(Column.DISCORD_ID, EQUALS, userID));
+			if(characterID > -1) {
+				Table.updateWhere(PLAYERS, CURRENT_CHARACTER, characterID, new Comparison(Column.DISCORD_ID, EQUALS, userID));
+			}
+			else {
+				Table.updateWhere(PLAYERS, CURRENT_CHARACTER, null, new Comparison(Column.DISCORD_ID, EQUALS, userID));
+			}
 		} catch (SQLException e) {
 			throw new IOError(e);
 		}

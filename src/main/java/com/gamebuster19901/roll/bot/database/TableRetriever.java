@@ -18,6 +18,8 @@ public interface TableRetriever {
 	
 	public double getDouble(Column column) throws SQLException;
 	
+	public boolean isNull(Column column) throws SQLException;
+	
 	public int size();
 	
 }

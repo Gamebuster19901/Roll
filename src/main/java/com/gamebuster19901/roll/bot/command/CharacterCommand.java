@@ -31,6 +31,7 @@ class CharacterCommand {
 				long id = result.getLong(Column.CHARACTER_ID);
 				selectBuilder.addOption(name, id + "");
 			}
+			selectBuilder.addOption("No Character", "null");
 			
 			MessageEditBuilder editBuilder = new MessageEditBuilder();
 			editBuilder.setComponents(ActionRow.of(selectBuilder.build())).setEmbeds(TITLE_EMBED);

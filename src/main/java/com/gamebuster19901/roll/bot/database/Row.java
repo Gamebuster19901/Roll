@@ -25,6 +25,11 @@ public class Row implements TableRetriever {
 			Column column = Column.getColumn(metaData.getColumnName(i));
 			int type = metaData.getColumnType(i);
 			
+			if(results.isNull(column)) {
+				this.results.put(column, null);
+				continue;
+			}
+			
 			if(type == Types.CHAR || type == Types.VARCHAR || type == Types.LONGVARCHAR) {
 				this.results.put(column, results.getString(column));
 				continue;
@@ -63,6 +68,13 @@ public class Row implements TableRetriever {
 			throw new AssertionError("Unknown type " + type);
 			
 		}
+	}
+	
+	public boolean isNull(Column column) {
+		if(results.containsKey(column)) {
+			return results.get(column) == null;
+		}
+		throw new AssertionError("Column " + column + " is not in " + results);
 	}
 	
 	public String getString(Column column) {

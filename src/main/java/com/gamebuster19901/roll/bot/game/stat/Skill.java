@@ -24,7 +24,7 @@ public class Skill implements Statistic, Proficientable {
 	public static final Skill Performance = new Skill("Performance", Charisma);
 	public static final Skill Persuasion = new Skill("Persuasion", Charisma);
 	public static final Skill Religion = new Skill("Religion", Intelligence);
-	public static final Skill Sleight_of_Hand = new Skill("Slight of Hand", Dexterity);
+	public static final Skill Sleight_of_Hand = new Skill("Sleight of Hand", Dexterity);
 	public static final Skill Stealth = new Skill("Stealth", Dexterity);
 	public static final Skill Survival = new Skill("Survival", Wisdom);
 	
@@ -85,6 +85,15 @@ public class Skill implements Statistic, Proficientable {
 			}
 		}
 		throw new IllegalArgumentException("No default skill called '" + stat.getName() + "'");
+	}
+
+	public static Skill getIfSkill(String stat) {
+		for(Skill skill : DEFAULT_SKILLS) {
+			if(skill.getName().equalsIgnoreCase(stat)) {
+				return skill;
+			}
+		}
+		return null;
 	}
 	
 }

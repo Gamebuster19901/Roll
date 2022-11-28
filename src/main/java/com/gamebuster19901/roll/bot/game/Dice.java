@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.EnumUtils;
-
 import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.exception.DieParseException;
 import com.gamebuster19901.roll.util.regex.RegexUtil;
@@ -14,13 +12,14 @@ import com.mojang.brigadier.StringReader;
 
 public class Dice {
 
-	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d*){0,1}(?<type>[\\w\\s]*)");
+	public static final Pattern ROLLING_REGEX = Pattern.compile("(?<amount>[\\+\\-]?\\d*)(?<die>d\\d+){0,1}(?<type>(?:(?!d\\d+)[\\w\\s])*)");
 	
-	transient int cursor;
+	transient boolean badDie = false;
+	
 	final int amount;
+	final boolean integerSupplied;
 	final int die;
 	final String type;
-	final DamageType damageType;
 	Dice child;
 	List<Die> dice = new ArrayList<>();
 	
@@ -38,21 +37,27 @@ public class Dice {
 	
 	private Dice(Matcher matcher, int cursor) {
 		matcher.find();
-		this.cursor = cursor;
+		//System.out.println("Cursor:" + cursor);
+		//System.out.println("End:" + matcher.end());
 		try {
-			this.cursor = matcher.start("amount");
-			
+			cursor = matcher.start("amount");
 			
 			String amt = matcher.group("amount");
 			int amount = 1;
 			if(amt.equals("-")) {
 				amount = -1;
+				integerSupplied = false;
 			}
 			else if(amt.equals("+")) {
+				integerSupplied = false;
 				//no-op
 			}
 			else if(amt != null && !amt.isEmpty()) {
 				amount = Integer.parseInt(amt);
+				integerSupplied = true;
+			}
+			else {
+				integerSupplied = false;
 			}
 			
 			this.amount = amount;
@@ -61,7 +66,7 @@ public class Dice {
 				
 				matcher.groupCount();
 				String die = matcher.group("die");
-				this.cursor = matcher.start("die");
+				cursor = matcher.start("die");
 				if(die != null && !die.isEmpty()) {
 					this.die = Integer.parseInt(die.substring(1));
 				}
@@ -76,26 +81,34 @@ public class Dice {
 			String type = matcher.group("type");
 			if(type == null || type.isBlank()) {
 				this.type = null;
-				this.damageType = null;
 			}
 			else {
 				this.type = type;
-				if (EnumUtils.isValidEnum(DamageType.class, type)) {
-					this.damageType = DamageType.valueOf(type);
-				}
-				else {
-					this.damageType = null;
-				}
 			}
 			
 			System.out.println("amount: " + this.amount);
+			System.out.println("integerSupplied: " + integerSupplied);
 			System.out.println("die:" + this.die);
 			System.out.println("type:" + type);
-			System.out.println("damageType:" + damageType);
 			
-			if(!matcher.hitEnd()) {
-				child = new Dice(matcher, cursor + matcher.end());
+			/*
+			System.out.println(matcher.requireEnd());
+			System.out.println(matcher.start() + ", " + matcher.end());
+			*/
+			if(matcher.start() != matcher.end()) {
+				Dice chld = new Dice(matcher, cursor + matcher.end());
+				//For some reason java regex is being buggy, and matcher.hitEnd() is returning true prematurely
+				//So the only way to tell if we have actually hit the end of the string is to check if matcher.start and matcher.end
+				//are both the same value. If they are then we know the generated die is bad and we should not add it as a child.
+				if(!chld.badDie) { 
+					child = chld;
+				}
 			}
+			else {
+				badDie = true;
+			}
+
+			//System.out.println(matcher.lookingAt());
 			group();
 		}
 		catch(Throwable t) {
@@ -120,10 +133,10 @@ public class Dice {
 			if(die > 0) {
 				for(int i = 0; i < Math.abs(amount); i++) {
 					if(amount > 0) {
-						dice.add(new Die(die));
+						dice.add(new Die(die, type));
 					}
 					else {
-						dice.add(new Die(-die));
+						dice.add(new Die(-die, type));
 					}
 				}
 			}
@@ -132,7 +145,22 @@ public class Dice {
 					dice.add(new Value(amount));
 				}
 				else {
-					dice.add(new RollValue(type));
+					if(!integerSupplied) {
+						if(amount < 0) {
+							dice.add(new RollValue(type, true));
+						}
+						else {
+							dice.add(new RollValue(type));
+						}
+					}
+					else {
+						if(amount > 0) {
+							dice.add(new Value(amount, type));
+						}
+						else {
+							dice.add(new Value(-amount, type));
+						}
+					}
 				}
 			}
 		}
@@ -185,7 +213,7 @@ public class Dice {
 		do {
 			if(dice.die != 0) {
 				if(dice.type != null) {
-					ret.append(dice.amount + "d" + dice.die + type);
+					ret.append(dice.amount + "d" + dice.die + dice.type);
 				}
 				else {
 					ret.append(dice.amount + "d" + dice.die);
@@ -196,7 +224,17 @@ public class Dice {
 					ret.append(dice.amount);
 				}
 				else {
-					ret.append(dice.type);
+					if(!dice.integerSupplied) {
+						if(dice.amount < 0) {
+							ret.append("-" + dice.type);
+						}
+						else {
+							ret.append(dice.type);
+						}
+					}
+					else {
+						ret.append(dice.amount + dice.type);
+					}
 				}
 			}
 			dice = dice.child;

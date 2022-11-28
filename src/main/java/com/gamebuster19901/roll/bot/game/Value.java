@@ -3,18 +3,23 @@ package com.gamebuster19901.roll.bot.game;
 public class Value extends Die {
 
 	public Value(int value) {
-		super(value);
+		this(value, null);
 	}
 	
-	public Value(int value, DamageType type) {
+	public Value(int value, String type) {
 		super(value, type);
 	}
 
 	public String toString() {
+		StringBuilder ret = new StringBuilder();
 		if(sides > -1) {
-			return "+" + sides;
+			ret.append("+");
 		}
-		return ""+ sides;
+		ret.append(sides);
+		if(getValueType() != null) {
+			ret.append(getValueType());
+		}
+		return ret.toString();
 	}
 	
 	public int getMaxValue() {

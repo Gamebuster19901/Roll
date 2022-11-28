@@ -14,4 +14,8 @@ public interface ParseExceptions {
 	
 	public DynamicCommandExceptionType NO_DICE_TO_ROLL = new DynamicCommandExceptionType((value) -> new LiteralMessage("No dice to roll! `" + value + "` contains no values or dice!"));
 	public SimpleCommandExceptionType TOO_MANY_DICE = new SimpleCommandExceptionType(new LiteralMessage("Too many dice!"));
+	
+	public DynamicCommandExceptionType INVALID_SKILL = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept a skill named `" + value + "`"));
+	public DynamicCommandExceptionType INVALID_ABILITY = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept an ability named `" + value + "`"));
+	public DynamicCommandExceptionType INVALID_THROW = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept a save type named `" + value + "`"));
 }

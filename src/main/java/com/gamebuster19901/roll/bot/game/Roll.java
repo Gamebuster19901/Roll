@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 public class Roll {
 	
+	private final String name;
 	private final Dice dice;
 	private final LinkedHashMap<Die, Integer> result = new LinkedHashMap<Die, Integer>();
 	private final List<Entry<Die, Integer>> result2 = new ArrayList<Entry<Die, Integer>>();
@@ -18,6 +19,11 @@ public class Roll {
 	}
 	
 	public Roll(Dice dice, Statted statted) {
+		this("", dice, statted);
+	}
+	
+	public Roll(String name, Dice dice, Statted statted) {
+		this.name = name;
 		this.dice = dice;
 		this.statted = statted;
 		roll(statted);
@@ -95,6 +101,10 @@ public class Roll {
 	
 	public Statted getStatted() {
 		return statted;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 }

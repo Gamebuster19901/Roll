@@ -10,16 +10,18 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 
 import com.gamebuster19901.roll.bot.game.Die;
 import com.gamebuster19901.roll.bot.game.Roll;
 import com.gamebuster19901.roll.bot.game.RollValue;
+import com.gamebuster19901.roll.bot.game.Statted;
 
 public class DieTheme {
 	
-	public static final DieTheme DEFAULT_DIE_THEME = new DieTheme(new Font("Aakar", Font.BOLD, 200), Color.BLUE, Color.GREEN.darker(), Color.RED, Color.WHITE);
-	public static final DieTheme DEBUG_DIE_THEME = new DieTheme(new Font("Aakar", Font.BOLD, 200), Color.BLUE, Color.GREEN.darker(), Color.RED, Color.WHITE, true);
+	public static final DieTheme DEFAULT_DIE_THEME = new DieTheme(new Font("Ubuntu Mono", Font.BOLD, 200), Color.BLUE, Color.GREEN.darker(), Color.RED, Color.WHITE);
+	public static final DieTheme DEBUG_DIE_THEME = new DieTheme(new Font("Ubuntu Mono", Font.BOLD, 200), Color.BLUE, Color.GREEN.darker(), Color.RED, Color.WHITE, true);
 	
 	private final Font font;
 	private final Color textColor;
@@ -47,6 +49,8 @@ public class DieTheme {
 		int maxSize = 256;
 		Die die = dieResult.getKey();
 		int value = dieResult.getValue();
+		String valueType = die.getValueType();
+		Statted statted = roll.getStatted();
 		switch(die.getDieType()) {
 			case d10:
 			case d12:
@@ -68,26 +72,37 @@ public class DieTheme {
 				}
 				
 				renderText(g, value + "", die.getDieType().getOffsetX(), die.getDieType().getOffsetY(), maxSize, maxSize);
+				
+				if(valueType != null) {
+					g.setColor(Color.YELLOW);
+					renderLowerText(g, valueType);
+				}
+				else {
+					System.out.println(die);
+					System.out.println(die.getClass().getName());
+				}
 				break;
 			case modifier:
 				g.setColor(getTextColor());
 				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, maxSize, maxSize);
+				if(valueType != null) {
+					g.setColor(Color.YELLOW);
+					renderLowerText(g, valueType);
+				}
 				break;
 			case stat:
 				dieImage = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB); //blank image
 				g = (Graphics2D) dieImage.getGraphics();
 				g.setColor(getTextColor());
-				if(Math.abs(die.getSides()) > 2) { //so coin tosses are not always red/green
-					if(die.getSides() > -1 && die.getSides() == value) {
-						g.setColor(getGoodColor());
-					}
-					else if(value == 1 || value < 0) {
-						g.setColor(getBadColor());
-					}
-				}
 				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, 211, 211);
-				g.setColor(Color.YELLOW);
-				renderText(g, ((RollValue)die).getStat().getSimpleName(), 0, 100, 256, 45);
+				if(statted != null && statted.hasStat(((RollValue)die).getStat())) {
+					g.setColor(Color.YELLOW);
+				}
+				else {
+					g.setColor(Color.MAGENTA);
+				}
+				String lowerText = value >= 0 ? ((RollValue)die).getStat().getSimpleName() : "-" + ((RollValue)die).getStat().getSimpleName();
+				renderLowerText(g, lowerText);
 				
 				break;
 			case other:
@@ -107,15 +122,41 @@ public class DieTheme {
 				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, 211, 211);
 				g.setColor(Color.YELLOW);
 				if(die.getSides() > 0) {
-					renderText(g, "d" + die.getSides(), 0, 100, 256, 45);
+					renderLowerText(g, "d" + die.getSides());
 				}
 				else {
-					renderText(g, "-d" + Math.abs(die.getSides()), 0, 100, 256, 45);
+					renderLowerText(g, "-d" + Math.abs(die.getSides()));
 				}
 				
 				break;
 		}
 		return dieImage;
+	}
+	
+	@Nullable
+	public BufferedImage renderResult(Roll roll) {
+		if(roll.getValues().size() < 2) { //we don't need to render the result if only one die was rolled
+			return null;
+		}
+		BufferedImage resultImage = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) resultImage.getGraphics();
+		int result = roll.getValue();
+		Color color = textColor;
+		if(result == roll.getMaxValue()) {
+			color = goodColor;
+		}
+		else if (result == roll.getMinValue()) {
+			color = badColor;
+		}
+		g.setColor(color);
+		renderText(g, "" + result, 0, 0, 256, 256);
+		
+		return resultImage;
+	}
+	
+	
+	private void renderLowerText(Graphics2D g, String text) {
+		renderText(g, text, 0, 100, 256, 45);
 	}
 	
 	private void renderText(Graphics2D g, String text, int offsetX, int offsetY, int maxWidth, int maxHeight) {

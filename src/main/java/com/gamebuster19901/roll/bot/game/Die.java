@@ -8,13 +8,13 @@ public class Die {
 
 	protected final int sides;
 	protected final DieType dieType;
-	protected final DamageType damageType;
+	protected final String valueType;
 	
 	public Die(int sides) {
 		this(sides, null);
 	}
 	
-	public Die(int sides, DamageType damageType) {
+	public Die(int sides, String valueType) {
 		if(!(this instanceof Value)) {
 			if(sides == 0) {
 				throw new IllegalArgumentException("Die cannot have 0 sides!");
@@ -23,7 +23,7 @@ public class Die {
 		this.sides = sides;
 
 		this.dieType = DieType.getDieType(Math.abs(sides));
-		this.damageType = damageType;
+		this.valueType = valueType;
 	}
 	
 	public int getMaxValue() {
@@ -68,8 +68,8 @@ public class Die {
 	}
 	
 	public String toFullString() {
-		if(damageType != null) {
-			return toString() + " " + damageType;
+		if(valueType != null) {
+			return toString() + " " + valueType;
 		}
 		return toString();
 	}
@@ -79,8 +79,8 @@ public class Die {
 	}
 	
 	@Nullable
-	public DamageType getDamageType() {
-		return damageType;
+	public String getValueType() {
+		return valueType;
 	}
 	
 	public int getSides() {
@@ -91,7 +91,7 @@ public class Die {
 	}
 	
 	public Die invert() {
-		return new Die(-getSides(), getDamageType());
+		return new Die(-getSides(), getValueType());
 	}
 	
 }
