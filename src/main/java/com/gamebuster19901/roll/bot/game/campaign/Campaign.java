@@ -20,7 +20,7 @@ public class Campaign {
 	private LinkedHashSet<Long> dungeonMasters;
 	private LinkedHashSet<Long> players;
 	private LinkedHashSet<Long> characters;
-	private Session session = new NoSession(this);
+	private CampaignSession session = new NoSession(this);
 	
 	public Campaign(String name, User owner) {
 		this(name, owner.getIdLong());

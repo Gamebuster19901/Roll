@@ -91,7 +91,7 @@ public class ThreadService {
 					try {
 						Thread.sleep(1000);
 						waitTime = waitTime + 1000;
-						if(waitTime > 5000) {
+						if(waitTime > 20000) {
 							throw new InterruptedException("Took to long to stop!");
 						}
 					} catch (InterruptedException e) {
@@ -104,7 +104,7 @@ public class ThreadService {
 				while(threadCount > 0);
 				context.sendMessage("Stopped!");
 				Main.discordBot.jda.shutdown();
-				System.exit(0);
+				System.exit(ExitCode);
 			}
 		};
 		shutdownHandler.start();

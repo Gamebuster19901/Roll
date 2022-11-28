@@ -2,17 +2,18 @@ package com.gamebuster19901.roll.bot.game.campaign;
 
 import java.time.Instant;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import net.dv8tion.jda.api.entities.User;
 
-public class Session {
+public class CampaignSession {
 
 	private transient Instant lastInteraction = Instant.now();
 	private transient Campaign campaign;
 	private transient LinkedHashSet<Long> activeDMs;
 	private transient LinkedHashSet<Long> activePlayers;
 	
-	public Session(Campaign campaign) {
+	public CampaignSession(Campaign campaign) {
 		this.campaign = campaign;
 	}
 	
@@ -41,7 +42,7 @@ public class Session {
 		return campaign.getOwner();
 	}
 	
-	public LinkedHashSet<Long> getDMs() {
+	public Set<Long> getDMs() {
 		update();
 		return campaign.getDMs();
 	}

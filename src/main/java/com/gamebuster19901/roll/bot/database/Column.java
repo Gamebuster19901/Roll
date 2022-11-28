@@ -12,7 +12,7 @@ public enum Column implements Columns {
 	GENERATED_KEY("GENERATED_KEY", Table.values()), //Used for getting generated key
 	NAME("name", CAMPAIGNS, CHARACTERS),
 	
-	DISCORD_ID("discordID", CHARACTERS, CLASSES, THEMES, PLAYERS, RACES),
+	DISCORD_ID("discordID", CHARACTERS, CLASSES, THEMES, PLAYERS, RACES, SESSIONS_DEFAULT),
 	OWNER_ID("ownerID", CAMPAIGNS),
 	
 	/*
@@ -24,7 +24,7 @@ public enum Column implements Columns {
 	/*
 	 * Characters
 	 */
-	CHARACTER_ID("characterID", CHARACTERS),
+	CHARACTER_ID("characterID", CHARACTERS, SESSIONS_DEFAULT),
 	
 	/*
 	 * Classes
@@ -36,7 +36,7 @@ public enum Column implements Columns {
 	/*
 	 * Players
 	 */
-	//CURRENT_CHARACTER("currentCharacter"),
+	CURRENT_CHARACTER("currentCharacter", PLAYERS),
 	PLAYER_ID("playerID", CAMPAIGN_PLAYERS),
 	
 	/*

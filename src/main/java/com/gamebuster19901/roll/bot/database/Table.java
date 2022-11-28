@@ -17,7 +17,7 @@ public enum Table {
 	PLAYERS,
 	RACES,
 	THEMES,
-	
+	SESSIONS_DEFAULT,
 	;
 	
 	@Override
