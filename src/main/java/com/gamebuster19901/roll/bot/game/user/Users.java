@@ -63,6 +63,9 @@ public final class Users {
 		Result result = Table.selectColumnsFromWhere(CURRENT_CHARACTER, PLAYERS, new Comparison(DISCORD_ID, EQUALS, discordID));
 		if(result.hasNext()) {
 			result.next();
+			if(result.isNull(CURRENT_CHARACTER)) {
+				return null;
+			}
 			long id = result.getLong(CURRENT_CHARACTER);
 			if(id == 0) {
 				return null;
@@ -92,7 +95,6 @@ public final class Users {
 		} catch (SQLException e) {
 			throw new IOError(e);
 		}
-		getSession(user).setActiveCharacter(user, character);
 	}
 	
 	/**
