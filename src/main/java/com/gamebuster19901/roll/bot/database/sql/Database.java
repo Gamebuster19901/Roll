@@ -1,5 +1,6 @@
 package com.gamebuster19901.roll.bot.database.sql;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Array;
@@ -26,7 +27,6 @@ import java.util.concurrent.Executor;
 
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.StatSource;
-import com.gamebuster19901.roll.util.file.File;
 import com.mysql.cj.exceptions.CJCommunicationsException;
 import com.mysql.cj.exceptions.ConnectionIsClosedException;
 
@@ -48,14 +48,9 @@ public class Database implements Connection {
 	
 	public Database() throws IOException, SQLException {
 		File file = new File("./mysql.secret");
-		if(file.isSecret()) {
-			List<String> lines = Files.readAllLines(file.toPath());
-			parent = DriverManager.getConnection(lines.get(0), lines.get(1), lines.get(2));
-			lastDBInitialization = Instant.now();
-		}
-		else {
-			throw new IOException(file.getAbsolutePath() + " is not secret!");
-		}
+		List<String> lines = Files.readAllLines(file.toPath());
+		parent = DriverManager.getConnection(lines.get(0), lines.get(1), lines.get(2));
+		lastDBInitialization = Instant.now();
 	}
 		
 	public Database(String connectionInfo) throws SQLException {
