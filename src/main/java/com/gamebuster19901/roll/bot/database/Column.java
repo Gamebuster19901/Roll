@@ -10,24 +10,34 @@ public enum Column implements Columns {
 	//MULTIPLE TABLES:
 	ALL_COLUMNS("*", Table.values()),
 	GENERATED_KEY("GENERATED_KEY", Table.values()), //Used for getting generated key
-	NAME("name", CHARACTERS),
+	NAME("name", CAMPAIGNS, CHARACTERS),
 	
-	DISCORD_ID("discordID", CHARACTERS, CLASSES, THEMES, PLAYERS, RACES),
+	DISCORD_ID("discordID", CHARACTERS, CLASSES, THEMES, PLAYERS, RACES, SESSIONS_DEFAULT),
+	OWNER_ID("ownerID", CAMPAIGNS),
+	
+	/*
+	 * Campaigns
+	 */
+	CAMPAIGN_ID("campaignID", CAMPAIGNS, CAMPAIGN_PLAYERS),
+	
 	
 	/*
 	 * Characters
 	 */
-	CHARACTER_ID("characterID", CHARACTERS),
+	CHARACTER_ID("characterID", CHARACTERS, SESSIONS_DEFAULT),
 	
 	/*
 	 * Classes
 	 */
 	CLASS_ID("classID", CLASSES),
 	
+	
+	
 	/*
 	 * Players
 	 */
-	CURRENT_CHARACTER("currentCharacter", CHARACTERS),
+	CURRENT_CHARACTER("currentCharacter", PLAYERS),
+	PLAYER_ID("playerID", CAMPAIGN_PLAYERS),
 	
 	/*
 	 * Races

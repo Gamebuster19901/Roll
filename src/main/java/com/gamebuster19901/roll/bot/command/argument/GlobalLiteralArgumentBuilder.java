@@ -29,7 +29,7 @@ public class GlobalLiteralArgumentBuilder<S> extends LiteralArgumentBuilder<S> {
 		return result;
 	}
 	
-	public static final class GlobalLiteralCommandNode<S> extends LiteralCommandNode<S> {
+	public static final class GlobalLiteralCommandNode<S> extends LiteralCommandNode<S> implements GlobalNode {
 
 		public GlobalLiteralCommandNode(String literal, Command<S> command, Predicate<S> requirement, CommandNode<S> redirect, RedirectModifier<S> modifier, boolean forks) {
 			super(literal, command, requirement, redirect, modifier, forks);

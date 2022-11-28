@@ -101,13 +101,15 @@ public class DiscordBot {
 	private void setupGlobalCommands() {
 		List<CommandData> commands = new ArrayList<>();
 		Commands.DISPATCHER.getDispatcher().getRoot().getChildren().forEach((command) -> {
-			if(command instanceof GlobalLiteralCommandNode && !this.dev) {
-				SlashCommandData data = net.dv8tion.jda.api.interactions.commands.build.Commands.slash(command.getName(), command.getUsageText());
-				if(command.getChildren().size() > 0) {
-					data.addOption(OptionType.STRING, "argument", "argument");
+			if(!isDev()) {
+				if(command instanceof GlobalLiteralCommandNode) {
+					SlashCommandData data = net.dv8tion.jda.api.interactions.commands.build.Commands.slash(command.getName(), command.getUsageText());
+					if(command.getChildren().size() > 0) {
+						data.addOption(OptionType.STRING, "argument", "argument");
+					}
+					System.out.println("Global: " + command.getUsageText());
+					commands.add(data);
 				}
-				System.out.println("Global: " + command.getUsageText());
-				commands.add(data);
 			}
 		});
 		this.jda.updateCommands().addCommands(commands).queue();

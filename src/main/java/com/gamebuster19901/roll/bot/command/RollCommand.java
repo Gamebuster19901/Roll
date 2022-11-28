@@ -16,6 +16,7 @@ import com.gamebuster19901.roll.bot.game.Statted;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
 import com.gamebuster19901.roll.bot.game.stat.Skill;
+import com.gamebuster19901.roll.bot.game.user.Users;
 import com.gamebuster19901.roll.bot.graphics.Theme;
 import com.gamebuster19901.roll.bot.graphics.dice.DieGraphicBuilder;
 import com.gamebuster19901.roll.bot.graphics.dice.RollGraphicBuilder;
@@ -53,7 +54,7 @@ public class RollCommand {
 			)
 			.then(Commands.argument("dice", DiceArgumentType.DICE_ARGUMENT_TYPE)
 				.executes((context) -> {
-					return roll(context, PlayerCharacter.getActiveCharacter(context.getSource().getAuthor()));
+					return roll(context, Users.getActiveCharacter(context.getSource().getAuthor()));
 				})
 			)
 		);
@@ -134,5 +135,4 @@ public class RollCommand {
 			return 1;
 		}
 	}
-	
 }

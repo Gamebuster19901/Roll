@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Dispatcher;
+import com.gamebuster19901.roll.bot.command.argument.GlobalContextArgumentBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -12,6 +13,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.Component.Type;
@@ -27,6 +29,7 @@ public class Interactions {
 		ConfirmationButtonInteraction.register(dispatcher);
 		CharacterSheetInteraction.register(dispatcher);
 		SelectCharacterInteraction.register(dispatcher);
+		RollInteraction.register(dispatcher);
 	}
 	
 	public static void execute(CommandContext context, String command) throws CommandSyntaxException {
@@ -70,8 +73,16 @@ public class Interactions {
 		}
 	}
 	
+	public static void execute(MessageContextInteractionEvent e) throws CommandSyntaxException {
+		DISPATCHER.getDispatcher().execute(e.getCommandId(), new CommandContext(e));
+	}
+	
 	public static LiteralArgumentBuilder<CommandContext<?>> literal(String name) {
 		return LiteralArgumentBuilder.literal(name);
+	}
+	
+	public static GlobalContextArgumentBuilder<CommandContext<?>> contextMenu(String name) {
+		return GlobalContextArgumentBuilder.literal(name);
 	}
 	
 	public static <T> RequiredArgumentBuilder<CommandContext<?>, T> argument(String name, ArgumentType<T> type) {

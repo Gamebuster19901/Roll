@@ -2,7 +2,7 @@ package com.gamebuster19901.roll.bot.command;
 
 import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Result;
-import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
+import com.gamebuster19901.roll.bot.game.user.Users;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -24,7 +24,7 @@ class CharacterCommand {
 			ReplyCallbackAction r = e.deferReply();
 			r.queue();
 			
-			Result result = PlayerCharacter.getCharacterDataByOwner(c.getAuthor(), 23, 0);
+			Result result = Users.getCharacterDataByOwner(c.getAuthor(), 23, 0);
 			StringSelectMenu.Builder selectBuilder = StringSelectMenu.create("selectcharacter");
 			while(result.next()) {
 				String name = result.getString(Column.NAME);

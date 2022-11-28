@@ -80,7 +80,7 @@ public class CharacterImportInteraction {
 									}
 									else {
 										try {
-											PlayerCharacter.removeCharacter(id);
+											PlayerCharacter.deleteCharacter(id);
 											PlayerCharacter character = addCharacterToDatabase(e, builder);
 											askReply.editOriginal(responseBuilder.setContent("Overwrote " + character.getName()).setComponents(new StatInteractionBuilder(character).getComponents()).setEmbeds(new StatEmbedBuilder(character, responseBuilder).getEmbed()).build()).complete();
 										} catch (SQLException | IOException e1) {

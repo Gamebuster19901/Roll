@@ -8,6 +8,7 @@ import com.gamebuster19901.roll.bot.command.argument.StattedArgumentType;
 import com.gamebuster19901.roll.bot.command.embed.StatEmbedBuilder;
 import com.gamebuster19901.roll.bot.command.embed.StatInteractionBuilder;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
+import com.gamebuster19901.roll.bot.game.user.Users;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.interactions.components.ComponentInteraction;
@@ -24,7 +25,7 @@ public class SelectCharacterInteraction {
 							CommandContext c = context.getSource();
 							ComponentInteraction e = (ComponentInteraction) c.getEvent(ComponentInteraction.class);
 							e.deferEdit().queue();
-							PlayerCharacter.setActiveCharacter(context.getSource().getAuthor(), -1);
+							Users.setActiveCharacter(context.getSource().getAuthor(), null);
 							MessageEditBuilder editBuilder = new MessageEditBuilder();
 							editBuilder.setComponents(Collections.EMPTY_SET);
 							editBuilder.setContent("You no longer actively controlling a character.");
@@ -45,7 +46,7 @@ public class SelectCharacterInteraction {
 						edit.queue();
 						MessageEditBuilder editBuilder = new MessageEditBuilder();
 						try {
-							PlayerCharacter.setActiveCharacter(context.getSource().getAuthor(), character);
+							Users.setActiveCharacter(context.getSource().getAuthor(), character);
 							editBuilder.setContent(c.getAuthor().getAsMention() + ", you are now playing as " + character.getName() + ".").setEmbeds(new StatEmbedBuilder(character, editBuilder).getEmbed()).setComponents(new StatInteractionBuilder(character).getComponents());
 							e.getHook().editOriginal(editBuilder.build()).queue();
 						}

@@ -4,7 +4,7 @@ import com.gamebuster19901.roll.bot.command.argument.SaveArgumentType;
 import com.gamebuster19901.roll.bot.game.Dice;
 import com.gamebuster19901.roll.bot.game.SaveType;
 import com.gamebuster19901.roll.bot.game.Statted;
-import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
+import com.gamebuster19901.roll.bot.game.user.Users;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
@@ -26,7 +26,7 @@ public class SaveCommand {
 	
 	static int rollSave(CommandContext<IReplyCallback> c, SaveType save) {
 		if(hasActiveCharacter(c)) {
-			Statted character = PlayerCharacter.getActiveCharacter(c.getAuthor());
+			Statted character = Users.getActiveCharacter(c.getAuthor());
 			Dice dice;
 			if(save != SaveType.DEATH_SAVE) {
 				dice = new Dice("d20+" + save.getName() + " Saving Throw");
@@ -40,7 +40,7 @@ public class SaveCommand {
 	}
 	
 	private static boolean hasActiveCharacter(CommandContext<IReplyCallback> c) {
-		boolean ret = PlayerCharacter.hasActiveCharacter(c.getAuthor());
+		boolean ret = Users.hasActiveCharacter(c.getAuthor());
 		if(ret == false) {
 			c.getEvent(IReplyCallback.class).reply("You cannot roll a save, you have no active character!").queue();
 		}

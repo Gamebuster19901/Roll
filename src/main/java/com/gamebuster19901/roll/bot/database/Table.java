@@ -10,12 +10,14 @@ import com.gamebuster19901.roll.bot.database.sql.PreparedStatement;
 
 public enum Table {
 	
+	CAMPAIGN_PLAYERS,
+	CAMPAIGNS,
 	CHARACTERS,
 	CLASSES,
 	PLAYERS,
 	RACES,
 	THEMES,
-	
+	SESSIONS_DEFAULT,
 	;
 	
 	@Override
