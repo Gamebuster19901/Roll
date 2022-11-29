@@ -24,7 +24,7 @@ public final class Sessions {
 					}
 					for(Session session : SELF_SESSIONS) {
 						if(session.expired()) {
-							session.end();
+							session.end(false);
 						}
 					}
 				}

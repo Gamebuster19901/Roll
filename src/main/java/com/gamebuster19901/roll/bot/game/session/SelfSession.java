@@ -72,11 +72,6 @@ public class SelfSession implements Session, Savable {
 
 	@Override
 	public void end(String reason) {
-		end();
-	}
-
-	@Override
-	public void end() {
 		save();
 		Sessions.SELF_SESSIONS.remove(this);
 		System.out.println("Session ended for " + Main.discordBot.jda.retrieveUserById(getPlayer()).complete().getAsTag());
@@ -121,6 +116,16 @@ public class SelfSession implements Session, Savable {
 	@Override
 	public SessionType getSessionType() {
 		return SessionType.SELF;
+	}
+
+	@Override
+	public void end(boolean notify) {
+		//no-op
+	}
+
+	@Override
+	public boolean ended() {
+		return false;
 	}
 
 }

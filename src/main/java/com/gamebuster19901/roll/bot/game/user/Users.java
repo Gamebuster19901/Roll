@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import javax.annotation.Nullable;
 
+import com.gamebuster19901.roll.Main;
 import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Comparator;
 import com.gamebuster19901.roll.bot.database.Comparison;
@@ -29,6 +30,12 @@ public final class Users {
 	private Users() {
 		throw new AssertionError();
 	}
+	
+	public static User getUser(Long discordID) {
+		return Main.discordBot.jda.retrieveUserById(discordID).complete();
+	}
+	
+	
 	
 	public static Session getCampaignSession(User user) {
 		return Sessions.getCampaignSession(user);

@@ -1,14 +1,22 @@
 package com.gamebuster19901.roll.bot.game.campaign;
 
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
+import javax.annotation.Nullable;
+
 import com.gamebuster19901.roll.Main;
+import com.gamebuster19901.roll.bot.game.Savable;
 import com.gamebuster19901.roll.bot.game.Statted;
+import com.gamebuster19901.roll.bot.game.character.Stat;
+import com.gamebuster19901.roll.bot.game.user.Users;
+import com.gamebuster19901.roll.gson.GSerializable;
 
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 
-public class Campaign {
+public class Campaign implements GSerializable, Savable {
 
 	public static final Path CAMPAIGN_FOLDER = Main.RUN_DIR.toPath().resolve("Campaigns");
 	static {
@@ -19,51 +27,69 @@ public class Campaign {
 	private Long owner;
 	private LinkedHashSet<Long> dungeonMasters;
 	private LinkedHashSet<Long> players;
-	private LinkedHashSet<Long> characters;
-	private CampaignSession session = new NoSession(this);
+	private LinkedHashSet<Statted> characters;
+	private LinkedHashMap<Long, Statted> activeChars;
+	CampaignSession session = new NoSession(this);
 	
 	public Campaign(String name, User owner) {
-		this(name, owner.getIdLong());
-	}
-	
-	public Campaign(String name, Long owner) {
+		this.owner = owner.getIdLong();
+		this.name = name;
 		addDM(owner);
 	}
 	
 	public void addPlayer(User player) {
-		addPlayer(player.getIdLong());
-	}
-	
-	public void addPlayer(Long player) {
-		players.add(player);
+		players.add(player.getIdLong());
 	}
 	
 	public void removePlayer(User player) {
-		removePlayer(player.getIdLong());
-	}
-	
-	public void removePlayer(Long player) {
-		if(!owner.equals(player)) {
-			dungeonMasters.remove(player);
-			players.remove(player);
+		if(!owner.equals(player.getIdLong())) {
 			session.leavePlayer(player);
+			dungeonMasters.remove(player.getIdLong());
+			players.remove(player.getIdLong());
 		}
 	}
 	
 	public void addCharacter(Statted statted) {
-		addCharacter(statted.getID());
+		characters.add(statted);
+		if(statted.hasStat(Stat.Owner)) {
+			setActiveChar(Users.getUser(statted.getStat(Stat.Owner, Long.class)), statted);
+		}
 	}
 	
-	public void addCharacter(Long statted) {
-		characters.add(statted);
+	@Deprecated
+	public Statted getActiveChar(User player) {
+		return activeChars.get(player);
+	}
+	
+	public void setActiveChar(User player, @Nullable Statted statted) {
+		Statted previousChar = activeChars.get(player.getIdLong());
+		if(!characters.contains(statted)) {
+			return; //character not in campaign!
+		}
+		if(previousChar != null && previousChar instanceof Savable) {
+			((Savable) previousChar).save();
+		}
+		if(statted == null) {
+			activeChars.remove(player.getIdLong());
+		}
+		else {
+			activeChars.put(player.getIdLong(), statted);
+		}
+		session.update();
 	}
 	
 	public void removeCharacter(Statted statted) {
-		removeCharacter(statted.getID());
+		activeChars.entrySet().forEach((entry) -> {
+			if(entry.getValue().equals(statted)) {
+				setActiveChar(Main.discordBot.jda.getUserById(entry.getKey()), null);
+				activeChars.remove(entry.getKey());
+			}
+		});
+		characters.remove(statted);
 	}
 	
-	public void removeCharacter(Long statted) {
-		characters.remove(statted);
+	public boolean hasCharacter(Statted statted) {
+		return characters.add(statted);
 	}
 	
 	public void addDM(User dm) {
@@ -113,6 +139,12 @@ public class Campaign {
 		return players.contains(user);
 	}
 	
+	public void startSession(IReplyCallback callback) {
+		if(session instanceof NoSession) {
+			session = new CampaignSession(this, callback);
+		}
+	}
+	
 	public LinkedHashSet<Long> getDMs() {
 		LinkedHashSet<Long> ret =  new LinkedHashSet<>();
 		ret.addAll(dungeonMasters);
@@ -135,6 +167,11 @@ public class Campaign {
 	
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public void save() {
+		
 	}
 	
 }

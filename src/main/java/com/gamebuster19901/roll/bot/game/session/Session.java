@@ -37,7 +37,7 @@ public interface Session extends GSerializable, Savable {
 	
 	public void end(String reason);
 	
-	public void end();
+	public void end(boolean notify);
 	
 	public Instant getLastInteraction();
 	
@@ -45,6 +45,8 @@ public interface Session extends GSerializable, Savable {
 		return getLastInteraction().plus(Duration.ofSeconds(5)).isBefore(Instant.now());
 		//return getLastInteraction().plus(Duration.ofHours(1)).isAfter(Instant.now());
 	}
+	
+	public boolean ended();
 	
 	public SessionType getSessionType();
 	
