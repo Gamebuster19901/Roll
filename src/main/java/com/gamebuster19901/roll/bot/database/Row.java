@@ -3,13 +3,14 @@ package com.gamebuster19901.roll.bot.database;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import com.gamebuster19901.roll.bot.database.sql.ResultSet;
 
 public class Row implements TableRetriever {
 
-	public HashMap<Column, Object> results = new HashMap<Column, Object>();
+	public LinkedHashMap<Column, Object> results = new LinkedHashMap<Column, Object>();
 	
 	public Row (ResultSet results) throws SQLException {
 		this(results, true);
@@ -68,6 +69,10 @@ public class Row implements TableRetriever {
 			throw new AssertionError("Unknown type " + type);
 			
 		}
+	}
+	
+	public Iterator<Object> getResults() {
+		return results.values().iterator();
 	}
 	
 	public boolean isNull(Column column) {
