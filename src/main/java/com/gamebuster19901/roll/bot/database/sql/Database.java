@@ -62,6 +62,17 @@ public class Database implements Connection {
 	public Connection getRealDBConnection() {
 		return parent;
 	}
+	
+	public static int ping() {
+		try {
+			PreparedStatement st = Database.INSTANCE.prepareStatement("DO 1");
+			st.execute();
+			return 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
 
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {

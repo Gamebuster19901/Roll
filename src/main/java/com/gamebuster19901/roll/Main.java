@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 
 import com.gamebuster19901.roll.bot.DiscordBot;
+import com.gamebuster19901.roll.bot.database.Table;
 import com.gamebuster19901.roll.bot.database.sql.Database;
 import com.gamebuster19901.roll.util.ThreadService;
 import com.google.gson.Gson;
@@ -81,6 +82,7 @@ public class Main {
 		Thread.sleep(5000);
 		
 		discordBot.setOnline();
+		startDatabaseHeartbeatThread();
 		while(true) {
 
 		}
@@ -100,6 +102,23 @@ public class Main {
 			}
 		}
 		return new DiscordBot(botOwner, keyFile);
+	}
+	
+	private static void startDatabaseHeartbeatThread() {
+		ThreadService.run("Database Heartbeat", () -> {
+			while(true) {
+				try {
+					System.out.println(Database.ping());
+					Thread.sleep(10000);
+				}
+				catch(InterruptedException e) {
+					//swallow, kill thread
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public static synchronized void recoverDB() {
