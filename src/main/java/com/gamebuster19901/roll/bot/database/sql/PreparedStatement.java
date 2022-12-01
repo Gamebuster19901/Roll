@@ -133,8 +133,13 @@ public class PreparedStatement implements java.sql.PreparedStatement {
 	}
 
 	@Override
+	@Deprecated
 	public ResultSet getResultSet() throws SQLException {
 		return new ResultSet(parent.getResultSet());
+	}
+	
+	public Result getResults() throws SQLException {
+		return getResultSet().toResult();
 	}
 
 	@Override

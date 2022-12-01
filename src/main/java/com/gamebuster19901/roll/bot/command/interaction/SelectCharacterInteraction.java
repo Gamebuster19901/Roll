@@ -31,7 +31,6 @@ public class SelectCharacterInteraction {
 							editBuilder.setContent(c.getAuthor().getAsMention() + ", you no longer actively controlling a character.");
 							editBuilder.setEmbeds(Collections.EMPTY_SET);
 							e.getHook().editOriginal(editBuilder.build()).queue();
-							//e.reply("test").queue();
 							return 1;
 						})
 					)
@@ -51,11 +50,11 @@ public class SelectCharacterInteraction {
 							e.getHook().editOriginal(editBuilder.build()).queue();
 						}
 						catch (Throwable t) {
-							editBuilder.setContent("Could not set your active character to " + character.getName() + " due to an error: " + t.getMessage()).setEmbeds(new StatEmbedBuilder(character, editBuilder).getEmbed()).setComponents(new StatInteractionBuilder(character).getComponents());
+							editBuilder.setContent(c.getAuthor().getAsMention() + ", could not set your active character to " + character.getName() + " due to an error: " + t.getMessage()).setEmbeds(new StatEmbedBuilder(character, editBuilder).getEmbed()).setComponents(new StatInteractionBuilder(character).getComponents());
 						}
 					}
 					else {
-						reply.setContent("You do not own " + character.getName()).queue();
+						reply.setContent(c.getAuthor().getAsMention() + ", you do not own " + character.getName()).queue();
 					}
 					return 1;
 				})

@@ -14,7 +14,6 @@ import com.gamebuster19901.roll.bot.database.Comparator;
 import com.gamebuster19901.roll.bot.database.Comparison;
 import com.gamebuster19901.roll.bot.database.Insertion;
 import com.gamebuster19901.roll.bot.database.Table;
-import com.gamebuster19901.roll.bot.database.sql.Database;
 import com.gamebuster19901.roll.util.StacktraceUtil;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mysql.cj.exceptions.CJCommunicationsException;
@@ -47,7 +46,7 @@ public class EventReceiver extends ListenerAdapter {
 			GenericInteractionCreateEvent e = (GenericInteractionCreateEvent) ge;
 			try {
 				if(!Table.existsWhere(Table.PLAYERS, new Comparison(Column.DISCORD_ID, Comparator.EQUALS, e.getUser().getIdLong()))) {
-					Insertion.insertInto(Table.PLAYERS).setColumns(Column.DISCORD_ID).to(e.getUser().getIdLong()).prepare(Database.INSTANCE).execute();
+					Insertion.insertInto(Table.PLAYERS).setColumns(Column.DISCORD_ID).to(e.getUser().getIdLong()).prepare().execute();
 				}
 			}
 			catch(Throwable t) {
@@ -80,7 +79,12 @@ public class EventReceiver extends ListenerAdapter {
 			try {
 				Commands.DISPATCHER.getDispatcher().execute(c.toString() , context);
 			} catch (Throwable t) {
-				context.sendMessage(t.getMessage());
+				if(t.getMessage() != null && !t.getMessage().isBlank()) {
+					context.sendMessage(t.getMessage());
+				}
+				else {
+					context.sendMessage(t.toString());
+				}
 				if(!(t instanceof CommandSyntaxException)) {
 					throw new RuntimeException(t);
 				}

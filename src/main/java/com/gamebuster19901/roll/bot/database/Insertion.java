@@ -48,7 +48,7 @@ public class Insertion {
 		return ps;
 	}
 	
-	public PreparedStatement prepare(Database connection) throws SQLException {
+	public PreparedStatement prepare() throws SQLException {
 		return prepare(false);
 	}
 	

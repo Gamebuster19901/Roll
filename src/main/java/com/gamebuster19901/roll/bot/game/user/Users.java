@@ -35,8 +35,6 @@ public final class Users {
 		return Main.discordBot.jda.retrieveUserById(discordID).complete();
 	}
 	
-	
-	
 	public static Session getCampaignSession(User user) {
 		return Sessions.getCampaignSession(user);
 	}
