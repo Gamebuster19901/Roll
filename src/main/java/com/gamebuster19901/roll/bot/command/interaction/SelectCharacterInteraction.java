@@ -28,7 +28,7 @@ public class SelectCharacterInteraction {
 							Users.setActiveCharacter(context.getSource().getAuthor(), null);
 							MessageEditBuilder editBuilder = new MessageEditBuilder();
 							editBuilder.setComponents(Collections.EMPTY_SET);
-							editBuilder.setContent("You no longer actively controlling a character.");
+							editBuilder.setContent(c.getAuthor().getAsMention() + ", you no longer actively controlling a character.");
 							editBuilder.setEmbeds(Collections.EMPTY_SET);
 							e.getHook().editOriginal(editBuilder.build()).queue();
 							//e.reply("test").queue();
