@@ -6,3 +6,8 @@ updates:
       interval: "daily"
     reviewers:
       - "Gamebuster19901"
+    assignees:
+      - "Gamebuster19901"
+    labels:
+      - "Category - Enhancement"
+      - "Priority - Normal ↓"
