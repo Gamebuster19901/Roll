@@ -36,7 +36,12 @@ public class AbilityArgumentType implements ArgumentType<Ability> {
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
 		for(Ability ability : abilities) {
-			builder = builder.suggest(ability.name());
+			if(ability.name().toLowerCase().startsWith(Commands.lastArgOf(builder.getInput()).toLowerCase())) {
+				builder.suggest(ability.name());
+			}
+			else {
+				System.out.println(ability.name() + " does not match");
+			}
 		}
 		return builder.buildFuture();
 	}

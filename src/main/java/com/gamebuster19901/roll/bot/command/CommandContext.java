@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -22,7 +23,7 @@ public class CommandContext<E> {
 	private EmbedBuilder embedBuilder;
 	
 	public CommandContext(E e) {
-		if(e instanceof MessageReceivedEvent || e instanceof Interaction) {
+		if(e instanceof MessageReceivedEvent || e instanceof Interaction || e instanceof GuildReadyEvent) {
 			this.event = e;
 		}
 		else {

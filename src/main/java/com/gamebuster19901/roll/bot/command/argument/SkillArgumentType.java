@@ -36,7 +36,9 @@ public class SkillArgumentType implements ArgumentType<Skill>{
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
 		for(Skill skill : skills) {
-			builder = builder.suggest(skill.getName());
+			if(skill.getCommandArg().toLowerCase().startsWith(Commands.lastArgOf(builder.getInput()).toLowerCase())) {
+				builder.suggest(skill.getCommandArg());
+			}
 		}
 		return builder.buildFuture();
 	}

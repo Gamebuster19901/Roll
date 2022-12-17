@@ -65,6 +65,10 @@ public class Skill implements Statistic, Proficientable {
 		return name;
 	}
 	
+	public String getCommandArg() {
+		return name.replace(" ", "");
+	}
+	
 	public Ability getAbility() {
 		return ability;
 	}

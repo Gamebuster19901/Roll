@@ -41,7 +41,9 @@ public class SaveArgumentType implements ArgumentType<SaveType> {
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
 		for(SaveType save : saves) {
-			builder = builder.suggest(save.getName());
+			if(save.getName().toLowerCase().startsWith(Commands.lastArgOf(builder.getInput()).toLowerCase())) {
+				builder.suggest(save.getName());
+			}
 		}
 		return builder.buildFuture();
 	}
