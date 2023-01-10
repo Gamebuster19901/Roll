@@ -47,6 +47,11 @@ public class RollCommand {
 					return CheckCommand.rollCheck(context.getSource(), context.getArgument("skill", Skill.class));
 				})
 			)
+			.then(Commands.literal("initiative")
+				.executes((context) -> {
+					return CheckCommand.rollInitiative(context.getSource());
+				})
+			)
 			.then(Commands.argument("death", SaveArgumentType.DEATH_SAVE)
 				.executes((context) -> {
 					return SaveCommand.rollSave(context.getSource(), context.getArgument("death", SaveType.class)); //all ability saves would be parsed as checks before it gets here, so the only valid save at this point are death saves

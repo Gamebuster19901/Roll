@@ -49,6 +49,15 @@ class CheckCommand {
 		return 1;
 	}
 	
+	static int rollInitiative(CommandContext<IReplyCallback> c) {
+		if(hasActiveCharacter(c)) {
+			Statted character = Users.getActiveCharacter(c.getAuthor());
+			Dice dice = new Dice("d20+initiative");
+			RollCommand.roll(c, "Initiative", dice, character);
+		}
+		return 1;
+	}
+	
 	static boolean hasActiveCharacter(CommandContext<IReplyCallback> c) {
 		boolean ret = Users.hasActiveCharacter(c.getAuthor());
 		if(ret == false) {
