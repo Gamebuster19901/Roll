@@ -1,6 +1,7 @@
 package com.gamebuster19901.roll.bot.game.character;
 
 import com.ezylang.evalex.Expression;
+import com.gamebuster19901.roll.bot.game.coinage.Coinage;
 import com.gamebuster19901.roll.bot.game.stat.FixedStats;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
@@ -37,6 +38,46 @@ public class FixedPlayerCharacterStats extends PCStats implements PlayerCharacte
 	@Override
 	public boolean hasStatAt(GameLayer layer, Stat stat) {
 		return stats.hasStatAt(layer, stat);
+	}
+
+	@Override
+	public int getCopper() {
+		return getStat(Stat.Copper, int.class);
+	}
+
+	@Override
+	public int getSilver() {
+		return getStat(Stat.Silver, int.class);
+	}
+
+	@Override
+	public int getElectrum() {
+		return getStat(Stat.Electrum, int.class);
+	}
+
+	@Override
+	public int getGold() {
+		return getStat(Stat.Gold, int.class);
+	}
+
+	@Override
+	public int getPlatinum() {
+		return getStat(Stat.Platinum, int.class);
+	}
+
+	@Override
+	public void addCoinage(Coinage... coinages) {
+		//fixed stats cannot be altered
+	}
+
+	@Override
+	public void removeCoinage(Coinage... coinages) {
+		//fixed stats cannot be altered
+	}
+
+	@Override
+	public void setCoinage(Coinage... coinages) {
+		//fixed stats cannot be altered
 	}
 	
 }
