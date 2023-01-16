@@ -2,7 +2,14 @@ package com.gamebuster19901.roll.bot.command;
 
 import java.time.Instant;
 
+import com.gamebuster19901.roll.bot.database.Column;
+import com.gamebuster19901.roll.bot.database.Comparator;
+import com.gamebuster19901.roll.bot.database.Comparison;
+import com.gamebuster19901.roll.bot.database.Table;
+import com.gamebuster19901.roll.bot.user.ConsoleUser;
+
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -23,7 +30,7 @@ public class CommandContext<E> {
 	private EmbedBuilder embedBuilder;
 	
 	public CommandContext(E e) {
-		if(e instanceof MessageReceivedEvent || e instanceof Interaction || e instanceof GuildReadyEvent) {
+		if(e instanceof MessageReceivedEvent || e instanceof Interaction || e instanceof GuildReadyEvent || e instanceof User) {
 			this.event = e;
 		}
 		else {
@@ -32,13 +39,16 @@ public class CommandContext<E> {
 	}
 
 	public User getAuthor() {
+		if(event instanceof Interaction) {
+			return ((Interaction) event).getUser();
+		}
 		if(event instanceof MessageReceivedEvent) {
 			return ((MessageReceivedEvent) event).getAuthor();
 		}
-		else if (event instanceof Interaction) {
-			return ((Interaction) event).getUser();
+		if(event instanceof User) {
+			return (User) event;
 		}
-		throw new AssertionError();
+		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -136,6 +146,28 @@ public class CommandContext<E> {
 	
 	public EmbedBuilder getEmbed() {
 		return embedBuilder;
+	}
+	
+	public Guild getServer() {
+		if(event instanceof Interaction) {
+			return ((Interaction) event).getGuild();
+		}
+		if(event instanceof MessageReceivedEvent) {
+			return ((MessageReceivedEvent) event).getGuild();
+		}
+		return null;
+	}
+	
+	public boolean isConsoleMessage() {
+		return event instanceof ConsoleUser;
+	}
+
+	public boolean isOperator() {
+		User user = getAuthor();
+		if(user != null) {
+			return isConsoleMessage() || Table.existsWhere(Table.OPERATORS, new Comparison(Column.DISCORD_ID, Comparator.EQUALS, user.getIdLong()));
+		}
+		return false;
 	}
 
 }

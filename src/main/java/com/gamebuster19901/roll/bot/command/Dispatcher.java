@@ -1,5 +1,6 @@
 package com.gamebuster19901.roll.bot.command;
 
+import com.gamebuster19901.roll.bot.audit.CommandAudit;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -10,8 +11,10 @@ public class Dispatcher extends CommandDispatcher<CommandContext> {
 
 	@Override
 	public int execute(final StringReader input, final CommandContext source) throws CommandSyntaxException {
-		source.constructEmbedResponse(input.getString());
-		System.out.println(input.getString());
+		String command = input.getString();
+		CommandAudit.addCommandAudit(source, command);
+		source.constructEmbedResponse(command);
+		System.out.println(command);
 		return super.execute(input, source);
 	}
 	

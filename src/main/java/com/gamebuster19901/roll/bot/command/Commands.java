@@ -21,6 +21,7 @@ public class Commands {
 		ImportCharacterCommand.register(dispatcher);
 		CheckCommand.register(dispatcher);
 		SaveCommand.register(dispatcher);
+		ItemCommand.register(dispatcher);
 	}
 	
 	@Deprecated

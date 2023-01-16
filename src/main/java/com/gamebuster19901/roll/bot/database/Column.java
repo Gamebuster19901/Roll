@@ -14,6 +14,36 @@ public enum Column implements Columns {
 	
 	DISCORD_ID("discordID", CAMPAIGNS, CHARACTERS, CLASSES, THEMES, PLAYERS, RACES, SESSIONS_DEFAULT),
 	
+	//AUDITS
+	AUDIT_ID("auditID", AUDITS, AUDIT_BANS, AUDIT_BOT_MSG_DEL, AUDIT_COMMANDS),
+	AUDIT_TYPE("type", AUDITS),
+	ISSUER_ID("issuer", AUDITS),
+	ISSUER_NAME("issuerName", AUDITS),
+	DESCRIPTION("description", AUDITS),
+	DATE_ISSUED("issued", AUDITS),
+	
+	//BANS
+	BAN_DURATION("duration", AUDIT_BANS),
+	BAN_EXPIRE("expireTime", AUDIT_BANS),
+	BANNED_ID("bannedID", AUDIT_BANS),
+	@Deprecated BANNED_USERNAME("bannedUsername", AUDIT_BANS),
+	
+	//PARDONS
+	PARDONED_AUDIT_ID("pardonedAuditID", AUDIT_PARDONS),
+	
+	//RANK CHANGES
+	PROMOTEE("promotee", AUDIT_RANK_CHANGES),
+	PROMOTEE_ID("promoteeDiscordID", AUDIT_RANK_CHANGES),
+	
+	//COMMANDS
+	CHANNEL_NAME("channelName", AUDIT_COMMANDS),
+	CHANNEL_ID("channelID", AUDIT_COMMANDS),
+	MESSAGE_ID("messageID", AUDIT_COMMANDS),
+	IS_CONSOLE_MESSAGE("isConsoleMessage", AUDIT_COMMANDS),
+	IS_OPERATOR("isOperator", AUDIT_COMMANDS),
+	SERVER_ID("serverID", AUDIT_COMMANDS),
+	SERVER_NAME("serverName", AUDIT_COMMANDS),
+	
 	/*
 	 * Campaigns
 	 */
@@ -42,6 +72,7 @@ public enum Column implements Columns {
 	 * Races
 	 */
 	RACE_ID("raceID", RACES),
+
 	
 	/*
 	 * THEMES

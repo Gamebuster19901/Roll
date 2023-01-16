@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,9 +14,13 @@ import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 
 import com.gamebuster19901.roll.bot.DiscordBot;
+import com.gamebuster19901.roll.bot.command.Commands;
+import com.gamebuster19901.roll.bot.command.ConsoleContext;
 import com.gamebuster19901.roll.bot.database.sql.Database;
+import com.gamebuster19901.roll.bot.user.ConsoleUser;
 import com.gamebuster19901.roll.util.ThreadService;
 import com.google.gson.Gson;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
@@ -32,6 +37,7 @@ public class Main {
 	
 	private static ConcurrentLinkedDeque<String> consoleCommandsAwaitingProcessing = new ConcurrentLinkedDeque<String>();
 
+	public static ConsoleUser CONSOLE = ConsoleUser.INSTANCE;
 	public static boolean stopping = false;
 	public static Instant lastDBInitialization;
 	
@@ -82,8 +88,15 @@ public class Main {
 		
 		discordBot.setOnline();
 		startDatabaseHeartbeatThread();
+		startConsole();
 		while(true) {
-
+			if(consoleCommandsAwaitingProcessing.size() > 0) {
+				try {
+					Commands.DISPATCHER.getDispatcher().execute(consoleCommandsAwaitingProcessing.poll(), ConsoleContext.INSTANCE);
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
 		}
 		
 		//System.exit(-1);
@@ -101,6 +114,21 @@ public class Main {
 			}
 		}
 		return new DiscordBot(botOwner, keyFile);
+	}
+	
+	private static void startConsole() {
+		Thread consoleThread = new Thread() {
+			@Override
+			public void run() {
+				Scanner scanner = new Scanner(System.in);
+				while(scanner.hasNextLine()) {
+					consoleCommandsAwaitingProcessing.addFirst(scanner.nextLine());
+				}
+			}
+		};
+		consoleThread.setName("consoleReader");
+		consoleThread.setDaemon(true);
+		consoleThread.start();
 	}
 	
 	private static void startDatabaseHeartbeatThread() {
