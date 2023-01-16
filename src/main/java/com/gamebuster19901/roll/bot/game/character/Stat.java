@@ -57,7 +57,7 @@ public class Stat implements Statistic {
 	
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		return name.toLowerCase().hashCode();
 	}
 	
 	@Deprecated
