@@ -1,9 +1,9 @@
 package com.gamebuster19901.roll.bot.command;
 
+import java.sql.SQLException;
+
 import com.gamebuster19901.roll.bot.command.argument.DiscordUserArgumentType;
-import com.gamebuster19901.roll.bot.command.argument.DiscordUserArgumentType.UnknownType;
 import com.gamebuster19901.roll.bot.user.DiscordUser;
-import com.gamebuster19901.roll.bot.user.UnknownDiscordUser;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 
@@ -14,33 +14,38 @@ public class RankCommand {
 	@SuppressWarnings("rawtypes")
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.literal("rank")
-				.then(Commands.literal("add")
-						.then(Commands.argument("rank", StringArgumentType.word())
-								.then(Commands.argument("user", DiscordUserArgumentType.user().setUnknown(UnknownType.FULLY_KNOWN))
+				.then(Commands.sub("add")
+						.then(Commands.argument("rank", StringArgumentType.word()).suggests((context, builder) -> {return builder.buildFuture();})
+								.then(Commands.argument("user", new DiscordUserArgumentType())
 									.executes(context -> {
-										return addRank(context.getSource(), context.getArgument("user", DiscordUser.class), context.getArgument("rank", String.class));
+										try {
+											return addRank(context.getSource(), context.getArgument("user", User.class), context.getArgument("rank", String.class));
+										} catch (SQLException e) {
+											return 1;
+										}
 									})
 								)
 						)
-				).then(Commands.literal("remove")
-						.then(Commands.argument("rank", StringArgumentType.word())
-								.then(Commands.argument("user", DiscordUserArgumentType.user().setUnknown(UnknownType.FULLY_KNOWN))
+				).then(Commands.sub("remove")
+						.then(Commands.argument("rank", StringArgumentType.word()).suggests((context, builder) -> {return builder.buildFuture();})
+								.then(Commands.argument("user", new DiscordUserArgumentType())
 									.executes(context -> {
-										return removeRank(context.getSource(), context.getArgument("user", DiscordUser.class), context.getArgument("rank", String.class));
+										try {
+											return removeRank(context.getSource(), context.getArgument("user", User.class), context.getArgument("rank", String.class));
+										} catch (SQLException e) {
+											return 1;
+										}
 									})
 								)
 						)
-				)
+				).then(Commands.sub("test").then(Commands.literal("test").then(Commands.literal("test").then(Commands.literal("test")))))
 		);
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static int addRank(CommandContext context, DiscordUser user, String rank) {
+	private static int addRank(CommandContext context, User user, String rank) throws SQLException {
 		if(context.isOperator()) {
-			if(rank.equalsIgnoreCase("admin")) {
-				return addAdmin(context, user);
-			}
-			else if (rank.equalsIgnoreCase("operator") || rank.equalsIgnoreCase("op")) {
+			if (rank.equalsIgnoreCase("operator") || rank.equalsIgnoreCase("op")) {
 				return addOperator(context, user);
 			}
 		}
@@ -51,12 +56,9 @@ public class RankCommand {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static int removeRank(CommandContext context, DiscordUser user, String rank) {
+	private static int removeRank(CommandContext context, User user, String rank) throws SQLException {
 		if(context.isOperator()) {
-			if(rank.equalsIgnoreCase("admin")) {
-				return removeAdmin(context, user);
-			}
-			else if (rank.equalsIgnoreCase("operator") || rank.equalsIgnoreCase("op")) {
+			if (rank.equalsIgnoreCase("operator") || rank.equalsIgnoreCase("op")) {
 				return removeOperator(context, user);
 			}
 		}
@@ -67,68 +69,25 @@ public class RankCommand {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static int addAdmin(CommandContext context, User user) {		
-		if(user instanceof UnknownDiscordUser) {
-			context.sendMessage("Unknown user: " + user);
-			return 1;
-		}
+	private static int addOperator(CommandContext context, User user) throws SQLException {
 		
-		if(user.isAdmin()) {
-			context.sendMessage(user + " is already a bot admin");
-		}
-		else {
-			user.setAdmin(context, true);
-		}
-		return 1;
-	}
-	
-	@SuppressWarnings("rawtypes")
-	private static int removeAdmin(CommandContext context, User user) {
-		
-		if(user instanceof UnknownDiscordUser) {
-			context.sendMessage("Unknown user: " + user);
-			return 1;
-		}
-		
-		if(!user.isAdmin()) {
-			context.sendMessage(user + " is already not an admin");
-		}
-		else {
-			user.setAdmin(context, false);
-		}
-		return 1;
-	}
-	
-	@SuppressWarnings("rawtypes")
-	private static int addOperator(CommandContext context, User user) {
-		
-		if(user instanceof UnknownDiscordUser) {
-			context.sendMessage("Unknown user: " + user);
-			return 1;
-		}
-		
-		if(user.isOperator()) {
+		if(DiscordUser.isOperator(user)) {
 			context.sendMessage(user + " is already a bot operator");
 		}
 		else {
-			user.setOperator(context, true);
+			DiscordUser.addOperator(context, user);
 		}
 
 		return 1;
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static int removeOperator(CommandContext context, User user) {
-		if(user instanceof UnknownDiscordUser) {
-			context.sendMessage("Unknown user: " + user);
-			return 1;
-		}
-		
-		if(!user.isOperator()) {
+	private static int removeOperator(CommandContext context, User user) throws SQLException {
+		if(!DiscordUser.isOperator(user)) {
 			context.sendMessage(user + " is already not a bot operator");
 		}
 		else {
-			user.setOperator(context, false);
+			DiscordUser.removeOperator(context, user);
 		}
 		return 1;
 	}

@@ -20,7 +20,6 @@ import com.gamebuster19901.roll.bot.database.sql.Database;
 import com.gamebuster19901.roll.bot.user.ConsoleUser;
 import com.gamebuster19901.roll.util.ThreadService;
 import com.google.gson.Gson;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 

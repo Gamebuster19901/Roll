@@ -2,13 +2,22 @@ package com.gamebuster19901.roll.bot;
 
 import java.sql.SQLNonTransientConnectionException;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 
 import com.gamebuster19901.roll.Main;
 import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Commands;
+import com.gamebuster19901.roll.bot.command.argument.DiscordUserArgumentBuilder.DiscordUserCommandNode;
+import com.gamebuster19901.roll.bot.command.argument.DiscordUserArgumentType;
 import com.gamebuster19901.roll.bot.command.argument.GlobalNode;
+import com.gamebuster19901.roll.bot.command.argument.SubCommandArgumentBuilder.SubCommandNode;
 import com.gamebuster19901.roll.bot.command.interaction.Interactions;
 import com.gamebuster19901.roll.bot.database.Column;
 import com.gamebuster19901.roll.bot.database.Comparator;
@@ -19,6 +28,11 @@ import com.gamebuster19901.roll.util.StacktraceUtil;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.tree.ArgumentCommandNode;
+import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.brigadier.tree.RootCommandNode;
 import com.mysql.cj.exceptions.CJCommunicationsException;
 import com.mysql.cj.exceptions.ConnectionIsClosedException;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
@@ -33,10 +47,15 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
+import net.dv8tion.jda.api.interactions.commands.Command.Subcommand;
+import net.dv8tion.jda.api.interactions.commands.CommandInteraction;
+import net.dv8tion.jda.api.interactions.commands.CommandInteractionPayload;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallbackAction;
 
 public class EventReceiver extends ListenerAdapter {
 
@@ -108,6 +127,7 @@ public class EventReceiver extends ListenerAdapter {
 		public void onGuildReady(GuildReadyEvent e) {
 			List<CommandData> commands = new ArrayList<>();
 			Commands.DISPATCHER.getDispatcher().getRoot().getChildren().forEach((command) -> {
+				System.out.println(command + " " + (command.getChildren().size() > 1));
 				if(!Main.discordBot.isDev()) {
 					if(command instanceof GlobalNode) {
 						return; //Don't register global commands as guild commands if we're not in a dev environment
@@ -115,13 +135,37 @@ public class EventReceiver extends ListenerAdapter {
 				}
 				SlashCommandData data = net.dv8tion.jda.api.interactions.commands.build.Commands.slash(command.getName(), command.getUsageText());
 				
-				if(command.getChildren().size() > 0) {
-					data.addOption(OptionType.STRING, "argument", "argument", true, true);
+				CommandNode<CommandContext>[] children = command.getChildren().toArray(new CommandNode[] {});
+				
+				if(children.length > 0) {
+					for(int i = 0; i < children.length; i++) {
+						CommandNode node = children[i];
+						SuggestionProvider suggestions = null;
+						
+						if(node instanceof SubCommandNode) {
+							data.addSubcommands(new SubcommandData(node.getName(), node.getUsageText()));
+						}
+						else if(node instanceof DiscordUserCommandNode) {
+							data.addOption(OptionType.USER, node.getName(), node.getUsageText(), false, true);
+						}
+						else if(node instanceof LiteralCommandNode) {
+							data.addOption(OptionType.STRING, node.getName(), node.getUsageText(), false, true);
+						}
+						else if(node instanceof ArgumentCommandNode) {
+							data.addOption(OptionType.STRING, node.getName(), node.getUsageText(), false, true);
+						}
+						else {
+							data.addOption(OptionType.STRING, node.getName(), node.getUsageText(), false, true);
+						}
+						
+
+					}
 				}
 				
 				commands.add(data);
-				System.out.println(command.getUsageText());
+				
 			});
+			
 			Interactions.DISPATCHER.getDispatcher(); //initialize interactions
 			
 			e.getGuild().updateCommands().addCommands(commands).queue();
@@ -147,11 +191,10 @@ public class EventReceiver extends ListenerAdapter {
 		
 		@Override
 		public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent e) {
-			String command = e.getName() + " " + e.getFocusedOption().getValue();
-			System.out.println(command);
+			String command = getCommand(e);
+			System.err.println(command);
 			ParseResults<CommandContext> parseResults = Commands.DISPATCHER.getDispatcher().parse(command, new CommandContext<CommandAutoCompleteInteractionEvent>(e));
 			List<Suggestion> suggestions;
-			List<String> returnedSuggestions = new ArrayList<String>();
 			try {
 				suggestions = Commands.DISPATCHER.getDispatcher().getCompletionSuggestions(parseResults, command.length()).get().getList();
 			} catch (InterruptedException | ExecutionException ex) {
@@ -161,11 +204,37 @@ public class EventReceiver extends ListenerAdapter {
 			if(suggestions.size() > 25) {
 				suggestions = suggestions.subList(0, 25);
 			}
+			AutoCompleteCallbackAction action = e.replyChoices();
 			for(Suggestion suggestion : suggestions) {
-				returnedSuggestions.add(suggestion.getText());
+				if(suggestion.getTooltip() != null) {
+					System.out.println("Tooltip is \"" + suggestion.getTooltip() + "\"");
+					action.addChoice(suggestion.getTooltip().getString(), suggestion.getTooltip().getString());
+				}
+				else {
+					action.addChoice(suggestion.getText(), suggestion.getText());
+				}
 			}
-			e.replyChoiceStrings(returnedSuggestions).queue();
+			action.queue();
 		}
+	}
+	
+	private static String getCommand(CommandInteractionPayload e) {
+		StringBuilder b = new StringBuilder(e.getName());
+		for(OptionMapping option : e.getOptions()) {
+			b.append(' ');
+			b.append(option.getAsString());
+		}
+		return b.toString();
+	}
+	
+	private static int getDepth(CommandNode<CommandContext> node) {
+		int maxDepth = 0;
+		
+		for(CommandNode child : node.getChildren()) {
+			maxDepth = Math.max(maxDepth, getDepth(child));
+		}
+		
+		return maxDepth + 1;
 	}
 	
 }

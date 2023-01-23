@@ -1,5 +1,8 @@
 package com.gamebuster19901.roll.bot.command.exception;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
@@ -18,4 +21,6 @@ public interface ParseExceptions {
 	public DynamicCommandExceptionType INVALID_SKILL = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept a skill named `" + value + "`"));
 	public DynamicCommandExceptionType INVALID_ABILITY = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept an ability named `" + value + "`"));
 	public DynamicCommandExceptionType INVALID_THROW = new DynamicCommandExceptionType((value) -> new LiteralMessage("Argument does not know or accept a save type named `" + value + "`"));
+	
+	public DynamicCommandExceptionType INVALID_CHOICE = new DynamicCommandExceptionType((value) -> new LiteralMessage("Invalid choice, must choose from one of the following: " + Arrays.toString(((Collection<?>)value).toArray())));
 }

@@ -1,6 +1,7 @@
 package com.gamebuster19901.roll.bot.command;
 
 import com.gamebuster19901.roll.bot.command.argument.GlobalLiteralArgumentBuilder;
+import com.gamebuster19901.roll.bot.command.argument.SubCommandArgumentBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -22,6 +23,7 @@ public class Commands {
 		CheckCommand.register(dispatcher);
 		SaveCommand.register(dispatcher);
 		ItemCommand.register(dispatcher);
+		RankCommand.register(dispatcher);
 	}
 	
 	@Deprecated
@@ -31,6 +33,10 @@ public class Commands {
 	
 	public static GlobalLiteralArgumentBuilder<CommandContext> global(String name) {
 		return GlobalLiteralArgumentBuilder.literal(name);
+	}
+	
+	public static SubCommandArgumentBuilder<CommandContext> sub(String name) {
+		return SubCommandArgumentBuilder.sub(name);
 	}
 	
 	public static <T> RequiredArgumentBuilder<CommandContext, T> argument(String name, ArgumentType<T> type) {

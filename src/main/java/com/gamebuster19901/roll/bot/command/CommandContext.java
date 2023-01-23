@@ -2,16 +2,14 @@ package com.gamebuster19901.roll.bot.command;
 
 import java.time.Instant;
 
-import com.gamebuster19901.roll.bot.database.Column;
-import com.gamebuster19901.roll.bot.database.Comparator;
-import com.gamebuster19901.roll.bot.database.Comparison;
-import com.gamebuster19901.roll.bot.database.Table;
 import com.gamebuster19901.roll.bot.user.ConsoleUser;
+import com.gamebuster19901.roll.bot.user.DiscordUser;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -73,6 +71,16 @@ public class CommandContext<E> {
 		}
 		else if(event instanceof MessageReceivedEvent) {
 			((MessageReceivedEvent) event).getChannel().sendMessage(messageData);
+			return null;
+		}
+		else if(event instanceof User) {
+			if(event instanceof ConsoleUser) {
+				System.out.println(messageData.getContent());
+			}
+			else {
+				PrivateChannel channel = ((User)event).openPrivateChannel().complete();
+				channel.sendMessage(messageData).queue();
+			}
 			return null;
 		}
 		else {
@@ -163,11 +171,7 @@ public class CommandContext<E> {
 	}
 
 	public boolean isOperator() {
-		User user = getAuthor();
-		if(user != null) {
-			return isConsoleMessage() || Table.existsWhere(Table.OPERATORS, new Comparison(Column.DISCORD_ID, Comparator.EQUALS, user.getIdLong()));
-		}
-		return false;
+		return DiscordUser.isOperator(getAuthor());
 	}
 
 }
