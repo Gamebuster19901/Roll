@@ -30,7 +30,8 @@ public class DiscordUser {
 	public static boolean addOperator(CommandContext promoter, User user) throws SQLException {
 		RankChangeAudit.addRankChange(promoter, user, "operator", true);
 		PrivateChannel channel = user.openPrivateChannel().complete();
-		channel.sendMessage(promoter.getAuthor().getAsMention() + " has promoted you. You are now a global operator of " + Main.discordBot.getSelfUser().getAsMention() + ".").queue();;
+		channel.sendMessage(promoter.getAuthor().getAsMention() + " has promoted you. You are now a global operator of " + Main.discordBot.getSelfUser().getAsMention() + ".").queue();
+		promoter.replyMessage("Promoted " + user.getAsMention() + " to Operator.");
 		return Insertion.insertInto(Table.OPERATORS).setColumns(Column.DISCORD_ID).to(user.getIdLong()).prepare(true).execute();
 	}
 	
@@ -38,6 +39,7 @@ public class DiscordUser {
 		RankChangeAudit.addRankChange(promoter, user, "operator", false);
 		PrivateChannel channel = user.openPrivateChannel().complete();
 		channel.sendMessage(promoter.getAuthor().getAsMention() + " has demoted you. You are no longer a global operator of " + Main.discordBot.getSelfUser().getAsMention() + ".").queue();;
+		promoter.replyMessage(user.getAsMention() + "is no longer an Operator.");
 		Table.deleteWhere(Table.OPERATORS, new Comparison(Column.DISCORD_ID, Comparator.EQUALS, user.getIdLong()));
 	}
 	
