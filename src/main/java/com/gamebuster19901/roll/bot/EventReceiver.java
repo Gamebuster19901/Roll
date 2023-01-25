@@ -75,10 +75,8 @@ public class EventReceiver extends ListenerAdapter {
 		public void onSlashCommandInteraction(SlashCommandInteractionEvent e) {
 			StringBuilder c = new StringBuilder(e.getName());
 			for(OptionMapping arg : e.getOptions()) {
-				c.append(' ');
 				c.append(arg.getAsString());
 			}
-			System.out.println(c);
 			CommandContext context = new CommandContext(e);
 			try {
 				Commands.DISPATCHER.getDispatcher().execute(c.toString() , context);
@@ -147,13 +145,31 @@ public class EventReceiver extends ListenerAdapter {
 		
 		@Override
 		public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent e) {
+			
 			String command = e.getName() + " " + e.getFocusedOption().getValue();
-			System.out.println(command);
+			final String arguments = e.getFocusedOption().getValue();
+			String fixedArguments = e.getFocusedOption().getValue();
+			System.err.println(command + "-----");
+			
+			boolean spaceAdded = false;
+			
+			if(fixedArguments.indexOf(' ') != -1) {
+				fixedArguments = fixedArguments.substring(0, fixedArguments.lastIndexOf(' '));
+			}
+			else {
+				fixedArguments = "";
+			}
 			ParseResults<CommandContext> parseResults = Commands.DISPATCHER.getDispatcher().parse(command, new CommandContext<CommandAutoCompleteInteractionEvent>(e));
 			List<Suggestion> suggestions;
 			List<String> returnedSuggestions = new ArrayList<String>();
 			try {
 				suggestions = Commands.DISPATCHER.getDispatcher().getCompletionSuggestions(parseResults, command.length()).get().getList();
+				if(suggestions.size() == 0) {
+					command = command + " ";
+					spaceAdded = true;
+					parseResults = Commands.DISPATCHER.getDispatcher().parse(command, new CommandContext<CommandAutoCompleteInteractionEvent>(e));
+					suggestions = Commands.DISPATCHER.getDispatcher().getCompletionSuggestions(parseResults, command.length()).get().getList();
+				}
 			} catch (InterruptedException | ExecutionException ex) {
 				ex.printStackTrace();
 				return;
@@ -161,8 +177,14 @@ public class EventReceiver extends ListenerAdapter {
 			if(suggestions.size() > 25) {
 				suggestions = suggestions.subList(0, 25);
 			}
+			System.out.println("Arguments:" + arguments);
 			for(Suggestion suggestion : suggestions) {
-				returnedSuggestions.add(suggestion.getText());
+				if(!spaceAdded) {
+					returnedSuggestions.add(fixedArguments + " " + suggestion.getText());
+				}
+				else {
+					returnedSuggestions.add(fixedArguments + arguments + " " + suggestion.getText());
+				}
 			}
 			e.replyChoiceStrings(returnedSuggestions).queue();
 		}
