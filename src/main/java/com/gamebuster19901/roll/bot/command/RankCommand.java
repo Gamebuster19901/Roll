@@ -14,7 +14,7 @@ public class RankCommand {
 	@SuppressWarnings("rawtypes")
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.literal("rank")
-				.then(Commands.sub("add")
+				.then(Commands.literal("add")
 						.then(Commands.argument("rank", StringArgumentType.word()).suggests((context, builder) -> {return builder.buildFuture();})
 								.then(Commands.argument("user", new DiscordUserArgumentType())
 									.executes(context -> {
@@ -26,7 +26,7 @@ public class RankCommand {
 									})
 								)
 						)
-				).then(Commands.sub("remove")
+				).then(Commands.literal("remove")
 						.then(Commands.argument("rank", StringArgumentType.word()).suggests((context, builder) -> {return builder.buildFuture();})
 								.then(Commands.argument("user", new DiscordUserArgumentType())
 									.executes(context -> {
@@ -38,7 +38,7 @@ public class RankCommand {
 									})
 								)
 						)
-				).then(Commands.sub("test").then(Commands.literal("test").then(Commands.literal("test").then(Commands.literal("test")))))
+				).then(Commands.literal("test").then(Commands.literal("test").then(Commands.literal("test").then(Commands.literal("test")))))
 		);
 	}
 	

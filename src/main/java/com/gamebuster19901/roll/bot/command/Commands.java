@@ -35,10 +35,6 @@ public class Commands {
 		return GlobalLiteralArgumentBuilder.literal(name);
 	}
 	
-	public static SubCommandArgumentBuilder<CommandContext> sub(String name) {
-		return SubCommandArgumentBuilder.sub(name);
-	}
-	
 	public static <T> RequiredArgumentBuilder<CommandContext, T> argument(String name, ArgumentType<T> type) {
 		return RequiredArgumentBuilder.argument(name, type);
 	}
