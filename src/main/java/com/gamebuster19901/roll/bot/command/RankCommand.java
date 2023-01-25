@@ -15,7 +15,7 @@ public class RankCommand {
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.literal("rank")
 				.then(Commands.literal("add")
-						.then(Commands.argument("rank", StringArgumentType.word()).suggests((context, builder) -> {return builder.buildFuture();})
+						.then(Commands.argument("rank", StringArgumentType.word()).suggests((context, builder) -> {builder.suggest("operator"); return builder.buildFuture();})
 								.then(Commands.argument("user", new DiscordUserArgumentType())
 									.executes(context -> {
 										try {
@@ -27,7 +27,7 @@ public class RankCommand {
 								)
 						)
 				).then(Commands.literal("remove")
-						.then(Commands.argument("rank", StringArgumentType.word()).suggests((context, builder) -> {return builder.buildFuture();})
+						.then(Commands.argument("rank", StringArgumentType.word()).suggests((context, builder) -> {builder.suggest("operator"); return builder.buildFuture();})
 								.then(Commands.argument("user", new DiscordUserArgumentType())
 									.executes(context -> {
 										try {
