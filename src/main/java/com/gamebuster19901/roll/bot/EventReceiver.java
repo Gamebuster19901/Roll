@@ -116,7 +116,7 @@ public class EventReceiver extends ListenerAdapter {
 				SlashCommandData data = net.dv8tion.jda.api.interactions.commands.build.Commands.slash(command.getName(), command.getUsageText());
 				
 				if(command.getChildren().size() > 0) {
-					data.addOption(OptionType.STRING, "argument", "argument", true, true);
+					data.addOption(OptionType.STRING, "arguments", "arguments", true, true);
 				}
 				
 				commands.add(data);
