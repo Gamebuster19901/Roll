@@ -6,6 +6,7 @@ import com.gamebuster19901.roll.bot.game.stat.FixedStats;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
 import com.gamebuster19901.roll.util.TriFunction;
+import com.google.common.collect.ImmutableMap;
 
 public class FixedPlayerCharacterStats extends PCStats implements PlayerCharacterStats {
 	
@@ -78,6 +79,12 @@ public class FixedPlayerCharacterStats extends PCStats implements PlayerCharacte
 	@Override
 	public void setCoinage(Coinage... coinages) {
 		//fixed stats cannot be altered
+	}
+
+	@Override
+	public ImmutableMap<Stat, StatValue<?>> getStats() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

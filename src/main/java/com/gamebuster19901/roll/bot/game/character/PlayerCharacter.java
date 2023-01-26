@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.Map;
+
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.Main;
 import static com.gamebuster19901.roll.bot.database.Column.*;
@@ -122,6 +124,11 @@ public class PlayerCharacter implements Statted {
 	@Override
 	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type) {
 		return stats.getStat(layer, stat, type);
+	}
+	
+	@Override
+	public Map<Stat, StatValue<?>> getStats() {
+		return stats.getStats();
 	}
 
 	@Override

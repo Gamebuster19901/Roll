@@ -6,6 +6,7 @@ import com.gamebuster19901.roll.bot.game.stat.FixedStatBuilder;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
 import com.gamebuster19901.roll.util.TriFunction;
+import com.google.common.collect.ImmutableMap;
 
 public class FixedPlayerCharacterStatBuilder extends PlayerCharacterStatBuilder implements PlayerCharacterStats {
 
@@ -21,6 +22,11 @@ public class FixedPlayerCharacterStatBuilder extends PlayerCharacterStatBuilder 
 	@Override
 	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type) {
 		return fixedStatBuilder.getStat(layer, stat, type);
+	}
+	
+	@Override
+	public ImmutableMap<Stat, StatValue<?>> getStats() {
+		return fixedStatBuilder.getStats();
 	}
 	
 	@Override

@@ -57,7 +57,7 @@ public class RollCommand {
 					return SaveCommand.rollSave(context.getSource(), context.getArgument("death", SaveType.class)); //all ability saves would be parsed as checks before it gets here, so the only valid save at this point are death saves
 				})
 			)
-			.then(Commands.argument("dice", DiceArgumentType.DICE_ARGUMENT_TYPE)
+			.then(Commands.argument("dice", new DiceArgumentType().suggestStats(Ability.values()).suggestStats(Skill.DEFAULT_SKILLS).suggest("Initiative").suggestStats(SaveType.DEATH_SAVE))
 				.executes((context) -> {
 					return roll(context, Users.getActiveCharacter(context.getSource().getAuthor()));
 				})

@@ -1,10 +1,12 @@
 package com.gamebuster19901.roll.bot.game.stat;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.util.TriFunction;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Character stats that are fixed and will never be changed by the game state.
@@ -57,6 +59,11 @@ public class FixedStats extends Stats {
 	@Override
 	public boolean hasStatAt(GameLayer layer, Stat stat) { //fixedStats doesn't implement layer system
 		return hasStat(stat);
+	}
+
+	@Override
+	public Map<Stat, StatValue<?>> getStats() {
+		return ImmutableMap.copyOf(values);
 	}
 
 }

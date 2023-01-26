@@ -75,6 +75,7 @@ public class EventReceiver extends ListenerAdapter {
 		public void onSlashCommandInteraction(SlashCommandInteractionEvent e) {
 			StringBuilder c = new StringBuilder(e.getName());
 			for(OptionMapping arg : e.getOptions()) {
+				c.append(' ');
 				c.append(arg.getAsString());
 			}
 			CommandContext context = new CommandContext(e);

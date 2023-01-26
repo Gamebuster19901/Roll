@@ -1,5 +1,7 @@
 package com.gamebuster19901.roll.bot.game;
 
+import java.util.Map;
+
 import javax.annotation.CheckForNull;
 
 import org.jetbrains.annotations.NotNull;
@@ -144,6 +146,8 @@ public interface Statted extends GSerializable {
 	}
 	
 	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type);
+	
+	public Map<Stat, StatValue<?>> getStats();
 	
 	public default boolean hasStat(Stat stat) {
 		return hasStat(GameLayer.EFFECT, stat);

@@ -41,6 +41,10 @@ public enum DieType {
 		return offsetY;
 	}
 	
+	public int getSides() {
+		return sides;
+	}
+	
 	public static DieType getDieType(int i) {
 		for(DieType type : values()) {
 			if(i == type.sides) {

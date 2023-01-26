@@ -34,7 +34,7 @@ public enum SaveType implements Statistic {
 
 	@Override
 	public Stat getStat() {
-		return new Stat(name + " Saving Throw");
+		return new Stat(name + " Saving Throw", name);
 	}
 	
 }

@@ -9,6 +9,7 @@ import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.gamebuster19901.roll.util.TriFunction;
+import com.google.common.collect.ImmutableMap;
 
 public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 	
@@ -115,6 +116,11 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 		return new FixedStats(stats);
 	}
 	
+	@Override
+	public ImmutableMap<Stat, StatValue<?>> getStats() {
+		return ImmutableMap.copyOf(stats);
+	}
+	
 	private HashMap<MovementType, Integer> getSpeeds() {
 		HashMap<MovementType, Integer> ret = new HashMap<>();
 		for(MovementType m : MovementType.values()) {
@@ -123,7 +129,7 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 		return ret;
 	}
 	
-	private HashMap<Ability, Integer> getStats() {
+	private HashMap<Ability, Integer> getAbilityStats() {
 		HashMap<Ability, Integer> ret = new HashMap<>();
 		for(Ability a : Ability.values()) {
 			ret.put(a, stats.get(a.getStat()).getValueAs(Integer.class));

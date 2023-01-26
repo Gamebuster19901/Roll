@@ -30,13 +30,23 @@ public class Stat implements Statistic {
 	public static final Stat ID = new Stat("ID");
 	
 	String name;
+	String suggestion;
+	
+
+	public Stat(String name) {
+		this(name, name);
+	}
 	
 	@SuppressWarnings("null")
-	public Stat(String name) {
+	public Stat(String name, String suggestion) {
 		if(name == null) {
-			name.getBytes();
+			name.getBytes(); //intentionally throw NPE
+		}
+		if(suggestion == null) {
+			suggestion.getBytes(); //intentionally throw NPE
 		}
 		this.name = name;
+		this.suggestion = suggestion;
 	}
 
 	public String getName() {
@@ -45,6 +55,10 @@ public class Stat implements Statistic {
 	
 	public String getSimpleName() {
 		return  name;
+	}
+	
+	public String getSuggestion() {
+		return suggestion;
 	}
 	
 	@Override
@@ -72,7 +86,7 @@ public class Stat implements Statistic {
 	
 	@Deprecated
 	public static Stat of(Ability ability) {
-		return new AbilityScoreStat(ability.name() + " Score");
+		return new AbilityScoreStat(ability.name());
 	}
 	
 	@Deprecated
@@ -134,23 +148,23 @@ public class Stat implements Statistic {
 	
 	private static final class AbilityScoreStat extends Stat {
 		public AbilityScoreStat(String name) {
-			super(name);
+			super(name, name);
 		}
 		
 		@Override
 		public String getSimpleName() {
-			return name.substring(0, 3) + " Score";
+			return name + " Score";
 		}
 	}
 	
 	public static final class AbilityModStat extends Stat {
 		public AbilityModStat(String name) {
-			super(name);
+			super(name, name);
 		}
 		
 		@Override
 		public String getSimpleName() {
-			return name.substring(0, 3) + " Mod";
+			return name + " Mod";
 		}
 	}
 	
