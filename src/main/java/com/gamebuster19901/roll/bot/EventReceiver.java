@@ -75,13 +75,15 @@ public class EventReceiver extends ListenerAdapter {
 		public void onSlashCommandInteraction(SlashCommandInteractionEvent e) {
 			StringBuilder c = new StringBuilder(e.getName());
 			for(OptionMapping arg : e.getOptions()) {
-				c.append(' ');
 				c.append(arg.getAsString());
 			}
 			CommandContext context = new CommandContext(e);
 			try {
 				Commands.DISPATCHER.getDispatcher().execute(c.toString() , context);
 			} catch (Throwable t) {
+				if(c.indexOf(" ") == -1 && e.getOptions().size() > 0) {
+					throw new AssertionError("No whitespace between command and arguments");
+				}
 				if(t.getMessage() != null && !t.getMessage().isBlank()) {
 					context.sendMessage(t.getMessage());
 				}
