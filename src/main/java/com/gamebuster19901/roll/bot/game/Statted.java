@@ -1,7 +1,5 @@
 package com.gamebuster19901.roll.bot.game;
 
-import java.util.Map;
-
 import javax.annotation.CheckForNull;
 
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +14,7 @@ import com.gamebuster19901.roll.bot.game.stat.StatSource;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
 import com.gamebuster19901.roll.gson.GSerializable;
 import com.gamebuster19901.roll.util.TriFunction;
+import com.google.common.collect.ImmutableMap;
 
 public interface Statted extends GSerializable {
 
@@ -141,27 +140,42 @@ public interface Statted extends GSerializable {
 	}
 	
 	public default <T> T getStat(String name, Class<T> type) {
-		Stat stat = Stat.fromUserInput(name);
-		return getStat(stat, type);
+		return getStat(GameLayer.EFFECT, name, type);
+
+	}
+	
+	public default <T> T getStat(GameLayer layer, String name, Class<T> type) {
+		return getStat(layer, getStatFromUserInput(layer, name), type);
 	}
 	
 	public <T> T getStat(GameLayer layer, Stat stat, Class<T> type);
 	
-	public Map<Stat, StatValue<?>> getStats();
+	public default ImmutableMap<Stat, StatValue<?>> getStats() {
+		return getStats(GameLayer.EFFECT);
+	}
+	
+	public ImmutableMap<Stat, StatValue<?>> getStats(GameLayer layer);
 	
 	public default boolean hasStat(Stat stat) {
 		return hasStat(GameLayer.EFFECT, stat);
 	}
 	
 	public default boolean hasStat(String stat) {
-		return hasStat(Stat.fromUserInput(stat));
+		for(Stat found : getStats().keySet()) {
+			if(found.getName().equalsIgnoreCase(stat) || found.getSimpleName().equalsIgnoreCase(stat) || found.getSuggestion().equalsIgnoreCase(stat)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public default boolean hasStat(GameLayer layer, String stat) {
-		return hasStat(Stat.fromUserInput(stat));
+		return getStatFromUserInput(layer, stat) != null;
 	}
 	
-	public boolean hasStat(GameLayer layer, Stat stat);
+	public default boolean hasStat(GameLayer layer, Stat stat) {
+		return getStats(layer).containsKey(stat);
+	}
 	
 	public boolean hasStatAt(GameLayer layer, Stat stat);
 	
@@ -209,5 +223,18 @@ public interface Statted extends GSerializable {
 			}
 			return false;
 		};
+	}
+	
+	public default Stat getStatFromUserInput(String stat) {
+		return getStatFromUserInput(GameLayer.EFFECT, stat);
+	}
+	
+	public default Stat getStatFromUserInput(GameLayer layer, String stat) {
+		for(Stat s : getStats(layer).keySet()) {
+			if(s.getSuggestion().equals(stat) || s.getName().equals(stat)) {
+				return s;
+			}
+		}
+		return Stat.fromUserInput(stat);
 	}
 }

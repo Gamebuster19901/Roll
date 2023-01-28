@@ -10,7 +10,7 @@ public class CampaignCommand {
 	public static void register(CommandDispatcher<CommandContext> dispatcher) {
 		dispatcher.register(Commands.global("campaign")
 			.then(Commands.literal("create")
-				.then(Commands.argument("name", QuotableStringType.TYPE)
+				.then(Commands.argument("name", QuotableStringType.TYPE).suggests((context, builder) -> {return builder.suggest(Commands.lastArgOf(context.getInput()) + " <name>").buildFuture();})
 					.executes((context) -> {
 						CommandContext c = context.getSource();
 						Campaign campaign = createCampaign(c, context.getArgument("name", String.class));

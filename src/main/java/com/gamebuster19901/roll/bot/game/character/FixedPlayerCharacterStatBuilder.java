@@ -98,4 +98,9 @@ public class FixedPlayerCharacterStatBuilder extends PlayerCharacterStatBuilder 
 		//fixed stats cannot be altered
 	}
 
+	@Override
+	public ImmutableMap<Stat, StatValue<?>> getStats(GameLayer layer) {
+		return fixedStatBuilder.getStats(layer);
+	}
+
 }

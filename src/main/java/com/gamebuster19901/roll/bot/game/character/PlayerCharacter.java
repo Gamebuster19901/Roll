@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Map;
 
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.Main;
@@ -33,6 +32,7 @@ import com.gamebuster19901.roll.bot.game.stat.Skill;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
 import com.gamebuster19901.roll.bot.graphics.ImageResource;
 import com.gamebuster19901.roll.util.TriFunction;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
@@ -127,7 +127,7 @@ public class PlayerCharacter implements Statted {
 	}
 	
 	@Override
-	public Map<Stat, StatValue<?>> getStats() {
+	public ImmutableMap<Stat, StatValue<?>> getStats(GameLayer layer) {
 		return stats.getStats();
 	}
 

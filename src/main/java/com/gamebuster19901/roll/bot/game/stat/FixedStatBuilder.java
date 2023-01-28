@@ -76,6 +76,12 @@ public class FixedStatBuilder extends Stats implements StatBuilder<FixedStats> {
 		return stats.get(stat).getValueAs(type);
 	}
 	
+
+	@Override
+	public ImmutableMap<Stat, StatValue<?>> getStats(GameLayer layer) {
+		return ImmutableMap.copyOf(stats);
+	}
+	
 	@Override
 	public boolean hasStat(GameLayer layer, Stat stat) {
 		return stats.containsKey(stat);

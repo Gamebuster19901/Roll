@@ -95,13 +95,13 @@ public class DieTheme {
 				g = (Graphics2D) dieImage.getGraphics();
 				g.setColor(getTextColor());
 				renderText(g, value > -1 ? "+" + value : value + "", 0, 0, 211, 211);
-				if(statted != null && statted.hasStat(((RollValue)die).getStat())) {
+				if(statted != null && statted.hasStat(((RollValue)die).getStat(statted))) {
 					g.setColor(Color.YELLOW);
 				}
 				else {
 					g.setColor(Color.MAGENTA);
 				}
-				String lowerText = value >= 0 ? ((RollValue)die).getStat().getSimpleName() : "-" + ((RollValue)die).getStat().getSimpleName();
+				String lowerText = value >= 0 ? ((RollValue)die).getStat(statted).getSimpleName() : "-" + ((RollValue)die).getStat(statted).getSimpleName();
 				renderLowerText(g, lowerText);
 				
 				break;

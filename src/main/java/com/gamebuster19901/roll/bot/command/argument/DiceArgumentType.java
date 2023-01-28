@@ -36,7 +36,7 @@ public class DiceArgumentType implements ArgumentType<Dice> {
 	
 	public DiceArgumentType suggestStats(Statistic... statistics) {
 		for(Statistic statistic : statistics) {
-			suggestions.add(statistic.getStat().getSimpleName());
+			suggestions.add(statistic.getStat().getSuggestion());
 		}
 		return this;
 	}

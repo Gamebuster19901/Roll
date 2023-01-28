@@ -82,9 +82,8 @@ public class FixedPlayerCharacterStats extends PCStats implements PlayerCharacte
 	}
 
 	@Override
-	public ImmutableMap<Stat, StatValue<?>> getStats() {
-		// TODO Auto-generated method stub
-		return null;
+	public ImmutableMap<Stat, StatValue<?>> getStats(GameLayer layer) {
+		return stats.getStats(layer);
 	}
 	
 }

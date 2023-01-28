@@ -55,8 +55,11 @@ public class RollValue extends Value {
 		return stat;
 	}
 	
-	public Stat getStat() {
-		return Stat.fromUserInput(value);
+	public Stat getStat(Statted statted) {
+		if(statted == null) {
+			return Stat.fromUserInput(value);
+		}
+		return statted.getStatFromUserInput(value);
 	}
 	
 	@Override

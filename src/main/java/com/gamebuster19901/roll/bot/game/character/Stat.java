@@ -9,14 +9,14 @@ public class Stat implements Statistic {
 
 	public static final Stat Name = new Stat("Name");
 	public static final Stat HP = new Stat("HP");
-	public static final Stat Max_HP = new Stat("Max HP");
-	public static final Stat Temp_HP = new Stat("Temp HP");
+	public static final Stat Max_HP = new Stat("Max HP", "MaxHP");
+	public static final Stat Temp_HP = new Stat("Temp HP", "TempHP");
 	public static final Stat AC = new Stat("AC");
 	public static final Stat EXP = new Stat("EXP");
 	public static final Stat Proficiency = new Stat("Proficiency");
 	public static final Stat Initiative = new Stat("Initiative");
-	public static final Stat Proficiency_Bonus = new Stat("Proficiency Bonus");
-	public static final Stat Hit_Dice = new Stat("Hit Dice");
+	public static final Stat Proficiency_Bonus = new Stat("Proficiency Bonus", "Proficiency");
+	public static final Stat Hit_Dice = new Stat("Hit Dice", "HitDice");
 	public static final Stat Copper = new Stat("Copper");
 	public static final Stat Silver = new Stat("Silver");
 	public static final Stat Electrum = new Stat("Electrum");
@@ -91,7 +91,7 @@ public class Stat implements Statistic {
 	
 	@Deprecated
 	public static Stat modOf(Ability ability) {
-		return new AbilityModStat(ability.name() + " Mod");
+		return new AbilityModStat(ability.name());
 	}
 	
 	public static Stat fromUserInput(String stat) {
@@ -148,29 +148,29 @@ public class Stat implements Statistic {
 	
 	private static final class AbilityScoreStat extends Stat {
 		public AbilityScoreStat(String name) {
-			super(name, name);
+			super(name + " Score", name);
 		}
 		
 		@Override
 		public String getSimpleName() {
-			return name + " Score";
+			return name;
 		}
 	}
 	
 	public static final class AbilityModStat extends Stat {
 		public AbilityModStat(String name) {
-			super(name, name);
+			super(name + " Mod", name.replace(" ", ""));
 		}
 		
 		@Override
 		public String getSimpleName() {
-			return name + " Mod";
+			return name;
 		}
 	}
 	
 	private static final class SkillStat extends Stat {
 		public SkillStat(String name) {
-			super(name);
+			super(name, name.replace(" ", ""));
 		}
 	}
 }

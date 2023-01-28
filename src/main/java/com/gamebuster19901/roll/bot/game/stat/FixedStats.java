@@ -1,7 +1,6 @@
 package com.gamebuster19901.roll.bot.game.stat;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.bot.game.character.Stat;
@@ -62,7 +61,7 @@ public class FixedStats extends Stats {
 	}
 
 	@Override
-	public Map<Stat, StatValue<?>> getStats() {
+	public ImmutableMap<Stat, StatValue<?>> getStats(GameLayer layer) {
 		return ImmutableMap.copyOf(values);
 	}
 
