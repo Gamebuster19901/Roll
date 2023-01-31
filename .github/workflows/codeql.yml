@@ -14,12 +14,14 @@ name: "CodeQL"
 on:
   push:
   pull_request:
+    
   schedule:
     - cron: '21 19 * * 6'
 
 jobs:
   analyze:
     name: Analyze
+    if: github.event.pull_request.head.repo.name != github.repository
     runs-on: ubuntu-latest
     permissions:
       actions: read
