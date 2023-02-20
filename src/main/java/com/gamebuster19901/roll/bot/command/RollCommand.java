@@ -130,12 +130,12 @@ public class RollCommand {
 				//action.addActionRow(Button.primary("Sort", "Sort Dice"), Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 			}
 			message.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
-			hook.sendMessage(message.build()).queue();
+			c.replyMessage(message.build(), false, true);
 				
 			return 1;
 		}
 		catch(Throwable t) {
-			hook.sendMessage(t.getMessage() + "\n\nPrinting stacktrace to console.").queue();
+			c.replyMessage(t.getMessage() + "\n\nPrinting stacktrace to console.");
 			t.printStackTrace();
 			return 1;
 		}

@@ -62,12 +62,12 @@ public class CommandContext<E> {
 	}
 	
 	public InteractionHook replyMessage(MessageCreateData messageData) {
-		return replyMessage(messageData, false);
+		return replyMessage(messageData, false, false);
 	}
 	
-	public InteractionHook replyMessage(MessageCreateData messageData, boolean ephemeral) {
+	public InteractionHook replyMessage(MessageCreateData messageData, boolean ephemeral, boolean silent) {
 		if(event instanceof IReplyCallback) {
-			return ((IReplyCallback) event).reply(messageData).setEphemeral(ephemeral).complete();
+			return ((IReplyCallback) event).reply(messageData).setEphemeral(ephemeral).setSuppressedNotifications(silent).complete();
 		}
 		else if(event instanceof MessageReceivedEvent) {
 			((MessageReceivedEvent) event).getChannel().sendMessage(messageData);
@@ -92,7 +92,7 @@ public class CommandContext<E> {
 		if(message.length() > 2000) {
 			message = message.substring(0, 2000);
 		}
-		replyMessage(new MessageCreateBuilder().setContent(message).build(), false);
+		replyMessage(new MessageCreateBuilder().setContent(message).build(), false, false);
 	}
 	
 	public void editMessage(MessageEditData messageEdit) {
@@ -126,8 +126,8 @@ public class CommandContext<E> {
 		replyMessage(new MessageCreateBuilder().setEmbeds(embed.build()).build());
 	}
 	
-	public void sendMessage(EmbedBuilder embed, boolean ephemeral) {
-		replyMessage(new MessageCreateBuilder().setEmbeds(embed.build()).build(), ephemeral);
+	public void sendMessage(EmbedBuilder embed, boolean ephemeral, boolean silent) {
+		replyMessage(new MessageCreateBuilder().setEmbeds(embed.build()).build(), ephemeral, silent);
 	}
 	
 	public EmbedBuilder constructEmbedResponse(String command) {
