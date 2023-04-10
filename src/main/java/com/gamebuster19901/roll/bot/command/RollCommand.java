@@ -130,7 +130,8 @@ public class RollCommand {
 				//action.addActionRow(Button.primary("Sort", "Sort Dice"), Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 			}
 			message.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
-			c.replyMessage(message.build(), false, true);
+			message.setSuppressedNotifications(true);
+			hook.sendMessage(message.build()).queue();
 				
 			return 1;
 		}
