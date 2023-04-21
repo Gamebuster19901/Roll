@@ -25,10 +25,8 @@ import com.gamebuster19901.roll.util.pipe.PipeHelper;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
@@ -129,7 +127,7 @@ public class RollCommand {
 			if(roll.isSortable()) {
 				//action.addActionRow(Button.primary("Sort", "Sort Dice"), Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 			}
-			message.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
+			//message.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 			message.setSuppressedNotifications(true);
 			hook.sendMessage(message.build()).queue();
 				
