@@ -38,7 +38,7 @@ public class DiscordBot {
 	public final JDA jda;
 	private Boolean dev;
 	
-	public DiscordBot(String botOwner, File secretFile) throws LoginException, IOException {
+	public DiscordBot(String botOwner, File secretFile /*temporary until production*/) throws LoginException, IOException {
 		BufferedReader reader = null;
 		String secret = null;
 		

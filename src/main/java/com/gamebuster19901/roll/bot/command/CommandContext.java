@@ -130,6 +130,10 @@ public class CommandContext<E> {
 		replyMessage(new MessageCreateBuilder().setEmbeds(embed.build()).build(), ephemeral, silent);
 	}
 	
+	public IReplyCallback getReplyCallback() {
+		return (IReplyCallback)event;
+	}
+	
 	public void sendThrowable(Throwable t) {
 		IReplyCallback callback = (IReplyCallback) event;
 		if(!callback.isAcknowledged()) {
