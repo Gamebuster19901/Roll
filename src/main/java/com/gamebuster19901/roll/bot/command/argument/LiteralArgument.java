@@ -35,7 +35,11 @@ public class LiteralArgument implements SuggestableArgument<String> {
 	
 	@Override
 	public <S> String parse(S context, StringReader reader) throws CommandSyntaxException {
-		return Commands.readString(reader);
+		String s = Commands.readString(reader);
+		if(!s.equals(arg)) {
+			throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect().createWithContext(reader, s);
+		}
+		return s;
 	}
 	
 	@Override
