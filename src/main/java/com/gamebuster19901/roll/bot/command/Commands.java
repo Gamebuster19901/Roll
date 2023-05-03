@@ -24,6 +24,7 @@ public class Commands {
 		SaveCommand.register(dispatcher);
 		ItemCommand.register(dispatcher);
 		RankCommand.register(dispatcher);
+		DebugCommand.register(dispatcher);
 	}
 	
 	@Deprecated
