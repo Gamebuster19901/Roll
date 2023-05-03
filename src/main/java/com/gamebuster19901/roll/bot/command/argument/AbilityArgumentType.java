@@ -39,9 +39,11 @@ public class AbilityArgumentType implements SuggestableArgument<Ability> {
 		String input = Commands.lastArgOf(builder.getInput());
 		String currentArg = getCurrentArg(input);
 		StringRange currentRange = getCurrentArgRange(input);
-		for(Ability ability : abilities) {
-			if(ability.name().toLowerCase().startsWith(currentArg.toLowerCase())) {
-				builder.suggest(new Suggestion(currentRange, ability.name()));
+		if(canSuggest(input)) {
+			for(Ability ability : abilities) {
+				if(ability.name().toLowerCase().startsWith(currentArg.toLowerCase())) {
+					builder.suggest(new Suggestion(currentRange, ability.name()));
+				}
 			}
 		}
 		return builder.buildFuture();

@@ -45,11 +45,14 @@ public class SaveArgumentType implements SuggestableArgument<SaveType> {
 		String currentArg = getCurrentArg(input);
 		StringRange currentRange = getCurrentArgRange(input);
 		
-		for(SaveType save : saves) {
-			if(save.getName().toLowerCase().startsWith(currentArg.toLowerCase())) {
-				builder.suggest(new Suggestion(currentRange, save.getName()));
+		if(canSuggest(input)) {
+			for(SaveType save : saves) {
+				if(save.getName().toLowerCase().startsWith(currentArg.toLowerCase())) {
+					builder.suggest(new Suggestion(currentRange, save.getName()));
+				}
 			}
 		}
+		
 		return builder.buildFuture();
 	}
 

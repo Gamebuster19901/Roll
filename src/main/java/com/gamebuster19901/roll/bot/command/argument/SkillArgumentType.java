@@ -39,11 +39,15 @@ public class SkillArgumentType implements SuggestableArgument<Skill>{
 		String input = Commands.lastArgOf(builder.getInput());
 		String currentArg = getCurrentArg(input);
 		StringRange currentRange = getCurrentArgRange(input);
-		for(Skill skill : skills) {
-			if(skill.getCommandArg().toLowerCase().startsWith(currentArg.toLowerCase())) {
-				builder.suggest(new Suggestion(currentRange, skill.getCommandArg()));
+		
+		if(canSuggest(input)) {
+			for(Skill skill : skills) {
+				if(skill.getCommandArg().toLowerCase().startsWith(currentArg.toLowerCase())) {
+					builder.suggest(new Suggestion(currentRange, skill.getCommandArg()));
+				}
 			}
 		}
+		
 		return builder.buildFuture();
 	}
 	

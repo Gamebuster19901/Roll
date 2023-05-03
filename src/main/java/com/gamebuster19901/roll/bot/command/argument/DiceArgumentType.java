@@ -93,9 +93,9 @@ public class DiceArgumentType implements SuggestableArgument<Dice> {
 			if(suggestion.toLowerCase().startsWith(currentArg.toLowerCase())) {
 				if(suggestion.equalsIgnoreCase(currentArg)) {
 					StringRange range = replaceRange;
-					replaceRange = new StringRange(input.length(), input.length());
-					builder.suggest(new Suggestion(replaceRange, "+"));
-					builder.suggest(new Suggestion(replaceRange, "-"));
+					//replaceRange = new StringRange(input.length(), input.length());
+					builder.suggest(new Suggestion(replaceRange, currentArg + "+"));
+					builder.suggest(new Suggestion(replaceRange, currentArg + "-"));
 					replaceRange = range;
 				}
 				else {

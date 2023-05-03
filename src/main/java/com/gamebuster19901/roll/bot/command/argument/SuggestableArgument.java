@@ -21,7 +21,7 @@ public interface SuggestableArgument<T> extends ArgumentType<T> {
 	 */
 	public default StringRange getLastArgRange(String input) {
 		
-		int lastSeparator = Math.max(input.indexOf('-'), input.indexOf('+'));
+		int lastSeparator = input.indexOf(' ');
 		if(lastSeparator == -1) { 
 			return new StringRange(0, input.length());
 		}
@@ -77,6 +77,24 @@ public interface SuggestableArgument<T> extends ArgumentType<T> {
 		}
 		StringRange range = getCurrentArgRange(input);
 		return input.substring(range.getStart(), range.getEnd());
+	}
+
+	
+	public default int getCurrentArgIndex(String input) {
+		int index = 0;
+		if (input.isBlank()) {
+			return index;
+		}
+		Matcher matcher = getDelimiterRegex().matcher(input);
+		
+		while(matcher.find()) {
+			index++;
+		}
+		return index;
+	}
+	
+	public default boolean canSuggest(String input) {
+		return getCurrentArgIndex(input) == 0 || !getCurrentArg(input).isBlank();
 	}
 	
 }

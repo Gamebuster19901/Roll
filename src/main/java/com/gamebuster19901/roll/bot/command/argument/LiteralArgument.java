@@ -62,8 +62,10 @@ public class LiteralArgument implements SuggestableArgument<String> {
 			String currentArg = getCurrentArg(input);
 			StringRange currentRange = getCurrentArgRange(input);
 			
-			if(arg.arg.toLowerCase().startsWith(currentArg.toLowerCase())) {
-				builder.suggest(new Suggestion(currentRange, arg.arg));
+			if(canSuggest(input)) {
+				if(arg.arg.toLowerCase().startsWith(currentArg.toLowerCase())) {
+					builder.suggest(new Suggestion(currentRange, arg.arg));
+				}
 			}
 				
 			return builder.buildFuture();
