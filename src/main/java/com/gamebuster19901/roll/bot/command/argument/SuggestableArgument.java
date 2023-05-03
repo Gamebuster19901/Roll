@@ -9,7 +9,7 @@ import com.mojang.brigadier.context.StringRange;
 
 public interface SuggestableArgument<T> extends ArgumentType<T> {
 
-	static final Pattern NORMAL_ARGUMENT_REGEX = Pattern.compile("(.*?)( |$)");
+	static final Pattern NORMAL_ARGUMENT_REGEX = Pattern.compile("(.+?)( |$)+");
 	
 	public default Pattern getDelimiterRegex() {
 		return NORMAL_ARGUMENT_REGEX;
