@@ -161,12 +161,7 @@ public interface Statted extends GSerializable {
 	}
 	
 	public default boolean hasStat(String stat) {
-		for(Stat found : getStats().keySet()) {
-			if(found.getName().equalsIgnoreCase(stat) || found.getSimpleName().equalsIgnoreCase(stat) || found.getSuggestion().equalsIgnoreCase(stat)) {
-				return true;
-			}
-		}
-		return false;
+		return hasStat(GameLayer.EFFECT, stat);
 	}
 	
 	public default boolean hasStat(GameLayer layer, String stat) {
