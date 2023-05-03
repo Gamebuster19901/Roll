@@ -164,15 +164,22 @@ public interface Statted extends GSerializable {
 		return hasStat(GameLayer.EFFECT, stat);
 	}
 	
-	public default boolean hasStat(GameLayer layer, String stat) {
-		return getStatFromUserInput(layer, stat) != null;
+	public default boolean hasStat(GameLayer layer, String stat) { 
+		return hasStat(layer, Stat.fromUserInput(stat));
 	}
 	
 	public default boolean hasStat(GameLayer layer, Stat stat) {
-		return getStats(layer).containsKey(stat);
+		for(Stat found : getStats().keySet()) {
+			if(found.equals(stat) || found.getSimpleName().equalsIgnoreCase(stat.getName()) || found.getSuggestion().equalsIgnoreCase(stat.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
-	public boolean hasStatAt(GameLayer layer, Stat stat);
+	public default boolean hasStatAt(GameLayer layer, Stat stat) {
+		return getStats(layer).containsKey(stat);
+	}
 	
 	public default void addStat(StatValue<?> value) {
 		addStat(value, getOverwriteFunction(value));
