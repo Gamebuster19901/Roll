@@ -1,6 +1,7 @@
 package com.gamebuster19901.roll.bot.command;
 
 import com.gamebuster19901.roll.bot.command.argument.GlobalLiteralArgumentBuilder;
+import com.gamebuster19901.roll.bot.command.argument.LiteralArgument;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -28,6 +29,11 @@ public class Commands {
 	@Deprecated
 	public static LiteralArgumentBuilder<CommandContext> literal(String name) {
 		return LiteralArgumentBuilder.literal(name);
+	}
+	
+	@Deprecated
+	public static RequiredArgumentBuilder<CommandContext, String> suggestableString(String name) {
+		return argument(name, LiteralArgument.of(name));
 	}
 	
 	public static GlobalLiteralArgumentBuilder<CommandContext> global(String name) {

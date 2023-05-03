@@ -6,13 +6,14 @@ import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.bot.command.exception.ParseExceptions;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
-public class AbilityArgumentType implements ArgumentType<Ability> {
+public class AbilityArgumentType implements SuggestableArgument<Ability> {
 
 	public static final AbilityArgumentType ANY_ABILITY = AbilityArgumentType.of(Ability.values());
 	
@@ -35,12 +36,12 @@ public class AbilityArgumentType implements ArgumentType<Ability> {
 	
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+		String input = Commands.lastArgOf(builder.getInput());
+		String currentArg = getCurrentArg(input);
+		StringRange currentRange = getCurrentArgRange(input);
 		for(Ability ability : abilities) {
-			if(ability.name().toLowerCase().startsWith(Commands.lastArgOf(builder.getInput()).toLowerCase())) {
-				builder.suggest(ability.name());
-			}
-			else {
-				System.out.println(ability.name() + " does not match");
+			if(ability.name().toLowerCase().startsWith(currentArg.toLowerCase())) {
+				builder.suggest(new Suggestion(currentRange, ability.name()));
 			}
 		}
 		return builder.buildFuture();
