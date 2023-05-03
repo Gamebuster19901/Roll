@@ -134,7 +134,7 @@ public class RollCommand {
 			return 1;
 		}
 		catch(Throwable t) {
-			c.replyMessage(t.getMessage() + "\n\nPrinting stacktrace to console.");
+			hook.editOriginal(t.getMessage() + "\n\nPrinting stacktrace to console.").queue();
 			t.printStackTrace();
 			return 1;
 		}

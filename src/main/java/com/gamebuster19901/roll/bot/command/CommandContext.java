@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import com.gamebuster19901.roll.bot.user.ConsoleUser;
 import com.gamebuster19901.roll.bot.user.DiscordUser;
+import com.gamebuster19901.roll.util.StacktraceUtil;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -128,6 +129,10 @@ public class CommandContext<E> {
 	
 	public void sendMessage(EmbedBuilder embed, boolean ephemeral, boolean silent) {
 		replyMessage(new MessageCreateBuilder().setEmbeds(embed.build()).build(), ephemeral, silent);
+	}
+	
+	public void sendThrowable(Throwable t) {
+		getChannel().sendMessage(StacktraceUtil.getStackTrace(t).toString()).queue();
 	}
 	
 	public EmbedBuilder constructEmbedResponse(String command) {
