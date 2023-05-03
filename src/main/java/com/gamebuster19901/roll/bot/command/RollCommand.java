@@ -76,7 +76,10 @@ public class RollCommand {
 	public static int roll(CommandContext<?> c, String name, Dice dice, Statted statted) {
 		IReplyCallback e = c.getEvent(IReplyCallback.class);
 		InteractionHook hook = e.getHook();
-		e.deferReply().queue();
+		e.deferReply().setSuppressedNotifications(true).queue();
+		if (true) {
+			return 1;
+		}
 		try {
 			Roll roll = new Roll(name, dice, statted);
 			int result = roll.getValue();
