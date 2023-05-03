@@ -45,7 +45,7 @@ public class RollCommand {
 					return CheckCommand.rollCheck(context.getSource(), context.getArgument("skill", Skill.class));
 				})
 			)
-			.then(Commands.literal("initiative")
+			.then(Commands.literal("Initiative")
 				.executes((context) -> {
 					return CheckCommand.rollInitiative(context.getSource());
 				})
