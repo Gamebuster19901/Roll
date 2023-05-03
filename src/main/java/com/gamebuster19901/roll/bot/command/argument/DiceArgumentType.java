@@ -2,7 +2,6 @@ package com.gamebuster19901.roll.bot.command.argument;
 
 import java.util.LinkedHashSet;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,6 @@ import com.gamebuster19901.roll.bot.game.Statistic;
 import com.gamebuster19901.roll.bot.game.Statted;
 import com.gamebuster19901.roll.bot.game.character.Stat;
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -23,7 +21,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mysql.cj.util.StringUtils;
 
-public class DiceArgumentType implements ArgumentType<Dice> {
+public class DiceArgumentType implements SuggestableArgument<Dice> {
 	
 	public static final Pattern DELIMITER_REGEX = Pattern.compile("(.*?)([+\\-])");
 	public static final Pattern DICE_REGEX = Pattern.compile("^(?<amount>\\d*)d(?<die>\\d*)$");
@@ -167,68 +165,9 @@ public class DiceArgumentType implements ArgumentType<Dice> {
 		return builder.buildFuture();
 	}
 	
-	/**
-	 * @param input the full command input
-	 * @return the StringRange representing the start and end of the argument
-	 */
-	private StringRange getLastArgRange(String input) {
-		
-		int lastSeparator = Math.max(input.indexOf('-'), input.indexOf('+'));
-		if(lastSeparator == -1) { 
-			return new StringRange(0, input.length());
-		}
-		else {
-			Matcher matcher = DELIMITER_REGEX.matcher(input);
-			MatchResult start = null;
-			MatchResult end = null;
-			
-			MatchResult result = null;
-			while(matcher.find()) {
-				result = matcher.toMatchResult();
-			}
-			
-			return new StringRange(result.start(), result.end());
-		}
-	}
-	
-	/**
-	 * Gets the last fully complete and valid subargument that the user typed.
-	 * 
-	 * This argument may or may not be the at the end of the input.
-	 * @param input
-	 * @return
-	 */
-	private String getLastValidArg(String input) {
-		if(input.isBlank()) {
-			return input;
-		}
-		StringRange range = getLastArgRange(input);
-		return input.substring(range.getStart(), range.getEnd());
-	}
-	
-
-	private StringRange getCurrentArgRange(String input) {
-		StringRange lastRange = getLastArgRange(input);
-		StringRange currentRange = new StringRange(lastRange.getEnd(), input.length());
-		if(lastRange.getEnd() == currentRange.getEnd()) {
-			return lastRange;
-		}
-		return currentRange;
-	}
-	
-	/**
-	 * Gets the last argument that the user typed.
-	 * 
-	 * This argument may not be valid, and is always at the end of the input.
-	 * @param input
-	 * @return
-	 */
-	private String getCurrentArg(String input) {
-		if(input.isBlank()) {
-			return input;
-		}
-		StringRange range = getCurrentArgRange(input);
-		return input.substring(range.getStart(), range.getEnd());
+	@Override
+	public Pattern getDelimiterRegex() {
+		return DELIMITER_REGEX;
 	}
 	
 	private boolean isDelimiter(String s) {
