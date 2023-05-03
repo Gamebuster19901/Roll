@@ -165,12 +165,6 @@ public class EventReceiver extends ListenerAdapter {
 			List<String> returnedSuggestions = new ArrayList<String>();
 			try {
 				suggestions = Commands.DISPATCHER.getDispatcher().getCompletionSuggestions(parseResults, command.length()).get().getList();
-				if(suggestions.size() == 0) {
-					command = command + " ";
-					spaceAdded = true;
-					parseResults = Commands.DISPATCHER.getDispatcher().parse(command, new CommandContext<CommandAutoCompleteInteractionEvent>(e));
-					suggestions = Commands.DISPATCHER.getDispatcher().getCompletionSuggestions(parseResults, command.length()).get().getList();
-				}
 			} catch (InterruptedException | ExecutionException ex) {
 				ex.printStackTrace();
 				return;
