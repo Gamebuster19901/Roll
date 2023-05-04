@@ -5,6 +5,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.HashSet;
 
+import com.gamebuster19901.roll.Main;
 import com.gamebuster19901.roll.bot.command.argument.AbilityArgumentType;
 import com.gamebuster19901.roll.bot.command.argument.DiceArgumentType;
 import com.gamebuster19901.roll.bot.command.argument.SaveArgumentType;
@@ -21,14 +22,17 @@ import com.gamebuster19901.roll.bot.graphics.Theme;
 import com.gamebuster19901.roll.bot.graphics.dice.DieGraphicBuilder;
 import com.gamebuster19901.roll.bot.graphics.dice.RollGraphicBuilder;
 import com.gamebuster19901.roll.bot.graphics.dice.RollResultGraphicBuilder;
+import com.gamebuster19901.roll.bot.server.Emote;
 import com.gamebuster19901.roll.util.pipe.PipeHelper;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 public class RollCommand {
 
@@ -75,11 +79,8 @@ public class RollCommand {
 	
 	public static int roll(CommandContext<?> c, String name, Dice dice, Statted statted) {
 		IReplyCallback e = c.getEvent(IReplyCallback.class);
-		InteractionHook hook = e.getHook();
-		e.deferReply().setSuppressedNotifications(true).queue();
-		if (true) {
-			return 1;
-		}
+		InteractionHook hook = e.reply(Emote.getEmoji("loading")  + " " + Main.discordBot.getSelfUser().getName() + " is thinking...").setSuppressedNotifications(true).complete();
+		
 		try {
 			Roll roll = new Roll(name, dice, statted);
 			int result = roll.getValue();
@@ -132,7 +133,7 @@ public class RollCommand {
 			}
 			//message.addActionRow(Button.secondary("Probability distribution", Emoji.fromUnicode("U+1F4C8")));
 			message.setSuppressedNotifications(true);
-			hook.sendMessage(message.build()).queue();
+			hook.editOriginal(MessageEditData.fromCreateData(message.build())).queue();
 				
 			return 1;
 		}
