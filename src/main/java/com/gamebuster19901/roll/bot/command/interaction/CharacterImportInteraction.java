@@ -97,7 +97,7 @@ public class CharacterImportInteraction {
 								try {
 									PlayerCharacter character = addCharacterToDatabase(e, builder);
 									MessageCreateBuilder builder = new MessageCreateBuilder();
-									e.reply(builder.setContent("Added `" + character.getName() + "` to your collection.").setEmbeds(new StatEmbedBuilder(character, builder).getEmbed()).build());
+									e.reply(builder.setContent("Added `" + character.getName() + "` to your collection.").setEmbeds(new StatEmbedBuilder(character, builder).getEmbed()).build()).queue();
 								} catch (SQLException | IOException e1) {
 									throw new RuntimeException(e1);
 								}
