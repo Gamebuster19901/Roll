@@ -1,7 +1,7 @@
-package com.gamebuster19901.roll.bot.game.beyond.character;
+package com.gamebuster19901.roll.bot.game.foreign.beyond.character;
 
 import static com.gamebuster19901.roll.bot.game.SaveType.*;
-import static com.gamebuster19901.roll.bot.game.beyond.character.DNDBeyondPDFValue.FunctionType.*;
+import static com.gamebuster19901.roll.bot.game.foreign.beyond.character.DNDBeyondPDFValue.FunctionType.*;
 import static com.gamebuster19901.roll.bot.game.stat.Ability.*;
 import static com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel.*;
 import static com.gamebuster19901.roll.bot.game.stat.Skill.*;

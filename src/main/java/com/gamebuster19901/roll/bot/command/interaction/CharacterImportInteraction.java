@@ -9,8 +9,8 @@ import com.gamebuster19901.roll.bot.command.Commands;
 import com.gamebuster19901.roll.bot.command.argument.DNDBeyondPDFArgument;
 import com.gamebuster19901.roll.bot.command.embed.StatEmbedBuilder;
 import com.gamebuster19901.roll.bot.command.embed.StatInteractionBuilder;
-import com.gamebuster19901.roll.bot.game.beyond.character.DNDBeyondPDFPlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.PlayerCharacter;
+import com.gamebuster19901.roll.bot.game.foreign.beyond.character.DNDBeyondPDFPlayerBuilder;
 import com.gamebuster19901.roll.util.ThreadService;
 import com.mojang.brigadier.CommandDispatcher;
 

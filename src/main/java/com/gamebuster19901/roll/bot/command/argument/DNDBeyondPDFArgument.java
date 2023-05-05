@@ -2,7 +2,7 @@ package com.gamebuster19901.roll.bot.command.argument;
 
 import com.gamebuster19901.roll.bot.command.CommandContext;
 import com.gamebuster19901.roll.bot.command.Commands;
-import com.gamebuster19901.roll.bot.game.beyond.character.DNDBeyondPDFPlayerBuilder;
+import com.gamebuster19901.roll.bot.game.foreign.beyond.character.DNDBeyondPDFPlayerBuilder;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;

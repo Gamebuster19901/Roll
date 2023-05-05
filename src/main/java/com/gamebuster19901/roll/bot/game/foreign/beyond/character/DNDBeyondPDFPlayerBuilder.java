@@ -1,4 +1,4 @@
-package com.gamebuster19901.roll.bot.game.beyond.character;
+package com.gamebuster19901.roll.bot.game.foreign.beyond.character;
 
 import java.io.InputStream;
 import java.net.URL;
