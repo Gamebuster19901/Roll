@@ -2,6 +2,7 @@ package com.gamebuster19901.roll.bot.command.argument;
 
 import java.util.LinkedHashSet;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -163,6 +164,71 @@ public class DiceArgumentType implements SuggestableArgument<Dice> {
 		}
 		
 		return builder.buildFuture();
+	}
+	
+	/**
+	 * @param input the full command input
+	 * @return the StringRange representing the start and end of the argument
+	 */
+	public StringRange getLastArgRange(String input) {
+		
+		int lastSeparator = Math.max(input.indexOf('-'), input.indexOf('+'));
+		if(lastSeparator == -1) { 
+			return new StringRange(0, input.length());
+		}
+		else {
+			Matcher matcher = DELIMITER_REGEX.matcher(input);
+			MatchResult start = null;
+			MatchResult end = null;
+			
+			MatchResult result = null;
+			while(matcher.find()) {
+				result = matcher.toMatchResult();
+			}
+			
+			return new StringRange(result.start(), result.end());
+		}
+	}
+	
+	/**
+	 * Gets the last fully complete and valid subargument that the user typed.
+	 * 
+	 * This argument may or may not be the at the end of the input.
+	 * @param input
+	 * @return
+	 */
+	public String getLastValidArg(String input) {
+		if(input.isBlank()) {
+			return input;
+		}
+		StringRange range = getLastArgRange(input);
+		return input.substring(range.getStart(), range.getEnd());
+	}
+	
+	@Override
+	public StringRange getCurrentArgRange(String input) {
+		StringRange lastRange = getLastArgRange(input);
+		StringRange currentRange = new StringRange(lastRange.getEnd(), input.length());
+		if(lastRange.getEnd() == currentRange.getEnd()) {
+			return lastRange;
+		}
+		return currentRange;
+	}
+	
+	/**
+	 * Gets the last argument that the user typed.
+	 * 
+	 * This argument may not be valid, and is always at the end of the input.
+	 * @param input
+	 * @return
+	 */
+	@Override
+	public String getCurrentArg(String input) {
+		if(input.isBlank()) {
+			return input;
+		}
+		StringRange range = getCurrentArgRange(input);
+		return input.substring(range.getStart(), range.getEnd());
 	}
 	
 	@Override
