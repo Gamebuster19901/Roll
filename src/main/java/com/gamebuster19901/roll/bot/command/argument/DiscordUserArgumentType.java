@@ -27,6 +27,10 @@ public class DiscordUserArgumentType implements ArgumentType<User>{
 					id = Long.parseLong(s.substring(2, s.length() - 1));
 					return Main.discordBot.jda.retrieveUserById(id).complete();
 				}
+				else {
+					id = Long.parseLong(s);
+					return Main.discordBot.jda.retrieveUserById(id).complete();
+				}
 			}
 		throw ParseExceptions.NONEXISTANT.create("Discord User", s);
 	}
