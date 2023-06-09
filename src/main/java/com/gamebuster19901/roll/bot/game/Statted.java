@@ -17,7 +17,7 @@ import com.gamebuster19901.roll.util.TriFunction;
 import com.google.common.collect.ImmutableMap;
 
 public interface Statted extends GSerializable {
-
+	
 	public default String getName() {
 		return getName(GameLayer.OFFICE_ACTION);
 	}

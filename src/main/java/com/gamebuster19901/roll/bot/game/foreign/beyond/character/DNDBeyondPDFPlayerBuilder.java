@@ -6,11 +6,13 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gamebuster19901.roll.util.URI;
 import com.gamebuster19901.roll.bot.command.argument.DNDBeyondPDFArgument;
 import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.character.FixedPlayerCharacterStatBuilder;
 import com.gamebuster19901.roll.bot.game.character.PlayerBuilder;
 import com.gamebuster19901.roll.bot.game.character.Stat;
+import com.gamebuster19901.roll.bot.game.foreign.ForeignLocation;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.StatSource;
 import com.gamebuster19901.roll.util.pdf.PDFText;
@@ -36,6 +38,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 	private static FixedPlayerCharacterStatBuilder getStats(User owner, String charSheet) {
 		FixedPlayerCharacterStatBuilder statBuilder = new FixedPlayerCharacterStatBuilder();
 		statBuilder.addStat(Stat.Owner, GameLayer.DATABASE, "D&D Beyond Character ID", owner.getIdLong());
+		statBuilder.addStat(Stat.ForeignLocation, StatSource.DATABASE_SOURCE, ForeignLocation.DND_BEYOND.ordinal());
 		try {
 			if(!charSheet.startsWith("https://")) {
 				charSheet = charSheet + "https://";
@@ -117,7 +120,7 @@ public class DNDBeyondPDFPlayerBuilder extends PlayerBuilder {
 			else {
 				throw new IllegalStateException("D&D Beyond character id (" + id + ") exceeded maximum expected value?! This is a critical issue! Report immediately!");
 			}
-
+			statBuilder.addStat(Stat.URI, StatSource.DATABASE_SOURCE, new URI(url.toURI()));
 		}
 		catch(Exception e) {
 			e.printStackTrace();

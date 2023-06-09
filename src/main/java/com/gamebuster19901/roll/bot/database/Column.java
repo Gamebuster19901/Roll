@@ -55,7 +55,8 @@ public enum Column implements Columns {
 	 */
 	CHARACTER_ID("characterID", CHARACTERS, SESSIONS_DEFAULT),
 	FOREIGN_ID("foreignID", CHARACTERS),
-	FOREIGN_LOCATION("foreignLocation"),
+	FOREIGN_LOCATION("foreignLocation", CHARACTERS),
+	URI("uri", CHARACTERS),
 	
 	/*
 	 * Classes

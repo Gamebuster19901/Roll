@@ -16,6 +16,8 @@ public class FixedPlayerCharacterStatBuilder extends PlayerCharacterStatBuilder 
 		FixedStatBuilder fixedStatBuilder = new FixedStatBuilder();
 		fixedStatBuilder.requiredStats.add(Stat.Owner);
 		fixedStatBuilder.requiredStats.add(Stat.ID);
+		fixedStatBuilder.requiredStats.add(Stat.ForeignLocation);
+		fixedStatBuilder.requiredStats.add(Stat.URI);
 		this.fixedStatBuilder = fixedStatBuilder;
 	}
 

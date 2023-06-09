@@ -2,10 +2,13 @@ package com.gamebuster19901.roll.bot.game.character;
 
 import com.ezylang.evalex.Expression;
 import com.gamebuster19901.roll.bot.game.coinage.Coinage;
+import com.gamebuster19901.roll.bot.game.foreign.ForeignLocation;
 import com.gamebuster19901.roll.bot.game.stat.FixedStats;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
+import static com.gamebuster19901.roll.bot.game.stat.GameLayer.*;
 import com.gamebuster19901.roll.bot.game.stat.StatValue;
 import com.gamebuster19901.roll.util.TriFunction;
+import com.gamebuster19901.roll.util.URI;
 import com.google.common.collect.ImmutableMap;
 
 public class FixedPlayerCharacterStats extends PCStats implements PlayerCharacterStats {
@@ -64,6 +67,16 @@ public class FixedPlayerCharacterStats extends PCStats implements PlayerCharacte
 	@Override
 	public int getPlatinum() {
 		return getStat(Stat.Platinum, int.class);
+	}
+	
+	@Override
+	public ForeignLocation getForeignLocation() {
+		return getStat(DATABASE, "foreignLocation", ForeignLocation.class);
+	}
+
+	@Override
+	public URI getForeignURI() {
+		return getStat(DATABASE, "foreignURI", URI.class);
 	}
 
 	@Override

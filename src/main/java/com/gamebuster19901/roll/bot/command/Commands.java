@@ -101,11 +101,4 @@ public class Commands {
 		return ret.toString();
 	}
 	
-	public static String lastArgOf(String command) {
-		if(command.indexOf(' ') > 0) {
-			return command.substring(command.lastIndexOf(' ') + 1);
-		}
-		return "";
-	}
-	
 }

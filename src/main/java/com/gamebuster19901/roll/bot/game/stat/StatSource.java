@@ -2,6 +2,8 @@ package com.gamebuster19901.roll.bot.game.stat;
 
 public interface StatSource {
 	
+	public static final StatSource DATABASE_SOURCE = StatSource.of(GameLayer.DATABASE, " For internal database use. You shouldn't see this!");
+	
 	public GameLayer getGameLayer();
 	
 	public String toString();

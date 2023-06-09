@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Path;
 import java.sql.SQLException;
 
@@ -22,9 +23,11 @@ import com.gamebuster19901.roll.bot.database.Insertion;
 import com.gamebuster19901.roll.bot.database.Result;
 import com.gamebuster19901.roll.bot.database.Table;
 import static com.gamebuster19901.roll.bot.database.Table.*;
+import static com.gamebuster19901.roll.bot.game.stat.GameLayer.*;
 import com.gamebuster19901.roll.bot.database.sql.PreparedStatement;
 import com.gamebuster19901.roll.bot.game.MovementType;
 import com.gamebuster19901.roll.bot.game.Statted;
+import com.gamebuster19901.roll.bot.game.foreign.ForeignLocation;
 import com.gamebuster19901.roll.bot.game.stat.Ability;
 import com.gamebuster19901.roll.bot.game.stat.GameLayer;
 import com.gamebuster19901.roll.bot.game.stat.ProficiencyLevel;
@@ -46,6 +49,7 @@ public class PlayerCharacter implements Statted {
 
 	protected final PlayerCharacterStats stats;
 	protected ImageResource image;
+
 	
 	public PlayerCharacter(PlayerCharacterStats stats) {
 		this.stats = stats;
@@ -164,6 +168,14 @@ public class PlayerCharacter implements Statted {
 		return getOwner(getID());
 	}
 	
+	public ForeignLocation getForeignLocation() {
+		return getStat(DATABASE, "foreignLocation", ForeignLocation.class);
+	}
+	
+	public URI getForeignURI() {
+		return getStat(DATABASE, "uri", URI.class);
+	}
+	
 	public File getCharacterFolder() {
 		return getCharacterFolder(getID());
 	}
@@ -224,14 +236,18 @@ public class PlayerCharacter implements Statted {
 			deleteCharacter(character.getID());
 		}
 		PreparedStatement s = Insertion.insertInto(Table.CHARACTERS)
-				.setColumns(
-						Column.CHARACTER_ID, 
-						Column.DISCORD_ID, 
-						Column.NAME)
-				.to(
-					character.getStat(Stat.ID, long.class), 
-					character.getStat(Stat.Owner, long.class), 
-					character.getStat(Stat.Name, String.class)
+			.setColumns(
+				Column.CHARACTER_ID, 
+				Column.DISCORD_ID, 
+				Column.NAME,
+				Column.FOREIGN_LOCATION,
+				Column.URI)
+			.to(
+				character.getStat(Stat.ID, long.class), 
+				character.getStat(Stat.Owner, long.class), 
+				character.getStat(Stat.Name, String.class),
+				character.getStat(Stat.ForeignLocation, ForeignLocation.class),
+				character.getStat(Stat.URI, URI.class)
 		).prepare(true);
 		s.execute();
 		character.getCharacterFolder().mkdirs();

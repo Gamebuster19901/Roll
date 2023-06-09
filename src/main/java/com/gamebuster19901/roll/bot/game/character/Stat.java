@@ -29,6 +29,12 @@ public class Stat implements Statistic {
 	public static final Stat Owner = new Stat("Owner");
 	public static final Stat ID = new Stat("ID");
 	
+	/*
+	 * Database only stats:
+	 */
+	public static final Stat ForeignLocation = new Stat("Foreign Location", "ForeignLocation");
+	public static final Stat URI = new Stat("URI", "uri");
+	
 	String name;
 	String suggestion;
 	
